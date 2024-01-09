@@ -10,19 +10,39 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.mapbox.geojson.Point
+import com.mapbox.maps.CameraOptions
+import com.mapbox.maps.MapView
+import com.mapbox.maps.MapboxExperimental
+import com.mapbox.maps.extension.compose.MapboxMap
+import com.mapbox.maps.extension.compose.animation.viewport.MapViewportState
 import fr.onat68.aileronsappmapandroid.ui.theme.AileronsAppMapAndroidTheme
 
 class MainActivity : ComponentActivity() {
+    private lateinit var mapView: MapView
+
+    @OptIn(MapboxExperimental::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        mapView = MapView(this)
+        mapView.mapboxMap.setCamera(
+            CameraOptions.Builder()
+                .center(Point.fromLngLat(-98.0, 39.5))
+                .pitch(0.0)
+                .zoom(2.0)
+                .bearing(0.0)
+                .build()
+        )
+        mapView.mapboxMap.loadStyle("mapbox://styles/onatyr/clq9si1g5002o01r57yb3comk")
+
         setContent {
+
             AileronsAppMapAndroidTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Android")
+                    setContentView(mapView)
                 }
             }
         }
