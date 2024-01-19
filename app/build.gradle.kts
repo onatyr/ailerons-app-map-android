@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     kotlin("plugin.serialization") version "1.9.0"
+    id("com.google.secrets_gradle_plugin") version "0.4"
 }
 
 android {
