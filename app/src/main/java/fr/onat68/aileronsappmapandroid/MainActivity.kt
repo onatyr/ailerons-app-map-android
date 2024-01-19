@@ -70,7 +70,25 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             AileronsAppMapAndroidTheme {
+
                 val navController = rememberNavController()
+                var records by remember { mutableStateOf<List<Record>>(listOf()) }
+                var lineList by remember { mutableStateOf<List<List<Point>>>(listOf()) }
+
+                LaunchedEffect(Unit) { // Fetch the data from Supabase
+                    withContext(Dispatchers.IO) {
+                        records = supabase.from("record")
+                            .select().decodeList<Record>()
+                        lineList = records.groupBy { it.individualId }.values.map { records ->
+                            records.map {
+                                Point.fromLngLat(
+                                    it.longitude.toDouble(),
+                                    it.latitude.toDouble()
+                                )
+                            }
+                        }
+                    }
+                }
 
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -83,7 +101,7 @@ class MainActivity : ComponentActivity() {
                             modifier = Modifier.weight(1f)
                         ) {
                             composable("favorites") { Text("Favorites") }
-                            composable("map") { Map(supabase) }
+                            composable("map") { Map(supabase, records, lineList) }
                             composable("species") { Text("Species") }
                             composable("news") { Text("News") }
                         }
@@ -127,20 +145,8 @@ fun NavBar(navController: NavHostController) {
 
 @OptIn(MapboxExperimental::class)
 @Composable
-fun Map(supabase: SupabaseClient) {
+fun Map(supabase: SupabaseClient, records: List<Record>, lineList: List<List<Point>>) {
 
-    var records by remember { mutableStateOf<List<Record>>(listOf()) }
-    var lineList by remember { mutableStateOf<List<List<Point>>>(listOf()) }
-
-    LaunchedEffect(Unit) { // Fetch the data from Supabase
-        withContext(Dispatchers.IO) {
-            records = supabase.from("record")
-                .select().decodeList<Record>()
-            lineList = records.groupBy { it.individualId }.values.map { records ->
-                records.map { Point.fromLngLat(it.longitude.toDouble(), it.latitude.toDouble()) }
-            }
-        }
-    }
     MapboxMap(
         mapInitOptionsFactory = {
             MapInitOptions(
