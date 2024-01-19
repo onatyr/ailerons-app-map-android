@@ -7,19 +7,11 @@ import android.graphics.BitmapFactory
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -34,16 +26,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.mapbox.geojson.Point
 import com.mapbox.maps.CameraOptions
 import com.mapbox.maps.MapInitOptions
@@ -63,38 +53,34 @@ import kotlinx.coroutines.withContext
 
 class MainActivity : ComponentActivity() {
 
-
-    @OptIn(MapboxExperimental::class)
-    override fun onCreate(savedInstanceState: Bundle?) {
+        override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val ai: ApplicationInfo = applicationContext.packageManager
             .getApplicationInfo(applicationContext.packageName, PackageManager.GET_META_DATA)
-        val supabase = createSupabaseClient(
+        @Suppress("DEPRECATION") val supabase = createSupabaseClient(
             supabaseUrl = ai.metaData["supabaseUrl"].toString(),
             supabaseKey = ai.metaData["supabaseKey"].toString(),
         ) {
             install(Postgrest)
         }
 
-
-        val points = listOf(Point.fromLngLat(17.00, 58.00), Point.fromLngLat(16.00, 57.00))
-        val lines = listOf(
-            Point.fromLngLat(17.94, 59.25),
-            Point.fromLngLat(18.18, 59.37),
-            Point.fromLngLat(19.0, 59.0)
-        )
-
         setContent {
-
             AileronsAppMapAndroidTheme {
+                val navController = rememberNavController()
+
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
                     Column {
-                        Map(this@MainActivity, supabase, Modifier.weight(1f))
-                        Box(modifier = Modifier.weight(0.08f)) {
+                        NavHost(navController = navController, startDestination = "map", modifier = Modifier.weight(1f)){
+                            composable("favorites"){  }
+                            composable("map"){ Map(supabase) }
+                            composable("species"){  }
+                            composable("news"){  }
+                        }
+                        Box(modifier = Modifier.weight(0.11f)) {
                             NavBar()
                         }
                     }
@@ -109,14 +95,14 @@ fun NavBar() {
     var selectedItem by remember { mutableIntStateOf(1) }
     val items = listOf(NavBarItem.Favorites, NavBarItem.Map, NavBarItem.Species, NavBarItem.News)
 
-    NavigationBar(Modifier.fillMaxHeight()){
+    NavigationBar(Modifier.fillMaxSize()){
         items.forEachIndexed { index, item ->
             NavigationBarItem(
                 selected = selectedItem == index,
                 onClick = { selectedItem = index },
-                icon = { Icon( ImageVector.vectorResource(item.icon), item.title ) },
-                label = { Text(item.title, fontSize = 10.sp) },
-                modifier = Modifier.fillMaxHeight()
+                icon = { Icon( ImageVector.vectorResource(item.icon), item.title, Modifier.size(40.dp) ) },
+                label = { Text(item.title, fontSize = 8.sp) },
+                modifier = Modifier.wrapContentHeight()
             )
         }
     }
@@ -124,7 +110,7 @@ fun NavBar() {
 
 @OptIn(MapboxExperimental::class)
 @Composable
-fun Map(context: Context, supabase: SupabaseClient, modifier: Modifier) {
+fun Map(supabase: SupabaseClient) {
 
     var records by remember { mutableStateOf<List<Record>>(listOf()) }
     var lineList by remember { mutableStateOf<List<List<Point>>>(listOf()) }
@@ -138,7 +124,7 @@ fun Map(context: Context, supabase: SupabaseClient, modifier: Modifier) {
             }
         }
     }
-    MapboxMap(modifier = modifier,
+    MapboxMap(
         mapInitOptionsFactory = {
             MapInitOptions(
                 context = it,
@@ -153,7 +139,7 @@ fun Map(context: Context, supabase: SupabaseClient, modifier: Modifier) {
             PointAnnotation(
                 point = Point.fromLngLat(it.longitude.toDouble(), it.latitude.toDouble()),
                 iconImageBitmap = BitmapFactory.decodeResource(
-                    context.resources,
+                    LocalContext.current.resources,
                     R.drawable.red_marker
                 ),
                 iconSize = 0.3
