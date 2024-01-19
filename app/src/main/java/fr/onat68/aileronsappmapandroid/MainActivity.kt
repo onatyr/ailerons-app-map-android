@@ -5,6 +5,7 @@ import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
@@ -31,6 +32,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -53,7 +56,7 @@ import kotlinx.coroutines.withContext
 
 class MainActivity : ComponentActivity() {
 
-        override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val ai: ApplicationInfo = applicationContext.packageManager
@@ -74,14 +77,18 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     Column {
-                        NavHost(navController = navController, startDestination = "map", modifier = Modifier.weight(1f)){
-                            composable("favorites"){  }
-                            composable("map"){ Map(supabase) }
-                            composable("species"){  }
-                            composable("news"){  }
+                        NavHost(
+                            navController = navController,
+                            startDestination = "map",
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            composable("favorites") { Text("Favorites") }
+                            composable("map") { Map(supabase) }
+                            composable("species") { Text("Species") }
+                            composable("news") { Text("News") }
                         }
                         Box(modifier = Modifier.weight(0.11f)) {
-                            NavBar()
+                            NavBar(navController)
                         }
                     }
                 }
@@ -91,16 +98,26 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun NavBar() {
+fun NavBar(navController: NavHostController) {
     var selectedItem by remember { mutableIntStateOf(1) }
     val items = listOf(NavBarItem.Favorites, NavBarItem.Map, NavBarItem.Species, NavBarItem.News)
 
-    NavigationBar(Modifier.fillMaxSize()){
+    NavigationBar(Modifier.fillMaxSize()) {
+
         items.forEachIndexed { index, item ->
             NavigationBarItem(
                 selected = selectedItem == index,
-                onClick = { selectedItem = index },
-                icon = { Icon( ImageVector.vectorResource(item.icon), item.title, Modifier.size(40.dp) ) },
+                onClick = {
+                    selectedItem = index
+                    navController.navigate(item.route)
+                },
+                icon = {
+                    Icon(
+                        ImageVector.vectorResource(item.icon),
+                        item.title,
+                        Modifier.size(40.dp)
+                    )
+                },
                 label = { Text(item.title, fontSize = 8.sp) },
                 modifier = Modifier.wrapContentHeight()
             )
