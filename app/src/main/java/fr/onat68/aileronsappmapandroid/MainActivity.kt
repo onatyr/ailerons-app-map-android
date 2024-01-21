@@ -51,6 +51,7 @@ import com.mapbox.maps.extension.compose.MapboxMap
 import com.mapbox.maps.extension.compose.annotation.generated.PointAnnotation
 import com.mapbox.maps.extension.compose.annotation.generated.PolylineAnnotation
 import fr.onat68.aileronsappmapandroid.map.Map
+import fr.onat68.aileronsappmapandroid.species.SpeciesScreen
 import fr.onat68.aileronsappmapandroid.ui.theme.AileronsAppMapAndroidTheme
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.createSupabaseClient
@@ -108,7 +109,7 @@ class MainActivity : ComponentActivity() {
                         ) {
                             composable("favorites") { Text("Favorites") }
                             composable("map") { Map(supabase, records, lineList) }
-                            composable("species") { Text("Species") }
+                            composable("species") { SpeciesScreen() }
                             composable("news") { Text("News") }
                         }
                         NavBar(navController)
