@@ -1,11 +1,8 @@
 package fr.onat68.aileronsappmapandroid.map
 
 import android.graphics.BitmapFactory
+import android.util.Log
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import com.mapbox.geojson.Point
 import com.mapbox.maps.CameraOptions
@@ -17,17 +14,17 @@ import com.mapbox.maps.extension.compose.annotation.generated.PointAnnotation
 import com.mapbox.maps.extension.compose.annotation.generated.PolylineAnnotation
 import fr.onat68.aileronsappmapandroid.R
 import fr.onat68.aileronsappmapandroid.RecordPoints
-import io.github.jan.supabase.SupabaseClient
 
 @OptIn(MapboxExperimental::class)
 @Composable
 fun Map(
     recordPoints: List<RecordPoints>,
     individualIdFilter: Int
-) { // To show all the points, individualIdFilter must be equal to -1
+) { // To show all the points, individualIdFilter must be equal to 0
 
+    Log.d("ICI", "$individualIdFilter")
     var points = recordPoints
-    if (individualIdFilter != -1) {
+    if (individualIdFilter != 0) { // first try with -1 instead of 0 but some bugs can appear
         points = points.filter { it.individualId == individualIdFilter }
     }
 

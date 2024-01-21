@@ -27,10 +27,11 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.mapbox.geojson.Point
+import androidx.navigation.navArgument
 import fr.onat68.aileronsappmapandroid.map.Map
 import fr.onat68.aileronsappmapandroid.species.Individual
 import fr.onat68.aileronsappmapandroid.species.SpeciesScreen
@@ -81,11 +82,20 @@ class MainActivity : ComponentActivity() {
                     Column {
                         NavHost(
                             navController = navController,
-                            startDestination = "map",
+                            startDestination = "map/${0}", // if changed don't forget to also change the route of map in NavBarItem
                             modifier = Modifier.weight(1f)
                         ) {
                             composable("favorites") { Text("Favorites") }
-                            composable("map") { Map(recordPoints, -1) }
+                            composable(
+                                "map/{individualIdFilter}",
+                                arguments = listOf(navArgument("individualIdFilter") {
+                                    type = NavType.IntType
+                                })
+                            ) {
+                                val individualIdFilter = it.arguments!!.getInt("individualIdFilter")
+                                Map(recordPoints, individualIdFilter)
+
+                            }
                             composable("species") { SpeciesScreen(individualsList, navController) }
                             composable("news") { Text("News") }
                         }

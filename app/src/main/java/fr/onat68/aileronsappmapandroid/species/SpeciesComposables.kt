@@ -29,7 +29,7 @@ fun IndividualsList(individualsList: List<Individual>, navController: NavControl
                     )
                 },
                 trailingContent = { Text("meta") },
-//                modifier = Modifier.clickable { navController.navigate("map") }
+                modifier = Modifier.clickable { navController.navigate("map/${individual.individualRecordId}") }
             )
             Divider()
         }
