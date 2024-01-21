@@ -8,15 +8,19 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,6 +31,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
@@ -45,6 +50,7 @@ import com.mapbox.maps.Style
 import com.mapbox.maps.extension.compose.MapboxMap
 import com.mapbox.maps.extension.compose.annotation.generated.PointAnnotation
 import com.mapbox.maps.extension.compose.annotation.generated.PolylineAnnotation
+import fr.onat68.aileronsappmapandroid.map.Map
 import fr.onat68.aileronsappmapandroid.ui.theme.AileronsAppMapAndroidTheme
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.createSupabaseClient
@@ -105,9 +111,7 @@ class MainActivity : ComponentActivity() {
                             composable("species") { Text("Species") }
                             composable("news") { Text("News") }
                         }
-                        Box(modifier = Modifier.weight(0.11f)) {
-                            NavBar(navController)
-                        }
+                        NavBar(navController)
                     }
                 }
             }
@@ -120,7 +124,7 @@ fun NavBar(navController: NavHostController) {
     var selectedItem by remember { mutableIntStateOf(1) }
     val items = listOf(NavBarItem.Favorites, NavBarItem.Map, NavBarItem.Species, NavBarItem.News)
 
-    NavigationBar(Modifier.fillMaxSize()) {
+    NavigationBar(Modifier.height(70.dp)) {
 
         items.forEachIndexed { index, item ->
             NavigationBarItem(
@@ -133,43 +137,10 @@ fun NavBar(navController: NavHostController) {
                     Icon(
                         ImageVector.vectorResource(item.icon),
                         item.title,
-                        Modifier.size(40.dp)
                     )
                 },
-                label = { Text(item.title, fontSize = 8.sp) },
-                modifier = Modifier.wrapContentHeight()
+                label = { Text(item.title, fontSize = 12.sp) }
             )
-        }
-    }
-}
-
-@OptIn(MapboxExperimental::class)
-@Composable
-fun Map(supabase: SupabaseClient, records: List<Record>, lineList: List<List<Point>>) {
-
-    MapboxMap(
-        mapInitOptionsFactory = {
-            MapInitOptions(
-                context = it,
-                styleUri = Style.MAPBOX_STREETS,
-                cameraOptions = CameraOptions.Builder()
-                    .center(Point.fromLngLat(24.9384, 60.1699))
-                    .zoom(2.0)
-                    .build()
-            )
-        }) {
-        records.map { // Create marker annotations with the fetched data
-            PointAnnotation(
-                point = Point.fromLngLat(it.longitude.toDouble(), it.latitude.toDouble()),
-                iconImageBitmap = BitmapFactory.decodeResource(
-                    LocalContext.current.resources,
-                    R.drawable.red_marker
-                ),
-                iconSize = 0.3
-            )
-        }
-        lineList.map { // Create polyline annotations with the fetched data
-            PolylineAnnotation(points = it, lineColorString = "#ee4e8b", lineWidth = 10.00)
         }
     }
 }

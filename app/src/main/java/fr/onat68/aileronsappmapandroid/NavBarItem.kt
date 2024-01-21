@@ -1,34 +1,32 @@
 package fr.onat68.aileronsappmapandroid
 
-import androidx.compose.ui.graphics.vector.ImageVector
-
 sealed class NavBarItem(
     var title: String,
     var icon: Int,
     var route: String
 ) {
-    object Favorites:
+    data object Favorites:
             NavBarItem(
                 "Favoris",
-                R.drawable.ic_fav_foreground,
+                R.drawable.ic_star,
                 "favorites"
             )
-    object Map:
+    data object Map:
             NavBarItem(
                 "Carte",
-                R.drawable.ic_map_foreground,
+                R.drawable.ic_map,
                 "map"
             )
-    object Species:
+    data object Species:
             NavBarItem(
                 "Espèces",
-                R.drawable.ic_list_foreground,
+                R.drawable.ic_species,
                 "species"
             )
-    object News:
+    data object News:
             NavBarItem(
                 "Actualités",
-                R.drawable.ic_news_foreground,
+                R.drawable.ic_news,
                 "news"
             )
 }
