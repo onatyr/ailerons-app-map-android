@@ -2,6 +2,10 @@ package fr.onat68.aileronsappmapandroid.map
 
 import android.graphics.BitmapFactory
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import com.mapbox.geojson.Point
 import com.mapbox.maps.CameraOptions
@@ -12,12 +16,29 @@ import com.mapbox.maps.extension.compose.MapboxMap
 import com.mapbox.maps.extension.compose.annotation.generated.PointAnnotation
 import com.mapbox.maps.extension.compose.annotation.generated.PolylineAnnotation
 import fr.onat68.aileronsappmapandroid.R
-import fr.onat68.aileronsappmapandroid.Record
+import fr.onat68.aileronsappmapandroid.RecordPoints
 import io.github.jan.supabase.SupabaseClient
 
 @OptIn(MapboxExperimental::class)
 @Composable
-fun Map(supabase: SupabaseClient, records: List<Record>, lineList: List<List<Point>>) {
+fun Map(
+    recordPoints: List<RecordPoints>,
+    individualIdFilter: Int
+) { // To show all the points, individualIdFilter must be equal to -1
+
+    var points = recordPoints
+    if (individualIdFilter != -1) {
+        points = points.filter { it.individualId == individualIdFilter }
+    }
+
+    val lines = points.groupBy { it.individualId }.values.map { records ->
+        records.map {
+            Point.fromLngLat(
+                it.longitude.toDouble(),
+                it.latitude.toDouble()
+            )
+        }
+    }
 
     MapboxMap(
         mapInitOptionsFactory = {
@@ -30,7 +51,7 @@ fun Map(supabase: SupabaseClient, records: List<Record>, lineList: List<List<Poi
                     .build()
             )
         }) {
-        records.map { // Create marker annotations with the fetched data
+        points.map { // Create marker annotations with the fetched data
             PointAnnotation(
                 point = Point.fromLngLat(it.longitude.toDouble(), it.latitude.toDouble()),
                 iconImageBitmap = BitmapFactory.decodeResource(
@@ -40,7 +61,7 @@ fun Map(supabase: SupabaseClient, records: List<Record>, lineList: List<List<Poi
                 iconSize = 0.3
             )
         }
-        lineList.map { // Create polyline annotations with the fetched data
+        lines.map { // Create polyline annotations with the fetched data
             PolylineAnnotation(points = it, lineColorString = "#ee4e8b", lineWidth = 10.00)
         }
     }

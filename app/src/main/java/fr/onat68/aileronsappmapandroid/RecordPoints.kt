@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Record(
+data class RecordPoints(
     @SerialName("id")
     val id: Int,
 
