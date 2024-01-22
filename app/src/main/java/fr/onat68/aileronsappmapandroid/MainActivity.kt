@@ -104,7 +104,7 @@ class MainActivity : ComponentActivity() {
                             startDestination = "map/${Constants.defaultFilter}",
                             modifier = Modifier.weight(1f)
                         ) {
-                            composable("favorites") { FavoriteScreen(favoritesViewModel) }
+                            composable("favorites") { FavoriteScreen(favoritesViewModel, navController, individualsList) }
                             composable(
                                 "map/{individualIdFilter}",
                                 arguments = listOf(navArgument("individualIdFilter") {
@@ -124,7 +124,7 @@ class MainActivity : ComponentActivity() {
                                 })
                             ) {
                                 val listId = it.arguments!!.getInt("listId")
-                                IndividualScreen(individualsList, mapViewModel, listId)
+                                IndividualScreen(individualsList, mapViewModel, listId, favoritesViewModel)
                             }
                         }
                         NavBar(navController)

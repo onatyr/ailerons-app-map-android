@@ -21,12 +21,18 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.onat68.aileronsappmapandroid.R
+import fr.onat68.aileronsappmapandroid.favorites.FavoritesViewModel
 import fr.onat68.aileronsappmapandroid.map.Map
 import fr.onat68.aileronsappmapandroid.map.MapViewModel
 import fr.onat68.aileronsappmapandroid.species.Individual
 
 @Composable
-fun IndividualScreen(individualsList: List<Individual>, mapViewModel: MapViewModel, listId: Int) {
+fun IndividualScreen(
+    individualsList: List<Individual>,
+    mapViewModel: MapViewModel,
+    listId: Int,
+    favoritesViewModel: FavoritesViewModel
+) {
     val individual = individualsList[listId]
     Column {
         Row(
@@ -34,7 +40,7 @@ fun IndividualScreen(individualsList: List<Individual>, mapViewModel: MapViewMod
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(individual.individualName, fontSize = 40.sp)
-            Button(onClick = { /*TODO*/ }) {
+            Button(onClick = { favoritesViewModel.addFav(individual.individualRecordId) }) {
                 Icon(
                     imageVector = ImageVector.vectorResource(R.drawable.ic_star),
                     contentDescription = "Add to favorites"

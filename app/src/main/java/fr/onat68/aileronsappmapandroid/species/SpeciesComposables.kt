@@ -17,23 +17,28 @@ import androidx.navigation.NavController
 fun IndividualsList(individualsList: List<Individual>, navController: NavController) {
     for (i in individualsList.indices) {
         Column {
-            ListItem(
-                headlineContent = { Text(individualsList[i].individualName) },
-                supportingContent = {
-                    Text(individualsList[i].binomialName)
-                },
-                leadingContent = {
-                    Icon(
-                        Icons.Filled.Favorite,
-                        contentDescription = "Localized description",
-                    )
-                },
-                trailingContent = { Text("meta") },
-                modifier = Modifier.clickable { navController.navigate("individualSheet/${i}") }
-            )
+            IndividualItem(individualsList[i], navController, i)
             Divider()
         }
     }
+}
+
+@Composable
+fun IndividualItem(individual: Individual, navController: NavController, individualListId: Int){
+    ListItem(
+        headlineContent = { Text(individual.individualName) },
+        supportingContent = {
+            Text(individual.binomialName)
+        },
+        leadingContent = {
+            Icon(
+                Icons.Filled.Favorite,
+                contentDescription = "Localized description",
+            )
+        },
+        trailingContent = { Text("meta") },
+        modifier = Modifier.clickable { navController.navigate("individualSheet/${individualListId}") }
+    )
 }
 
 

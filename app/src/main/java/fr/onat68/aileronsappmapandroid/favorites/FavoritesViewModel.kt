@@ -2,10 +2,6 @@ package fr.onat68.aileronsappmapandroid.favorites
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 
 class FavoritesViewModel(private val database: AppDatabase) : ViewModel() {

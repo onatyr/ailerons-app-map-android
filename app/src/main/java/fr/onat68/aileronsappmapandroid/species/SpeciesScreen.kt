@@ -8,7 +8,7 @@ import androidx.navigation.NavController
 @Composable
 fun SpeciesScreen(individualsList: List<Individual>, navController: NavController) {
     Column {
-        Text(text = "Hey")
+        Text(text = "Espèces")
         IndividualsList(individualsList, navController)
     }
 
