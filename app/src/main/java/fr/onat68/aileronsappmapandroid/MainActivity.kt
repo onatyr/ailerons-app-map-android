@@ -1,8 +1,10 @@
 package fr.onat68.aileronsappmapandroid
 
+import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
@@ -32,6 +34,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.room.Room
+import fr.onat68.aileronsappmapandroid.favorites.AppDatabase
+import fr.onat68.aileronsappmapandroid.favorites.Favorite
+import fr.onat68.aileronsappmapandroid.favorites.FavoriteDao
+import fr.onat68.aileronsappmapandroid.favorites.FavoriteScreen
+import fr.onat68.aileronsappmapandroid.favorites.FavoritesViewModel
 import fr.onat68.aileronsappmapandroid.individual.IndividualScreen
 import fr.onat68.aileronsappmapandroid.map.Map
 import fr.onat68.aileronsappmapandroid.map.MapViewModel
@@ -52,6 +60,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+
         val ai: ApplicationInfo = applicationContext.packageManager
             .getApplicationInfo(applicationContext.packageName, PackageManager.GET_META_DATA)
         @Suppress("DEPRECATION") val supabase = createSupabaseClient(
@@ -64,10 +73,12 @@ class MainActivity : ComponentActivity() {
         setContent {
             AileronsAppMapAndroidTheme {
 
+                val database = AppDatabase.getInstance(this)
                 val navController = rememberNavController()
                 val _recordsPoints = MutableStateFlow<List<RecordPoints>>(listOf())
                 val recordPointsTest: Flow<List<RecordPoints>> = _recordsPoints
                 val mapViewModel = MapViewModel(recordPointsTest)
+                val favoritesViewModel = FavoritesViewModel(database)
 
                 var individualsList by remember { mutableStateOf<List<Individual>>(listOf()) }
 
@@ -93,7 +104,7 @@ class MainActivity : ComponentActivity() {
                             startDestination = "map/${Constants.defaultFilter}",
                             modifier = Modifier.weight(1f)
                         ) {
-                            composable("favorites") { Text("Favorites") }
+                            composable("favorites") { FavoriteScreen(favoritesViewModel) }
                             composable(
                                 "map/{individualIdFilter}",
                                 arguments = listOf(navArgument("individualIdFilter") {
@@ -135,7 +146,7 @@ fun NavBar(navController: NavHostController) {
             NavigationBarItem(
                 selected = selectedItem == index,
                 onClick = {
-                    if (index == 1 && selectedItem == index) {
+                    if (index == 1 && selectedItem == index) { // block if trying to go to map and map is already displayed
                         return@NavigationBarItem
                     }
                     selectedItem = index
