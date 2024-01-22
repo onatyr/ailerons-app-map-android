@@ -15,12 +15,12 @@ import androidx.navigation.NavController
 
 @Composable
 fun IndividualsList(individualsList: List<Individual>, navController: NavController) {
-    for (individual in individualsList) {
+    for (i in individualsList.indices) {
         Column {
             ListItem(
-                headlineContent = { Text(individual.individualName) },
+                headlineContent = { Text(individualsList[i].individualName) },
                 supportingContent = {
-                    Text(individual.binomialName)
+                    Text(individualsList[i].binomialName)
                 },
                 leadingContent = {
                     Icon(
@@ -29,9 +29,11 @@ fun IndividualsList(individualsList: List<Individual>, navController: NavControl
                     )
                 },
                 trailingContent = { Text("meta") },
-                modifier = Modifier.clickable { navController.navigate("map/${individual.individualRecordId}") }
+                modifier = Modifier.clickable { navController.navigate("individualSheet/${i}") }
             )
             Divider()
         }
     }
 }
+
+

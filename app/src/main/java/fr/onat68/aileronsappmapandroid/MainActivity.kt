@@ -32,8 +32,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.mapbox.geojson.Point
+import fr.onat68.aileronsappmapandroid.individual.IndividualScreen
 import fr.onat68.aileronsappmapandroid.map.Map
+import fr.onat68.aileronsappmapandroid.map.MapViewModel
 import fr.onat68.aileronsappmapandroid.species.Individual
 import fr.onat68.aileronsappmapandroid.species.SpeciesScreen
 import fr.onat68.aileronsappmapandroid.ui.theme.AileronsAppMapAndroidTheme
@@ -41,6 +42,8 @@ import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.postgrest.from
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
 
 
@@ -62,13 +65,17 @@ class MainActivity : ComponentActivity() {
             AileronsAppMapAndroidTheme {
 
                 val navController = rememberNavController()
-                var recordPoints by remember { mutableStateOf<List<RecordPoints>>(listOf()) }
+                val _recordsPoints = MutableStateFlow<List<RecordPoints>>(listOf())
+                val recordPointsTest: Flow<List<RecordPoints>> = _recordsPoints
+                val mapViewModel = MapViewModel(recordPointsTest)
+
                 var individualsList by remember { mutableStateOf<List<Individual>>(listOf()) }
+
 
                 LaunchedEffect(Unit) { // Fetch the data from Supabase
                     withContext(Dispatchers.IO) {
 
-                        recordPoints = supabase.from("record")
+                        _recordsPoints.value = supabase.from("record")
                             .select().decodeList<RecordPoints>()
 
                         individualsList = supabase.from("individual")
@@ -94,11 +101,20 @@ class MainActivity : ComponentActivity() {
                                 })
                             ) {
                                 val individualIdFilter = it.arguments!!.getInt("individualIdFilter")
-                                Map(recordPoints, individualIdFilter)
+                                Map(mapViewModel, individualIdFilter)
 
                             }
                             composable("species") { SpeciesScreen(individualsList, navController) }
                             composable("news") { Text("News") }
+                            composable(
+                                "individualSheet/{listId}",
+                                arguments = listOf(navArgument("listId") {
+                                    type = NavType.IntType
+                                })
+                            ) {
+                                val listId = it.arguments!!.getInt("listId")
+                                IndividualScreen(individualsList, listId)
+                            }
                         }
                         NavBar(navController)
                     }

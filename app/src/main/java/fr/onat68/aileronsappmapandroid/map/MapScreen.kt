@@ -1,6 +1,8 @@
 package fr.onat68.aileronsappmapandroid.map
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,11 +29,12 @@ import fr.onat68.aileronsappmapandroid.RecordPoints
 
 @Composable
 fun Map(
-    recordPoints: List<RecordPoints>,
+    mapViewModel: MapViewModel,
     individualIdFilter: Int
 ) {
+    val recordsPoints: State<List<RecordPoints>> = mapViewModel.recordPoints.collectAsState(initial = listOf())
 
-    var recordPointsFiltered = recordPoints
+    var recordPointsFiltered = recordsPoints.value
     if (individualIdFilter != Constants.defaultFilter) { // first try with -1 instead of 0 but some bugs can appear
         recordPointsFiltered = recordPointsFiltered.filter { it.individualId == individualIdFilter }
     }
