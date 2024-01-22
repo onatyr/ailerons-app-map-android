@@ -32,6 +32,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.mapbox.geojson.Point
 import fr.onat68.aileronsappmapandroid.map.Map
 import fr.onat68.aileronsappmapandroid.species.Individual
 import fr.onat68.aileronsappmapandroid.species.SpeciesScreen
