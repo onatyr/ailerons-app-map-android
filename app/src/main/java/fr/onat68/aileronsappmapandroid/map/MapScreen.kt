@@ -97,8 +97,9 @@ fun Map(
                 }
             }
             if (points.isNotEmpty()) {
+                val zoom = if(individualIdFilter == 0) 1.5 else 3.0 // Set the zoom closer if one individual is selected
                 mapView.mapboxMap
-                    .flyTo(CameraOptions.Builder().zoom(1.5).center(centroid(points)).build())
+                    .flyTo(CameraOptions.Builder().zoom(zoom).center(centroid(points)).build())
             } else {
                 mapView.mapboxMap
                     .flyTo(CameraOptions.Builder().zoom(1.5).center(defaultCamera).build())
