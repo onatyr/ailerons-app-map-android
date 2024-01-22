@@ -36,8 +36,8 @@ interface FavoriteDao {
     @Insert
     suspend fun insert(favorite: Favorite)
 
-    @Delete
-    suspend fun delete(favorite: Favorite)
+    @Query("DELETE FROM favorite WHERE individualId = :id")
+    suspend fun delete(id: Int)
 }
 
 @Database(entities = [Favorite::class], version = 1)

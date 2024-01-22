@@ -40,7 +40,7 @@ fun IndividualScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(individual.individualName, fontSize = 40.sp)
-            Button(onClick = { favoritesViewModel.addFav(individual.individualRecordId) }) {
+            Button(onClick = { favoritesViewModel.changeFav(individual.individualRecordId) }) {
                 Icon(
                     imageVector = ImageVector.vectorResource(R.drawable.ic_star),
                     contentDescription = "Add to favorites"
