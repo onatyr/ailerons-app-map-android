@@ -135,10 +135,11 @@ fun NavBar(navController: NavHostController) {
             NavigationBarItem(
                 selected = selectedItem == index,
                 onClick = {
-                    if (selectedItem != index) {
-                        selectedItem = index
-                        navController.navigate(item.route)
+                    if (index == 1 && selectedItem == index) {
+                        return@NavigationBarItem
                     }
+                    selectedItem = index
+                    navController.navigate(item.route)
                 },
                 icon = {
                     Icon(
