@@ -2,19 +2,26 @@ package fr.onat68.aileronsappmapandroid.favorites
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 
-class FavoritesViewModel(private val database: AppDatabase): ViewModel() {
+class FavoritesViewModel(private val database: AppDatabase) : ViewModel() {
 
     var favoritesList = database.FavoriteDao().getAll()
 
-    fun addFav(id: Int){
+    fun addFav(individualId: Int) {
         viewModelScope.launch {
-            val newFavorite = Favorite(id)
+            val newFavorite = Favorite(individualId)
             database.FavoriteDao().insert(newFavorite)
-            favoritesList = database.FavoriteDao().getAll()
+        }
+    }
+
+    fun deleteFav(favorite: Favorite) {
+        viewModelScope.launch {
+            database.FavoriteDao().delete(favorite)
         }
     }
 }
