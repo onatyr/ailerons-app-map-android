@@ -1,5 +1,8 @@
 package fr.onat68.aileronsappmapandroid.map
 
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
@@ -9,6 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.viewinterop.NoOpUpdate
 import androidx.core.graphics.drawable.toBitmap
@@ -100,7 +104,7 @@ fun Map(
                 }
             }
             if (points.isNotEmpty()) {
-                val zoom = if(individualIdFilter == 0) 1.5 else 3.0 // Set the zoom closer if one individual is selected
+                val zoom = if(individualIdFilter == 0) 1.5 else 4.0 // Set the zoom closer if one individual is selected
                 mapView.mapboxMap
                     .flyTo(CameraOptions.Builder().zoom(zoom).center(centroid(points)).build())
             } else {
@@ -110,7 +114,7 @@ fun Map(
 
             NoOpUpdate
         },
-        modifier = Modifier
+        modifier = Modifier.fillMaxSize()
     )
 }
 

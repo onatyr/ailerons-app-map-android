@@ -113,7 +113,7 @@ class MainActivity : ComponentActivity() {
                                 })
                             ) {
                                 val listId = it.arguments!!.getInt("listId")
-                                IndividualScreen(individualsList, listId)
+                                IndividualScreen(individualsList, mapViewModel, listId)
                             }
                         }
                         NavBar(navController)
@@ -135,8 +135,10 @@ fun NavBar(navController: NavHostController) {
             NavigationBarItem(
                 selected = selectedItem == index,
                 onClick = {
-                    selectedItem = index
-                    navController.navigate(item.route)
+                    if (selectedItem != index) {
+                        selectedItem = index
+                        navController.navigate(item.route)
+                    }
                 },
                 icon = {
                     Icon(
