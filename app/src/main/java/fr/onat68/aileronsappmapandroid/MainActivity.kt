@@ -82,7 +82,7 @@ class MainActivity : ComponentActivity() {
                     Column {
                         NavHost(
                             navController = navController,
-                            startDestination = "map/${0}", // if changed don't forget to also change the route of map in NavBarItem
+                            startDestination = "map/$defaultFilter",
                             modifier = Modifier.weight(1f)
                         ) {
                             composable("favorites") { Text("Favorites") }
