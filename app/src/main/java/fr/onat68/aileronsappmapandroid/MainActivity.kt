@@ -83,7 +83,7 @@ class MainActivity : ComponentActivity() {
                     Column {
                         NavHost(
                             navController = navController,
-                            startDestination = "map/$defaultFilter",
+                            startDestination = "map/${Constants.defaultFilter}",
                             modifier = Modifier.weight(1f)
                         ) {
                             composable("favorites") { Text("Favorites") }

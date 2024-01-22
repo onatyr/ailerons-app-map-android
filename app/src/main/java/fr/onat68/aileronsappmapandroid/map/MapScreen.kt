@@ -21,9 +21,9 @@ import com.mapbox.maps.plugin.annotation.generated.PolylineAnnotationManager
 import com.mapbox.maps.plugin.annotation.generated.PolylineAnnotationOptions
 import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
 import com.mapbox.maps.plugin.annotation.generated.createPolylineAnnotationManager
+import fr.onat68.aileronsappmapandroid.Constants
 import fr.onat68.aileronsappmapandroid.R
 import fr.onat68.aileronsappmapandroid.RecordPoints
-import fr.onat68.aileronsappmapandroid.defaultFilter
 
 @Composable
 fun Map(
@@ -32,7 +32,7 @@ fun Map(
 ) {
 
     var recordPointsFiltered = recordPoints
-    if (individualIdFilter != defaultFilter) { // first try with -1 instead of 0 but some bugs can appear
+    if (individualIdFilter != Constants.defaultFilter) { // first try with -1 instead of 0 but some bugs can appear
         recordPointsFiltered = recordPointsFiltered.filter { it.individualId == individualIdFilter }
     }
 
@@ -63,7 +63,7 @@ fun Map(
     AndroidView(
         factory = {
             MapView(it).also { mapView ->
-                mapView.mapboxMap.loadStyle(mapStyle)
+                mapView.mapboxMap.loadStyle(MapValues.mapStyle)
                 val annotationApi = mapView.annotations
                 pointAnnotationManager = annotationApi.createPointAnnotationManager()
                 polylineAnnotationManager = annotationApi.createPolylineAnnotationManager()
@@ -78,7 +78,7 @@ fun Map(
                     val pointAnnotationOptions = PointAnnotationOptions()
                         .withPoint(point)
                         .withIconImage(marker)
-                        .withIconSize(pointIconSize)
+                        .withIconSize(MapValues.pointIconSize)
 
                     it.create(pointAnnotationOptions)
                 }
@@ -90,8 +90,8 @@ fun Map(
                 for (line in lines) {
                     val polylineAnnotationOptions = PolylineAnnotationOptions()
                         .withPoints(line)
-                        .withLineColor(polylineLineColor)
-                        .withLineWidth(polylineLineWidth)
+                        .withLineColor(MapValues.polylineLineColor)
+                        .withLineWidth(MapValues.polylineLineWidth)
 
                     it.create(polylineAnnotationOptions)
                 }
@@ -102,7 +102,7 @@ fun Map(
                     .flyTo(CameraOptions.Builder().zoom(zoom).center(centroid(points)).build())
             } else {
                 mapView.mapboxMap
-                    .flyTo(CameraOptions.Builder().zoom(1.5).center(defaultCamera).build())
+                    .flyTo(CameraOptions.Builder().zoom(1.5).center(MapValues.defaultCamera).build())
             }
 
             NoOpUpdate

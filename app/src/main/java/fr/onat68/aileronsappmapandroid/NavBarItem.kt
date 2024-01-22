@@ -15,7 +15,7 @@ sealed class NavBarItem(
             NavBarItem(
                 "Carte",
                 R.drawable.ic_map,
-                "map/$defaultFilter"
+                "map/${Constants.defaultFilter}"
             )
     data object Species:
             NavBarItem(
