@@ -17,14 +17,14 @@ import androidx.navigation.NavController
 fun IndividualsList(individualsList: List<Individual>, navController: NavController) {
     for (i in individualsList.indices) {
         Column {
-            IndividualItem(individualsList[i], navController, i)
+            IndividualItem(individualsList[i], navController)
             Divider()
         }
     }
 }
 
 @Composable
-fun IndividualItem(individual: Individual, navController: NavController, individualListId: Int){
+fun IndividualItem(individual: Individual, navController: NavController){
     ListItem(
         headlineContent = { Text(individual.individualName) },
         supportingContent = {
@@ -37,7 +37,7 @@ fun IndividualItem(individual: Individual, navController: NavController, individ
             )
         },
         trailingContent = { Text("meta") },
-        modifier = Modifier.clickable { navController.navigate("individualSheet/${individualListId}") }
+        modifier = Modifier.clickable { navController.navigate("individualSheet/${individual.individualRecordId}") }
     )
 }
 

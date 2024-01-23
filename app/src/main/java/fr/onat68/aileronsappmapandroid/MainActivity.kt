@@ -1,10 +1,8 @@
 package fr.onat68.aileronsappmapandroid
 
-import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
@@ -34,10 +32,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import androidx.room.Room
 import fr.onat68.aileronsappmapandroid.favorites.AppDatabase
-import fr.onat68.aileronsappmapandroid.favorites.Favorite
-import fr.onat68.aileronsappmapandroid.favorites.FavoriteDao
 import fr.onat68.aileronsappmapandroid.favorites.FavoriteScreen
 import fr.onat68.aileronsappmapandroid.favorites.FavoritesViewModel
 import fr.onat68.aileronsappmapandroid.individual.IndividualScreen
@@ -78,7 +73,7 @@ class MainActivity : ComponentActivity() {
                 val _recordsPoints = MutableStateFlow<List<RecordPoints>>(listOf())
                 val recordPointsTest: Flow<List<RecordPoints>> = _recordsPoints
                 val mapViewModel = MapViewModel(recordPointsTest)
-                val favoritesViewModel = FavoritesViewModel(database)
+                lateinit var favoritesViewModel: FavoritesViewModel
 
                 var individualsList by remember { mutableStateOf<List<Individual>>(listOf()) }
 
@@ -91,6 +86,7 @@ class MainActivity : ComponentActivity() {
 
                         individualsList = supabase.from("individual")
                             .select().decodeList<Individual>()
+                        favoritesViewModel = FavoritesViewModel(database, individualsList)
                     }
                 }
 
@@ -104,7 +100,7 @@ class MainActivity : ComponentActivity() {
                             startDestination = "map/${Constants.defaultFilter}",
                             modifier = Modifier.weight(1f)
                         ) {
-                            composable("favorites") { FavoriteScreen(favoritesViewModel, navController, individualsList) }
+                            composable("favorites") { FavoriteScreen(favoritesViewModel, navController) }
                             composable(
                                 "map/{individualIdFilter}",
                                 arguments = listOf(navArgument("individualIdFilter") {
@@ -123,8 +119,9 @@ class MainActivity : ComponentActivity() {
                                     type = NavType.IntType
                                 })
                             ) {
-                                val listId = it.arguments!!.getInt("listId")
-                                IndividualScreen(individualsList, mapViewModel, listId, favoritesViewModel)
+                                val individualId = it.arguments!!.getInt("listId")
+                                val individual = individualsList.first { it.individualRecordId == individualId }
+                                IndividualScreen(individual, mapViewModel, favoritesViewModel)
                             }
                         }
                         NavBar(navController)
