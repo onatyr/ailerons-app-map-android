@@ -12,5 +12,5 @@ object MapValues {
     const val pointIconSize: Double = 0.3
 
     const val polylineLineColor: String = "#ee4e8b"
-    const val polylineLineWidth: Double = 10.00
+    const val polylineLineWidth: Double = 5.00
 }
