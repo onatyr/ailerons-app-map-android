@@ -12,9 +12,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import fr.onat68.aileronsappmapandroid.R
 import fr.onat68.aileronsappmapandroid.favorites.FavoritesViewModel
 import fr.onat68.aileronsappmapandroid.map.Map
 import fr.onat68.aileronsappmapandroid.map.MapViewModel
@@ -43,7 +45,11 @@ fun IndividualScreen(
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
         Text(
-            "Age: ${individual.age} Poids: ${individual.weight} Sexe: ${individual.sex}",
+            "${LocalContext.current.resources.getString(R.string.age)}: ${individual.age} ${
+                LocalContext.current.resources.getString(
+                    R.string.weight
+                )
+            }: ${individual.weight} ${LocalContext.current.resources.getString(R.string.sex)}: ${individual.sex}",
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
         Spacer(modifier = Modifier.size(60.dp))
