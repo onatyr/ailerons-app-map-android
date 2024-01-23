@@ -1,20 +1,16 @@
 package fr.onat68.aileronsappmapandroid.favorites
 
 import android.content.Context
-import androidx.compose.runtime.MutableState
 import androidx.room.ColumnInfo
 import androidx.room.Dao
 import androidx.room.Database
-import androidx.room.Delete
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.Insert
 import androidx.room.PrimaryKey
 import androidx.room.Query
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.Index
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 
 @Entity(
     tableName = "favorite",
@@ -31,7 +27,7 @@ data class Favorite(
 @Dao
 interface FavoriteDao {
     @Query("SELECT * FROM favorite")
-    fun getAll(): Flow<List<Favorite>>
+    suspend fun getAll(): List<Favorite>
 
     @Insert
     suspend fun insert(favorite: Favorite)
