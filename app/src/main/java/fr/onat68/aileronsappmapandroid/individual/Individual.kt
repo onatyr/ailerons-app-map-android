@@ -1,6 +1,5 @@
-package fr.onat68.aileronsappmapandroid.species
+package fr.onat68.aileronsappmapandroid.individual
 
-import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -46,9 +45,5 @@ data class Individual(
     val picture: String,
 
     @SerialName("individual_record_id")
-    val individualRecordId: Int,
-
-    @Contextual
-    val liked: Boolean = false
-
+    val individualRecordId: Int
 )

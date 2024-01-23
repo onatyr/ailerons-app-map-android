@@ -2,7 +2,7 @@ package fr.onat68.aileronsappmapandroid.favorites
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import fr.onat68.aileronsappmapandroid.species.Individual
+import fr.onat68.aileronsappmapandroid.individual.Individual
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch

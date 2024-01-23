@@ -95,8 +95,8 @@ fun Map(
                 for (point in points) {
                     val circleAnnotationOptions = CircleAnnotationOptions()
                         .withPoint(point)
-                        .withCircleRadius(5.0)
-                        .withCircleColor(MapValues.polylineLineColor)
+                        .withCircleRadius(MapValues.circleRadius)
+                        .withCircleColor(MapValues.circleColor)
 
                     it.create(circleAnnotationOptions)
                 }
@@ -108,7 +108,8 @@ fun Map(
                 for (point in recordPointsFiltered.groupBy { it.individualId }.map {
                     Point.fromLngLat( // To change to the last coordinate in time when timestamp's serializer is ok
                         it.value.first().longitude.toDouble(),
-                        it.value.first().latitude.toDouble())
+                        it.value.first().latitude.toDouble()
+                    )
                 }) {
                     val pointAnnotationOptions = PointAnnotationOptions()
                         .withPoint(point)

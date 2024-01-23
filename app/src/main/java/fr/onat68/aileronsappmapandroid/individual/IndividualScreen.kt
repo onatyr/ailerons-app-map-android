@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.sp
 import fr.onat68.aileronsappmapandroid.favorites.FavoritesViewModel
 import fr.onat68.aileronsappmapandroid.map.Map
 import fr.onat68.aileronsappmapandroid.map.MapViewModel
-import fr.onat68.aileronsappmapandroid.species.Individual
 
 @Composable
 fun IndividualScreen(

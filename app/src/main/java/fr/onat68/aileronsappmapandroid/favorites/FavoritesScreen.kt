@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.navigation.NavController
-import fr.onat68.aileronsappmapandroid.species.Individual
+import fr.onat68.aileronsappmapandroid.individual.Individual
 import fr.onat68.aileronsappmapandroid.species.IndividualItem
 
 @Composable

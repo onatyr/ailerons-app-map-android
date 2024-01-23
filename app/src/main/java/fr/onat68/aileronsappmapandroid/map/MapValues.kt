@@ -9,6 +9,9 @@ object MapValues {
 
     const val mapStyle: String = Style.MAPBOX_STREETS
 
+    const val circleColor: String = "#ee4e8b"
+    const val circleRadius: Double = 5.0
+
     const val pointIconSize: Double = 0.3
 
     const val polylineLineColor: String = "#ee4e8b"
