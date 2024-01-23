@@ -1,5 +1,6 @@
 package fr.onat68.aileronsappmapandroid.map
 
+import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
@@ -27,6 +28,7 @@ import com.mapbox.maps.plugin.annotation.generated.PolylineAnnotationOptions
 import com.mapbox.maps.plugin.annotation.generated.createCircleAnnotationManager
 import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
 import com.mapbox.maps.plugin.annotation.generated.createPolylineAnnotationManager
+import com.mapbox.maps.plugin.gestures.addOnMapClickListener
 import fr.onat68.aileronsappmapandroid.Constants
 import fr.onat68.aileronsappmapandroid.R
 import fr.onat68.aileronsappmapandroid.RecordPoints
@@ -55,6 +57,7 @@ fun Map(
 
     val points =
         recordPointsFiltered.map {
+            Log.d("hey", "${it.recordTimestamp}")
             Point.fromLngLat(
                 it.longitude.toDouble(),
                 it.latitude.toDouble()
@@ -81,10 +84,21 @@ fun Map(
         factory = {
             MapView(it).also { mapView ->
                 mapView.mapboxMap.loadStyle(MapValues.mapStyle)
+                mapView.mapboxMap.addOnMapClickListener { it.longitude() < 100 }
                 val annotationApi = mapView.annotations
                 pointAnnotationManager = annotationApi.createPointAnnotationManager()
                 polylineAnnotationManager = annotationApi.createPolylineAnnotationManager()
                 circleAnnotationManager = annotationApi.createCircleAnnotationManager()
+
+
+//                mapView.mapboxMap.addOnMapClickListener(
+//                    OnMapClickListener { point ->
+//                        Log.d("hey", "${point.latitude()}")
+//                        false
+//                    }
+//                )
+
+
             }
         },
         update = { mapView ->
@@ -105,12 +119,13 @@ fun Map(
             pointAnnotationManager?.let {
                 it.deleteAll()
 
-                for (point in recordPointsFiltered.groupBy { it.individualId }.map {
-                    Point.fromLngLat( // To change to the last coordinate in time when timestamp's serializer is ok
-                        it.value.first().longitude.toDouble(),
-                        it.value.first().latitude.toDouble()
-                    )
-                }) {
+                for (point in recordPointsFiltered.groupBy { record -> record.individualId }
+                    .map { mapPoint ->
+                        Point.fromLngLat(  // Take the last point in the date ordered list to pin a point
+                            mapPoint.value.last().longitude.toDouble(),
+                            mapPoint.value.last().latitude.toDouble()
+                        )
+                    }) {
                     val pointAnnotationOptions = PointAnnotationOptions()
                         .withPoint(point)
                         .withIconImage(marker)
@@ -149,7 +164,6 @@ fun Map(
         modifier = Modifier.fillMaxSize()
     )
 }
-
 fun centroid(points: List<Point>): Point {
     var longitude = 0.0
     var latitude = 0.0

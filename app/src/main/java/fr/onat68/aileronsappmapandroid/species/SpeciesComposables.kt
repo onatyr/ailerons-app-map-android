@@ -13,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import fr.onat68.aileronsappmapandroid.individual.Individual
 
-
 @Composable
 fun IndividualsList(individualsList: List<Individual>, navController: NavController) {
     for (i in individualsList.indices) {
@@ -23,7 +22,6 @@ fun IndividualsList(individualsList: List<Individual>, navController: NavControl
         }
     }
 }
-
 @Composable
 fun IndividualItem(individual: Individual, navController: NavController){
     ListItem(

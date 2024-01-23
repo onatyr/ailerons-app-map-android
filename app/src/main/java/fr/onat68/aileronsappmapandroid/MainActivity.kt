@@ -35,10 +35,10 @@ import androidx.navigation.navArgument
 import fr.onat68.aileronsappmapandroid.favorites.AppDatabase
 import fr.onat68.aileronsappmapandroid.favorites.FavoriteScreen
 import fr.onat68.aileronsappmapandroid.favorites.FavoritesViewModel
+import fr.onat68.aileronsappmapandroid.individual.Individual
 import fr.onat68.aileronsappmapandroid.individual.IndividualScreen
 import fr.onat68.aileronsappmapandroid.map.Map
 import fr.onat68.aileronsappmapandroid.map.MapViewModel
-import fr.onat68.aileronsappmapandroid.individual.Individual
 import fr.onat68.aileronsappmapandroid.species.SpeciesScreen
 import fr.onat68.aileronsappmapandroid.ui.theme.AileronsAppMapAndroidTheme
 import io.github.jan.supabase.createSupabaseClient
@@ -82,7 +82,7 @@ class MainActivity : ComponentActivity() {
                     withContext(Dispatchers.IO) {
 
                         _recordsPoints.value = supabase.from("record")
-                            .select().decodeList<RecordPoints>()
+                            .select().decodeList<RecordPoints>().sortedBy { it.recordTimestamp }
 
                         individualsList = supabase.from("individual")
                             .select().decodeList<Individual>()

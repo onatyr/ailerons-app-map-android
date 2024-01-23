@@ -1,10 +1,14 @@
 package fr.onat68.aileronsappmapandroid
 
+import android.os.Build
+import androidx.annotation.RequiresApi
+import kotlinx.datetime.LocalDateTime
+import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class RecordPoints(
+data class RecordPoints @RequiresApi(Build.VERSION_CODES.O) constructor(
     @SerialName("id")
     val id: Int,
 
@@ -24,5 +28,8 @@ data class RecordPoints(
     val csvId: Int,
 
     @SerialName("record_timestamp")
-    val recordTimestamp: String
-)
+    val recordTimestampString: String,
+
+    @Contextual
+    val recordTimestamp: LocalDateTime = LocalDateTime.parse(recordTimestampString)
+    )

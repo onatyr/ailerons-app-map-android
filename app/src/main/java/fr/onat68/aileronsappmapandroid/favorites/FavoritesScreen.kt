@@ -14,7 +14,6 @@ fun FavoriteScreen(
     favoritesViewModel: FavoritesViewModel,
     navController: NavController
 ) {
-
     val favoritesList: State<List<Individual>> =
         favoritesViewModel.favoritesList.collectAsState(initial = listOf())
 
