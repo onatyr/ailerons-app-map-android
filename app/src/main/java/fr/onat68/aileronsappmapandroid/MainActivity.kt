@@ -71,9 +71,11 @@ class MainActivity : ComponentActivity() {
 
                 val database = AppDatabase.getInstance(this)
                 val navController = rememberNavController()
+
                 val _recordsPoints = MutableStateFlow<List<RecordPoints>>(listOf())
-                val recordPointsTest: Flow<List<RecordPoints>> = _recordsPoints
-                val mapViewModel = MapViewModel(recordPointsTest)
+                val recordPoints: Flow<List<RecordPoints>> = _recordsPoints
+
+                val mapViewModel = MapViewModel(recordPoints)
                 lateinit var favoritesViewModel: FavoritesViewModel
 
                 var individualsList by remember { mutableStateOf<List<Individual>>(listOf()) }

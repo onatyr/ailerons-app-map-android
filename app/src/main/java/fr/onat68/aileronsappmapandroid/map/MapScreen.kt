@@ -21,6 +21,8 @@ import com.mapbox.maps.plugin.animation.flyTo
 import com.mapbox.maps.plugin.annotation.annotations
 import com.mapbox.maps.plugin.annotation.generated.CircleAnnotationManager
 import com.mapbox.maps.plugin.annotation.generated.CircleAnnotationOptions
+import com.mapbox.maps.plugin.annotation.generated.OnPointAnnotationClickListener
+import com.mapbox.maps.plugin.annotation.generated.PointAnnotation
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationManager
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions
 import com.mapbox.maps.plugin.annotation.generated.PolylineAnnotationManager
@@ -84,20 +86,15 @@ fun Map(
         factory = {
             MapView(it).also { mapView ->
                 mapView.mapboxMap.loadStyle(MapValues.mapStyle)
-                mapView.mapboxMap.addOnMapClickListener { it.longitude() < 100 }
+                mapView.mapboxMap.addOnMapClickListener {
+
+                    Log.d("hola", "${it.longitude()}")
+                    it.longitude() < 100
+                }
                 val annotationApi = mapView.annotations
                 pointAnnotationManager = annotationApi.createPointAnnotationManager()
                 polylineAnnotationManager = annotationApi.createPolylineAnnotationManager()
                 circleAnnotationManager = annotationApi.createCircleAnnotationManager()
-
-
-//                mapView.mapboxMap.addOnMapClickListener(
-//                    OnMapClickListener { point ->
-//                        Log.d("hey", "${point.latitude()}")
-//                        false
-//                    }
-//                )
-
 
             }
         },
@@ -133,7 +130,26 @@ fun Map(
 
                     it.create(pointAnnotationOptions)
                 }
+//                pointAnnotationManager?.apply {
+//
+//                    addClickListener(
+//                        OnPointAnnotationClickListener {
+//                            Log.d("heeey", "Ce point a été clické : ${it.point.longitude()}")
+////                    Toast.makeText(context, "id: ${it.id}", Toast.LENGTH_LONG).show()
+//                            false
+//                        }
+//                    )
+//                }
             }
+            pointAnnotationManager?.addClickListener(object : OnPointAnnotationClickListener {
+                override fun onAnnotationClick(annotation: PointAnnotation): Boolean {
+                    Log.d("heeey", "Ce point a été clické : ${annotation.point.longitude()}")
+//                    Toast.makeText(this@MainActivity, "Marker clicked", Toast.LENGTH_SHORT).show()
+                    return true
+                }
+            })
+
+
 
             polylineAnnotationManager?.let {
                 it.deleteAll()
@@ -164,6 +180,7 @@ fun Map(
         modifier = Modifier.fillMaxSize()
     )
 }
+
 fun centroid(points: List<Point>): Point {
     var longitude = 0.0
     var latitude = 0.0
