@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import androidx.navigation.NavController
@@ -29,23 +30,23 @@ fun IndividualsList(individualsList: List<Individual>, navController: NavControl
 
 @Composable
 fun IndividualItem(individual: Individual, navController: NavController) {
-    val sharkImageBitmap = LocalContext.current.getDrawable(R.drawable.ic_shark)!!.toBitmap().asImageBitmap()
-    val rayImageBitmap = LocalContext.current.getDrawable(R.drawable.ic_ray_manta)!!.toBitmap().asImageBitmap()
+    val sharkImageBitmap =
+        LocalContext.current.getDrawable(R.drawable.ic_shark)!!.toBitmap().asImageBitmap()
+    val rayImageBitmap =
+        LocalContext.current.getDrawable(R.drawable.ic_ray_manta)!!.toBitmap().asImageBitmap()
     val iconList = listOf(sharkImageBitmap, rayImageBitmap)
 
     ListItem(
-        headlineContent = { Text(individual.individualName) },
+        headlineContent = { Text(individual.individualName, fontWeight = FontWeight.Bold) },
         supportingContent = {
             Text(individual.binomialName)
         },
         leadingContent = {
-                         Icon(
-                             bitmap = iconList[individual.icon-1], contentDescription = "Shark Icon", modifier = Modifier.size(30.dp)
-                         )
-//            Icon(
-//                Icons.Filled.Favorite,
-//                contentDescription = "Localized description",
-//            )
+            Icon(
+                bitmap = iconList[individual.icon - 1],
+                contentDescription = "Shark Icon",
+                modifier = Modifier.size(30.dp)
+            )
         },
         trailingContent = { Text("meta") },
         modifier = Modifier.clickable { navController.navigate("individualSheet/${individual.individualRecordId}") }

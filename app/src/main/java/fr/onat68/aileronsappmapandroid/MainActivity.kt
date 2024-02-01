@@ -42,6 +42,7 @@ import fr.onat68.aileronsappmapandroid.map.MapViewModel
 import fr.onat68.aileronsappmapandroid.news.NewsScreen
 import fr.onat68.aileronsappmapandroid.species.SpeciesScreen
 import fr.onat68.aileronsappmapandroid.ui.theme.AileronsAppMapAndroidTheme
+import fr.onat68.aileronsappmapandroid.ui.theme.Typography
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.postgrest.from
@@ -65,69 +66,84 @@ class MainActivity : ComponentActivity() {
         ) {
             install(Postgrest)
         }
-
         setContent {
-            AileronsAppMapAndroidTheme {
-
-                val database = AppDatabase.getInstance(this)
-                val navController = rememberNavController()
-
-                val _recordsPoints = MutableStateFlow<List<RecordPoints>>(listOf())
-                val recordPoints: Flow<List<RecordPoints>> = _recordsPoints
-
-                val mapViewModel = MapViewModel(recordPoints)
-                lateinit var favoritesViewModel: FavoritesViewModel
-
-                var individualsList by remember { mutableStateOf<List<Individual>>(listOf()) }
+            MaterialTheme (typography = Typography){
 
 
-                LaunchedEffect(Unit) { // Fetch the data from Supabase
-                    withContext(Dispatchers.IO) {
+                AileronsAppMapAndroidTheme {
 
-                        _recordsPoints.value = supabase.from("record")
-                            .select().decodeList<RecordPoints>().sortedBy { it.recordTimestamp }
+                    val database = AppDatabase.getInstance(this)
+                    val navController = rememberNavController()
 
-                        individualsList = supabase.from("individual")
-                            .select().decodeList<Individual>()
-                        favoritesViewModel = FavoritesViewModel(database, individualsList)
-                    }
-                }
+                    val _recordsPoints = MutableStateFlow<List<RecordPoints>>(listOf())
+                    val recordPoints: Flow<List<RecordPoints>> = _recordsPoints
 
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Column {
-                        NavHost(
-                            navController = navController,
-                            startDestination = "map/${Constants.defaultFilter}",
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            composable("favorites") { FavoriteScreen(favoritesViewModel, navController) }
-                            composable(
-                                "map/{individualIdFilter}",
-                                arguments = listOf(navArgument("individualIdFilter") {
-                                    type = NavType.IntType
-                                })
-                            ) {
-                                val individualIdFilter = it.arguments!!.getInt("individualIdFilter")
-                                Map(mapViewModel, individualIdFilter)
+                    val mapViewModel = MapViewModel(recordPoints)
+                    lateinit var favoritesViewModel: FavoritesViewModel
 
-                            }
-                            composable("species") { SpeciesScreen(individualsList, navController) }
-                            composable("news") { NewsScreen() }
-                            composable(
-                                "individualSheet/{listId}",
-                                arguments = listOf(navArgument("listId") {
-                                    type = NavType.IntType
-                                })
-                            ) {
-                                val individualId = it.arguments!!.getInt("listId")
-                                val individual = individualsList.first { it.individualRecordId == individualId }
-                                IndividualScreen(individual, mapViewModel, favoritesViewModel)
-                            }
+                    var individualsList by remember { mutableStateOf<List<Individual>>(listOf()) }
+
+
+                    LaunchedEffect(Unit) { // Fetch the data from Supabase
+                        withContext(Dispatchers.IO) {
+
+                            _recordsPoints.value = supabase.from("record")
+                                .select().decodeList<RecordPoints>().sortedBy { it.recordTimestamp }
+
+                            individualsList = supabase.from("individual")
+                                .select().decodeList<Individual>()
+                            favoritesViewModel = FavoritesViewModel(database, individualsList)
                         }
-                        NavBar(navController)
+                    }
+
+                    Surface(
+                        modifier = Modifier.fillMaxSize(),
+                        color = MaterialTheme.colorScheme.background
+                    ) {
+                        Column {
+                            NavHost(
+                                navController = navController,
+                                startDestination = "map/${Constants.defaultFilter}",
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                composable("favorites") {
+                                    FavoriteScreen(
+                                        favoritesViewModel,
+                                        navController
+                                    )
+                                }
+                                composable(
+                                    "map/{individualIdFilter}",
+                                    arguments = listOf(navArgument("individualIdFilter") {
+                                        type = NavType.IntType
+                                    })
+                                ) {
+                                    val individualIdFilter =
+                                        it.arguments!!.getInt("individualIdFilter")
+                                    Map(mapViewModel, individualIdFilter)
+
+                                }
+                                composable("species") {
+                                    SpeciesScreen(
+                                        individualsList,
+                                        navController
+                                    )
+                                }
+                                composable("news") { NewsScreen() }
+                                composable(
+                                    "individualSheet/{listId}",
+                                    arguments = listOf(navArgument("listId") {
+                                        type = NavType.IntType
+                                    })
+                                ) {
+                                    val individualId = it.arguments!!.getInt("listId")
+                                    val individual =
+                                        individualsList.first { it.individualRecordId == individualId }
+                                    IndividualScreen(individual, mapViewModel, favoritesViewModel)
+                                }
+                            }
+                            NavBar(navController)
+                        }
                     }
                 }
             }

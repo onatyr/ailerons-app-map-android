@@ -11,21 +11,33 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.onat68.aileronsappmapandroid.R
+import fr.onat68.aileronsappmapandroid.ui.theme.atkinsonHyperlegible
 
 @Composable
-fun Header(individual: Individual, liked: Boolean, changeFav: (Int) -> Unit){
+fun Header(individual: Individual, liked: Boolean, changeFav: (Int) -> Unit) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(individual.individualName, fontSize = 40.sp, modifier = Modifier.weight(1f).padding(15.dp))
+        Text(
+            individual.individualName,
+            fontFamily = atkinsonHyperlegible,
+            fontWeight = FontWeight.Bold,
+            fontSize = 40.sp,
+            color = Color.White,
+            modifier = Modifier
+                .weight(1f)
+                .padding(15.dp)
+        )
         FavToggle(liked, individual.individualRecordId, changeFav)
         Spacer(modifier = Modifier.size(15.dp))
     }
