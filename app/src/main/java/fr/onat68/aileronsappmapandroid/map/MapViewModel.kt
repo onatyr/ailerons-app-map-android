@@ -1,7 +1,8 @@
 package fr.onat68.aileronsappmapandroid.map
 
 import android.graphics.Bitmap
-import android.util.Log
+import androidx.navigation.NavController
+import com.google.gson.GsonBuilder
 import com.mapbox.geojson.Point
 import com.mapbox.maps.plugin.annotation.generated.CircleAnnotationManager
 import com.mapbox.maps.plugin.annotation.generated.CircleAnnotationOptions
@@ -15,6 +16,7 @@ import kotlinx.coroutines.flow.Flow
 
 class MapViewModel(
     val recordPoints: Flow<List<RecordPoint>>,
+    val navController: NavController
 ) {
     fun generateCircle(circleAnnotationManager: CircleAnnotationManager?, points: List<Point>) {
         circleAnnotationManager?.let {
@@ -31,22 +33,28 @@ class MapViewModel(
         }
     }
 
-    fun generatePoint(pointAnnotationManager: PointAnnotationManager?, points: List<RecordPoint>, marker: Bitmap) {
+    fun generatePoint(
+        pointAnnotationManager: PointAnnotationManager?,
+        recordPoints: List<RecordPoint>,
+        marker: Bitmap
+    ) {
 
         pointAnnotationManager?.let {
             it.deleteAll()
 
-            for (point in points.groupBy { record -> record.individualId }
-                .map { mapPoint ->
-                    Point.fromLngLat(  // Take the last point in the date ordered list to pin a point
-                        mapPoint.value.last().longitude.toDouble(),
-                        mapPoint.value.last().latitude.toDouble()
-                    )
+            for (recordPoint in recordPoints.groupBy { record -> record.individualId }
+                .map { mapPoint -> // Take the last point in the date ordered list to pin a point
+                    mapPoint.value.last()
                 }) {
+                val point = Point.fromLngLat(
+                    recordPoint.longitude.toDouble(),
+                    recordPoint.latitude.toDouble()
+                )
                 val pointAnnotationOptions = PointAnnotationOptions()
                     .withPoint(point)
                     .withIconImage(marker)
                     .withIconSize(MapValues.pointIconSize)
+                    .withData(GsonBuilder().create().toJsonTree(recordPoint.individualId))
 
                 it.create(pointAnnotationOptions)
             }
@@ -55,15 +63,18 @@ class MapViewModel(
         pointAnnotationManager?.apply {
             addClickListener(
                 OnPointAnnotationClickListener {
-                    Log.d("heeey", "Ce point a été clické : ${it.point.longitude()}")
-
+                    val individualId: String = it.getData().toString()
+                    navController.navigate("individualSheet/${individualId}")
                     false
                 }
             )
         }
     }
 
-    fun generatePolyline(polylineAnnotationManager: PolylineAnnotationManager?, lines: List<List<Point>>) {
+    fun generatePolyline(
+        polylineAnnotationManager: PolylineAnnotationManager?,
+        lines: List<List<Point>>
+    ) {
         polylineAnnotationManager?.let {
             it.deleteAll()
 
@@ -77,4 +88,6 @@ class MapViewModel(
             }
         }
     }
+
+
 }
