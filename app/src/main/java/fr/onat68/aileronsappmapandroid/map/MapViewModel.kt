@@ -11,14 +11,79 @@ import com.mapbox.maps.plugin.annotation.generated.PointAnnotationManager
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions
 import com.mapbox.maps.plugin.annotation.generated.PolylineAnnotationManager
 import com.mapbox.maps.plugin.annotation.generated.PolylineAnnotationOptions
+import fr.onat68.aileronsappmapandroid.Constants
 import fr.onat68.aileronsappmapandroid.RecordPoint
 import kotlinx.coroutines.flow.Flow
 
 class MapViewModel(
     val recordPoints: Flow<List<RecordPoint>>,
-    val navController: NavController
+    private val navController: NavController
 ) {
-    fun generateCircle(circleAnnotationManager: CircleAnnotationManager?, points: List<Point>) {
+
+    private lateinit var recordPointsValue: List<RecordPoint>
+    private lateinit var points: List<Point>
+    private lateinit var lines: List<List<Point>>
+
+    private lateinit var marker: Bitmap
+
+    fun setMarker(mapMarker: Bitmap) {
+        marker = mapMarker
+    }
+
+    fun setRecordsData(mapRecordPoints: List<RecordPoint>, individualIdFilter: Int) {
+        recordPointsValue = mapRecordPoints
+
+        if (individualIdFilter != Constants.defaultFilter) { // first try with -1 instead of 0 but some bugs can appear
+            recordPointsValue = mapRecordPoints.filter { it.individualId == individualIdFilter }
+        }
+
+        lines = recordPointsValue.groupBy { it.individualId }.values.map { records ->
+            records.map {
+                Point.fromLngLat(
+                    it.longitude.toDouble(),
+                    it.latitude.toDouble()
+                )
+            }
+        }
+
+        points =
+            recordPointsValue.map {
+                Point.fromLngLat(
+                    it.longitude.toDouble(),
+                    it.latitude.toDouble()
+                )
+            }
+    }
+
+    fun setDataAnnotations(
+        circleAnnotationManager: CircleAnnotationManager?,
+        pointAnnotationManager: PointAnnotationManager?,
+        polylineAnnotationManager: PolylineAnnotationManager?
+    ) {
+        generateCircle(circleAnnotationManager)
+        generatePoint(pointAnnotationManager)
+        generatePolyline(polylineAnnotationManager)
+    }
+
+    fun getCameraCenter(): Point {
+        return if (points.isNotEmpty()) centroid() else MapValues.defaultCamera
+    }
+
+    private fun centroid(): Point {
+        var longitude = 0.0
+        var latitude = 0.0
+
+        for (point in points) {
+            longitude += point.longitude()
+            latitude += point.latitude()
+        }
+        longitude /= points.size.toDouble()
+        latitude /= points.size.toDouble()
+
+        return Point.fromLngLat(longitude, latitude)
+    }
+
+    private fun generateCircle(circleAnnotationManager: CircleAnnotationManager?) {
         circleAnnotationManager?.let {
             it.deleteAll()
 
@@ -33,16 +98,12 @@ class MapViewModel(
         }
     }
 
-    fun generatePoint(
-        pointAnnotationManager: PointAnnotationManager?,
-        recordPoints: List<RecordPoint>,
-        marker: Bitmap
-    ) {
+    private fun generatePoint(pointAnnotationManager: PointAnnotationManager?) {
 
         pointAnnotationManager?.let {
             it.deleteAll()
 
-            for (recordPoint in recordPoints.groupBy { record -> record.individualId }
+            for (recordPoint in recordPointsValue.groupBy { record -> record.individualId }
                 .map { mapPoint -> // Take the last point in the date ordered list to pin a point
                     mapPoint.value.last()
                 }) {
@@ -71,10 +132,7 @@ class MapViewModel(
         }
     }
 
-    fun generatePolyline(
-        polylineAnnotationManager: PolylineAnnotationManager?,
-        lines: List<List<Point>>
-    ) {
+    private fun generatePolyline(polylineAnnotationManager: PolylineAnnotationManager?) {
         polylineAnnotationManager?.let {
             it.deleteAll()
 
@@ -88,6 +146,4 @@ class MapViewModel(
             }
         }
     }
-
-
 }
