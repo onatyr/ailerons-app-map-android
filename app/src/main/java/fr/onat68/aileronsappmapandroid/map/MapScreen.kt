@@ -5,7 +5,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -30,15 +29,11 @@ import fr.onat68.aileronsappmapandroid.RecordPoint
 @Composable
 fun Map(
     mapViewModel: MapViewModel,
-    individualId: Int
+    individualIdFilter: Int
 ) {
 
     val recordPoints: State<List<RecordPoint>> =
         mapViewModel.recordPoints.collectAsState(initial = listOf())
-
-    val individualIdFilter by remember {
-        mutableIntStateOf(individualId)
-    }
 
     mapViewModel.setMarker(LocalContext.current.getDrawable(R.drawable.red_marker)!!.toBitmap())
     mapViewModel.setRecordsData(recordPoints.value, individualIdFilter)

@@ -77,6 +77,7 @@ class MapViewModel(
             longitude += point.longitude()
             latitude += point.latitude()
         }
+
         longitude /= points.size.toDouble()
         latitude /= points.size.toDouble()
 
