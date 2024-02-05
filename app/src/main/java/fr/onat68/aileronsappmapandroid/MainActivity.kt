@@ -61,8 +61,8 @@ class MainActivity : ComponentActivity() {
                 val database = AppDatabase.getInstance(this)
                 val navController = rememberNavController()
 
-                val _recordsPoints = MutableStateFlow<List<RecordPoints>>(listOf())
-                val recordPoints: Flow<List<RecordPoints>> = _recordsPoints
+                val _recordsPoints = MutableStateFlow<List<RecordPoint>>(listOf())
+                val recordPoints: Flow<List<RecordPoint>> = _recordsPoints
 
                 val mapViewModel = MapViewModel(recordPoints)
                 lateinit var favoritesViewModel: FavoritesViewModel
@@ -74,7 +74,7 @@ class MainActivity : ComponentActivity() {
                     withContext(Dispatchers.IO) {
 
                         _recordsPoints.value = supabase.from("record")
-                            .select().decodeList<RecordPoints>().sortedBy { it.recordTimestamp }
+                            .select().decodeList<RecordPoint>().sortedBy { it.recordTimestamp }
 
                         individualsList = supabase.from("individual")
                             .select().decodeList<Individual>()

@@ -8,7 +8,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class RecordPoints @RequiresApi(Build.VERSION_CODES.O) constructor(
+data class RecordPoint @RequiresApi(Build.VERSION_CODES.O) constructor(
     @SerialName("id")
     val id: Int,
 
