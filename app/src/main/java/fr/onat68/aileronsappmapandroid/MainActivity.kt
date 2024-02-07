@@ -130,7 +130,7 @@ class MainActivity : ComponentActivity() {
                                 IndividualScreen(individual, mapViewModel, favoritesViewModel)
                             }
                         }
-                        NavBar(navController, navBarViewModel)
+                        NavBar(navBarViewModel)
                     }
                 }
             }

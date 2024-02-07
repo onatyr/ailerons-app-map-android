@@ -11,10 +11,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 
 @Composable
-fun NavBar(navController: NavHostController, navBarViewModel: NavBarViewModel) {
+fun NavBar(navBarViewModel: NavBarViewModel) {
     val selectedItem = navBarViewModel.selectedItem.collectAsState(initial = 1)
 
     NavigationBar( containerColor = Color(0xff173b65)) {

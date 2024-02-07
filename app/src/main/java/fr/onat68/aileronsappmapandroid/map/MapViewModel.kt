@@ -29,10 +29,16 @@ class MapViewModel(
 
     private lateinit var marker: Bitmap
 
+    /**
+     * Set a Bitmap marker that will be used to generate points with pointAnnotationManager
+     */
     fun setMarker(mapMarker: Bitmap) {
         marker = mapMarker
     }
 
+    /**
+     * With the data fetched, create a list of lines and a list of points with the indicated individualIdFilter
+     */
     fun setRecordsData(mapRecordPoints: List<RecordPoint>, individualIdFilter: Int) {
         recordPointsValue = mapRecordPoints
 
@@ -58,6 +64,9 @@ class MapViewModel(
             }
     }
 
+    /**
+     * Create the annotations on the map using the annotations manager
+     */
     fun setDataAnnotations(
         circleAnnotationManager: CircleAnnotationManager?,
         pointAnnotationManager: PointAnnotationManager?,
@@ -71,6 +80,10 @@ class MapViewModel(
     fun getCameraCenter(): Point {
         return if (points.isNotEmpty()) centroid() else MapValues.defaultCamera
     }
+
+    /**
+     * return a Point that is the cendroid of all the points from the data fetched
+     */
 
     private fun centroid(): Point {
         var longitude = 0.0
