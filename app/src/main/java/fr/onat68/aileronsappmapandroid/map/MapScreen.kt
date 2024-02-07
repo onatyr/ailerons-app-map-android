@@ -23,6 +23,7 @@ import com.mapbox.maps.plugin.annotation.generated.PolylineAnnotationManager
 import com.mapbox.maps.plugin.annotation.generated.createCircleAnnotationManager
 import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
 import com.mapbox.maps.plugin.annotation.generated.createPolylineAnnotationManager
+import fr.onat68.aileronsappmapandroid.Constants
 import fr.onat68.aileronsappmapandroid.R
 import fr.onat68.aileronsappmapandroid.RecordPoint
 
@@ -71,7 +72,7 @@ fun Map(
             )
 
             val zoom =
-                if (individualIdFilter == 0) 1.5 else 4.0 // Set the zoom closer if one individual is selected
+                if (individualIdFilter == Constants.defaultFilter) 1.5 else 4.0 // Set the zoom closer if one individual is selected
 
             mapView.mapboxMap
                 .flyTo(

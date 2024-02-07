@@ -1,6 +1,7 @@
 package fr.onat68.aileronsappmapandroid.map
 
 import android.graphics.Bitmap
+import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.google.gson.GsonBuilder
 import com.mapbox.geojson.Point
@@ -12,13 +13,15 @@ import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions
 import com.mapbox.maps.plugin.annotation.generated.PolylineAnnotationManager
 import com.mapbox.maps.plugin.annotation.generated.PolylineAnnotationOptions
 import fr.onat68.aileronsappmapandroid.Constants
+import fr.onat68.aileronsappmapandroid.NavBarViewModel
 import fr.onat68.aileronsappmapandroid.RecordPoint
 import kotlinx.coroutines.flow.Flow
 
 class MapViewModel(
     val recordPoints: Flow<List<RecordPoint>>,
-    private val navController: NavController
-) {
+    private val navController: NavController,
+    private val navBarViewModel: NavBarViewModel
+): ViewModel() {
 
     private lateinit var recordPointsValue: List<RecordPoint>
     private lateinit var points: List<Point>
@@ -126,6 +129,7 @@ class MapViewModel(
             addClickListener(
                 OnPointAnnotationClickListener {
                     val individualId: String = it.getData().toString()
+                    changeNavBarToSpecies()
                     navController.navigate("individualSheet/${individualId}")
                     false
                 }
@@ -146,5 +150,10 @@ class MapViewModel(
                 it.create(polylineAnnotationOptions)
             }
         }
+    }
+
+    private fun changeNavBarToSpecies () {
+        val speciesIndex = navBarViewModel.navBarItems.indexOfFirst { it.title == "Espèces" }
+        navBarViewModel.switchNavBarItem(speciesIndex)
     }
 }

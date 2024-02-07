@@ -6,10 +6,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
@@ -17,22 +14,20 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 
 @Composable
-fun NavBar(navController: NavHostController) {
-    var selectedItem by remember { mutableIntStateOf(1) }
-    val items = listOf(NavBarItem.Favorites, NavBarItem.Map, NavBarItem.Species, NavBarItem.News)
+fun NavBar(navController: NavHostController, navBarViewModel: NavBarViewModel) {
+    val selectedItem = navBarViewModel.selectedItem.collectAsState(initial = 1)
 
     NavigationBar( containerColor = Color(0xff173b65)) {
         //Modifier.height(70.dp),
 
-        items.forEachIndexed { index, item ->
+        navBarViewModel.navBarItems.forEachIndexed { index, item ->
             NavigationBarItem(
-                selected = selectedItem == index,
+                selected = selectedItem.value == index,
                 onClick = {
-                    if (index == 1 && selectedItem == index) { // block if trying to go to map and map is already displayed
+                    if (index == 1 && selectedItem.value == index) { // block if trying to go to map and map is already displayed
                         return@NavigationBarItem
                     }
-                    selectedItem = index
-                    navController.navigate(item.route)
+                    navBarViewModel.navigate(index)
                 },
                 icon = {
                     Icon(
