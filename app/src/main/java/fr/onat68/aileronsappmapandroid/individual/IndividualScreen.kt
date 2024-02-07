@@ -33,7 +33,7 @@ fun IndividualScreen(
         Spacer(modifier = Modifier.size(20.dp))
 
         Box(modifier = Modifier.height(300.dp)) {
-            Map(mapViewModel, individual.id)
+            Map(mapViewModel, individual.individualRecordId)
         }
     }
 }
