@@ -144,7 +144,7 @@ class MapViewModel(
                     val individualId: String = it.getData().toString()
                     changeNavBarToSpecies()
                     navController.navigate("individualSheet/${individualId}")
-                    false
+                    true
                 }
             )
         }
