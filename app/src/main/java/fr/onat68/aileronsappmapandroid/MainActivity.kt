@@ -75,11 +75,13 @@ class MainActivity : ComponentActivity() {
                 LaunchedEffect(Unit) { // Fetch the data from Supabase
                     withContext(Dispatchers.IO) {
 
-                        _recordsPoints.value = supabase.from("record")
-                            .select().decodeList<RecordPoint>().sortedBy { it.recordTimestamp }
-
                         individualsList = supabase.from("individual")
                             .select().decodeList<Individual>()
+
+                        _recordsPoints.value = supabase.from("record")
+                            .select().decodeList<RecordPoint>().sortedBy { it.recordTimestamp }
+                            .filter { individualsList.indexOfFirst { individual -> individual.individualRecordId == it.individualId } != -1 }
+
                         favoritesViewModel = FavoritesViewModel(database, individualsList)
                     }
                 }
