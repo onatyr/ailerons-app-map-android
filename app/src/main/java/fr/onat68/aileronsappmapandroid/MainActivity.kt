@@ -71,7 +71,6 @@ class MainActivity : ComponentActivity() {
 
                 var individualsList by remember { mutableStateOf<List<Individual>>(listOf()) }
 
-
                 LaunchedEffect(Unit) { // Fetch the data from Supabase
                     withContext(Dispatchers.IO) {
 
@@ -128,7 +127,7 @@ class MainActivity : ComponentActivity() {
                             ) {
                                 val individualId = it.arguments!!.getInt("listId")
                                 val individual =
-                                    individualsList.first { it.individualRecordId == individualId }
+                                    individualsList.first { individual -> individual.individualRecordId == individualId }
                                 IndividualScreen(individual, mapViewModel, favoritesViewModel)
                             }
                         }
