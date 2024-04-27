@@ -20,10 +20,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.onat68.aileronsappmapandroid.R
+import fr.onat68.aileronsappmapandroid.data.entities.IndividualDTO
 import fr.onat68.aileronsappmapandroid.ui.theme.atkinsonHyperlegible
 
 @Composable
-fun Header(individual: Individual, liked: Boolean, changeFav: (Int) -> Unit) {
+fun Header(individual: IndividualDTO, liked: Boolean, changeFav: (Int) -> Unit) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
@@ -61,7 +62,7 @@ fun FavToggle(liked: Boolean, individualId: Int, changeFav: (Int) -> Unit) {
 }
 
 @Composable
-fun IndividualCharacteristics(individual: Individual, modifier: Modifier) {
+fun IndividualCharacteristics(individual: IndividualDTO, modifier: Modifier) {
 
     Text(
         "${individual.commonName} / ${individual.binomialName}",

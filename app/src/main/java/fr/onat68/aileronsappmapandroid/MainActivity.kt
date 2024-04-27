@@ -23,7 +23,7 @@ import androidx.navigation.navArgument
 import fr.onat68.aileronsappmapandroid.favorites.AppDatabase
 import fr.onat68.aileronsappmapandroid.favorites.FavoriteScreen
 import fr.onat68.aileronsappmapandroid.favorites.FavoritesViewModel
-import fr.onat68.aileronsappmapandroid.individual.Individual
+import fr.onat68.aileronsappmapandroid.data.entities.IndividualDTO
 import fr.onat68.aileronsappmapandroid.individual.IndividualScreen
 import fr.onat68.aileronsappmapandroid.map.Map
 import fr.onat68.aileronsappmapandroid.map.MapViewModel
@@ -69,7 +69,7 @@ class MainActivity : ComponentActivity() {
                 val mapViewModel = MapViewModel(recordPoints, navController, navBarViewModel)
                 lateinit var favoritesViewModel: FavoritesViewModel
 
-                var individualsList by remember { mutableStateOf<List<Individual>>(listOf()) }
+                var individualsList by remember { mutableStateOf<List<IndividualDTO>>(listOf()) }
 
 
                 LaunchedEffect(Unit) { // Fetch the data from Supabase
@@ -79,7 +79,7 @@ class MainActivity : ComponentActivity() {
                             .select().decodeList<RecordPoint>().sortedBy { it.recordTimestamp }
 
                         individualsList = supabase.from("individual")
-                            .select().decodeList<Individual>()
+                            .select().decodeList<IndividualDTO>()
                         favoritesViewModel = FavoritesViewModel(database, individualsList)
                     }
                 }

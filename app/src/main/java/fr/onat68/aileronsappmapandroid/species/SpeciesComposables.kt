@@ -16,10 +16,10 @@ import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import androidx.navigation.NavController
 import fr.onat68.aileronsappmapandroid.R
-import fr.onat68.aileronsappmapandroid.individual.Individual
+import fr.onat68.aileronsappmapandroid.data.entities.IndividualDTO
 
 @Composable
-fun IndividualsList(individualsList: List<Individual>, navController: NavController) {
+fun IndividualsList(individualsList: List<IndividualDTO>, navController: NavController) {
     for (i in individualsList.indices) {
         Column {
             IndividualItem(individualsList[i], navController)
@@ -29,7 +29,7 @@ fun IndividualsList(individualsList: List<Individual>, navController: NavControl
 }
 
 @Composable
-fun IndividualItem(individual: Individual, navController: NavController) {
+fun IndividualItem(individual: IndividualDTO, navController: NavController) {
     val sharkImageBitmap =
         LocalContext.current.getDrawable(R.drawable.ic_shark)!!.toBitmap().asImageBitmap()
     val rayImageBitmap =

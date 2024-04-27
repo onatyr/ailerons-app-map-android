@@ -9,7 +9,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import fr.onat68.aileronsappmapandroid.R
-import fr.onat68.aileronsappmapandroid.individual.Individual
+import fr.onat68.aileronsappmapandroid.data.entities.IndividualDTO
 import fr.onat68.aileronsappmapandroid.species.IndividualItem
 
 @Composable
@@ -17,7 +17,7 @@ fun FavoriteScreen(
     favoritesViewModel: FavoritesViewModel,
     navController: NavController
 ) {
-    val favoritesList: State<List<Individual>> =
+    val favoritesList: State<List<IndividualDTO>> =
         favoritesViewModel.favoritesList.collectAsState(initial = listOf())
 
     Column {

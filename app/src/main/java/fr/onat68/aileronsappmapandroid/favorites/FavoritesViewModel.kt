@@ -2,19 +2,20 @@ package fr.onat68.aileronsappmapandroid.favorites
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import fr.onat68.aileronsappmapandroid.individual.Individual
+import fr.onat68.aileronsappmapandroid.data.entities.Favorite
+import fr.onat68.aileronsappmapandroid.data.entities.IndividualDTO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class FavoritesViewModel(
     private val database: AppDatabase,
-    private val individualsList: List<Individual>
+    private val individualsList: List<IndividualDTO>
 ) : ViewModel() {
 
 
-    private val _favoritesList: MutableStateFlow<List<Individual>> = MutableStateFlow(listOf())
-    val favoritesList: Flow<List<Individual>> = _favoritesList
+    private val _favoritesList: MutableStateFlow<List<IndividualDTO>> = MutableStateFlow(listOf())
+    val favoritesList: Flow<List<IndividualDTO>> = _favoritesList
 
         val initFav = getAll()
     private fun getAll() {
