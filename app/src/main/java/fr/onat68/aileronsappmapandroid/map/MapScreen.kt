@@ -25,6 +25,7 @@ import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
 import com.mapbox.maps.plugin.annotation.generated.createPolylineAnnotationManager
 import fr.onat68.aileronsappmapandroid.Constants
 import fr.onat68.aileronsappmapandroid.R
+import fr.onat68.aileronsappmapandroid.data.entities.RecordPoint
 import fr.onat68.aileronsappmapandroid.data.entities.RecordPointDTO
 
 @Composable
@@ -33,8 +34,7 @@ fun Map(
     individualIdFilter: Int
 ) {
 
-    val recordPoints: State<List<RecordPointDTO>> =
-        mapViewModel.recordPoints.collectAsState(initial = listOf())
+    val recordPoints = mapViewModel.recordPoints.collectAsState(initial = listOf())
 
     mapViewModel.setMarker(LocalContext.current.getDrawable(R.drawable.red_marker)!!.toBitmap())
     mapViewModel.setRecordsData(recordPoints.value, individualIdFilter)
@@ -65,11 +65,16 @@ fun Map(
         },
         update = { mapView ->
 
-            mapViewModel.setDataAnnotations(
-                circleAnnotationManager,
-                pointAnnotationManager,
-                polylineAnnotationManager
-            )
+            circleAnnotationManager.let { circleAnnotationManager ->
+                circleAnnotationManager?.deleteAll()
+                mapViewModel.generateListCircle(recordPoints.value)
+                    .forEach { circleAnnotationManager?.create(it) }
+            }
+
+            pointAnnotationManager.let { pointAnnotationManager ->
+                pointAnnotationManager?.deleteAll()
+                mapViewModel.
+            }
 
             val zoom =
                 if (individualIdFilter == Constants.defaultFilter) 1.5 else 4.0 // Set the zoom closer if one individual is selected

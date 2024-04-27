@@ -69,7 +69,7 @@ class MainActivity : ComponentActivity() {
 
                 val navBarViewModel = NavBarViewModel(navController)
 
-                val mapViewModel = MapViewModel(navBarViewModel)
+                val mapViewModel = MapViewModel(recordPointRepository ,navBarViewModel)
 
 
                 Surface(
