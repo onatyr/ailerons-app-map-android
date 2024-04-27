@@ -23,6 +23,7 @@ import fr.onat68.aileronsappmapandroid.favorites.FavoritesViewModel
 import fr.onat68.aileronsappmapandroid.data.entities.IndividualDTO
 import fr.onat68.aileronsappmapandroid.data.entities.RecordPointDTO
 import fr.onat68.aileronsappmapandroid.data.repositories.IndividualRepository
+import fr.onat68.aileronsappmapandroid.data.repositories.RecordPointRepository
 import fr.onat68.aileronsappmapandroid.individual.IndividualScreen
 import fr.onat68.aileronsappmapandroid.map.Map
 import fr.onat68.aileronsappmapandroid.map.MapViewModel
@@ -51,16 +52,10 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        lifecycleScope.launch(Dispatchers.Main) {
-            val recordPoints = supabaseClient.from("record")
-                .select().decodeList<RecordPointDTO>().sortedBy { it.recordTimestamp }
-
-            val individualList = supabaseClient.from("individual")
-                .select().decodeList<IndividualDTO>()
-        }
-
         val database = AppDatabase.getInstance(this as Context)
-        val individualRepository = IndividualRepository(database.individualDao())
+        val individualRepository = IndividualRepository(supabaseClient, database.individualDao())
+        val recordPointRepository = RecordPointRepository(supabaseClient, database.recordPointDao())
+
         val favoritesViewModel = FavoritesViewModel(individualRepository)
 
 

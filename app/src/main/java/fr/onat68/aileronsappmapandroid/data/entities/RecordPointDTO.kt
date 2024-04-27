@@ -32,4 +32,15 @@ data class RecordPointDTO @RequiresApi(Build.VERSION_CODES.O) constructor(
 
     @SerialName("csv_uuid")
     val csvUuid: String,
-)
+) {
+    fun toRecordPointEntity(): RecordPoint {
+        return RecordPoint(
+            id = this.id,
+            longitude = this.longitude,
+            latitude = this.latitude,
+            individualId = this.individualId,
+            recordTimestamp = this.recordTimestamp,
+            depth = this.depth
+        )
+    }
+}

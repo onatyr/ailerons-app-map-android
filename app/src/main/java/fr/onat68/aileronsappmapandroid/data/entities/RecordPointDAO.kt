@@ -15,7 +15,7 @@ data class RecordPoint(
     @PrimaryKey val id: Int,
     @ColumnInfo(name = "longitude") val longitude: Float,
     @ColumnInfo(name = "latitude") val latitude: Float,
-    @ColumnInfo(name = "individual_id") val individualId: Int,
+    @ColumnInfo(name = "individual_id") val individualId: Int?,
     @ColumnInfo(name = "record_timestamp") val recordTimestamp: String,
     @ColumnInfo(name = "depth") val depth: Int
 )
