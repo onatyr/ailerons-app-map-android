@@ -5,6 +5,7 @@ import androidx.room.Dao
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.Query
+import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 @Entity(
@@ -19,10 +20,20 @@ data class Individual(
     @ColumnInfo(name = "binomial_name") val binomialName: String,
     @ColumnInfo(name = "description") val description: String,
     @ColumnInfo(name = "icon") val icon: String,
-    )
+    @ColumnInfo(name = "is_favorite") val isFavorite: Boolean = false
+)
 
 @Dao
 interface IndividualDAO {
-    @Query("SELECT * FROM favorite")
-    fun getAll(): List<Individual>
+    @Query("SELECT * FROM individual")
+    suspend fun getAll(): List<Individual>
+
+    @Query("SELECT * FROM individual WHERE is_favorite = 1")
+    fun getListFavorite(): Flow<List<Individual>>
+
+    @Query("UPDATE individual SET is_favorite = 1 WHERE id = :id")
+    fun addFavorite(id: Int)
+
+    @Query("UPDATE individual SET is_favorite = 0 WHERE id = :id")
+    fun removeFavorite(id: Int)
 }

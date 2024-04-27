@@ -20,6 +20,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import fr.onat68.aileronsappmapandroid.data.AppDatabase
 import fr.onat68.aileronsappmapandroid.favorites.AppDatabase
 import fr.onat68.aileronsappmapandroid.favorites.FavoriteScreen
 import fr.onat68.aileronsappmapandroid.favorites.FavoritesViewModel
@@ -58,7 +59,6 @@ class MainActivity : ComponentActivity() {
 
             AileronsAppMapAndroidTheme {
 
-                val database = AppDatabase.getInstance(this)
                 val navController = rememberNavController()
 
                 val _recordsPoints = MutableStateFlow<List<RecordPoint>>(listOf())
@@ -80,7 +80,7 @@ class MainActivity : ComponentActivity() {
 
                         individualsList = supabase.from("individual")
                             .select().decodeList<IndividualDTO>()
-                        favoritesViewModel = FavoritesViewModel(database, individualsList)
+                        favoritesViewModel = FavoritesViewModel(individualsList)
                     }
                 }
 
@@ -126,7 +126,7 @@ class MainActivity : ComponentActivity() {
                             ) {
                                 val individualId = it.arguments!!.getInt("listId")
                                 val individual =
-                                    individualsList.first { it.individualRecordId == individualId }
+                                    individualsList.first { it.id == individualId }
                                 IndividualScreen(individual, mapViewModel, favoritesViewModel)
                             }
                         }

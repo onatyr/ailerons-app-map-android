@@ -7,6 +7,7 @@ import androidx.room.Index
 import androidx.room.Insert
 import androidx.room.PrimaryKey
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 
 @Entity(
     tableName = "favorite",
@@ -23,10 +24,7 @@ data class Favorite(
 @Dao
 interface FavoriteDAO {
     @Query("SELECT * FROM favorite")
-    suspend fun getAll(): List<Favorite>
-
-    @Insert
-    suspend fun insert(favorite: Favorite)
+    fun getAll(): Flow<List<Favorite>>
 
     @Query("DELETE FROM favorite WHERE individualId = :id")
     suspend fun delete(id: Int)

@@ -4,29 +4,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import fr.onat68.aileronsappmapandroid.data.entities.Favorite
 import fr.onat68.aileronsappmapandroid.data.entities.IndividualDTO
+import fr.onat68.aileronsappmapandroid.data.repositories.IndividualRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class FavoritesViewModel(
-    private val database: AppDatabase,
-    private val individualsList: List<IndividualDTO>
-) : ViewModel() {
+class FavoritesViewModel @Inject constructor(private val individualRepository: IndividualRepository)
+: ViewModel() {
 
+    val favoritesList: Flow<List<Favorite>> = individualRepository.getListFavorite()
 
-    private val _favoritesList: MutableStateFlow<List<IndividualDTO>> = MutableStateFlow(listOf())
-    val favoritesList: Flow<List<IndividualDTO>> = _favoritesList
-
-        val initFav = getAll()
-    private fun getAll() {
-
-        viewModelScope.launch {
-            _favoritesList.value = individualsList.filter {
-                database.FavoriteDao().getAll().map { fav -> fav.individualId }
-                    .contains(it.individualRecordId)
-            }
-        }
-    }
 
     private fun addFav(individualId: Int) {
 

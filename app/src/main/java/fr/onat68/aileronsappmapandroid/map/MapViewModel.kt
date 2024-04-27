@@ -1,6 +1,9 @@
 package fr.onat68.aileronsappmapandroid.map
 
 import android.graphics.Bitmap
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.google.gson.GsonBuilder
@@ -16,12 +19,17 @@ import fr.onat68.aileronsappmapandroid.Constants
 import fr.onat68.aileronsappmapandroid.NavBarViewModel
 import fr.onat68.aileronsappmapandroid.RecordPoint
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 class MapViewModel(
     val recordPoints: Flow<List<RecordPoint>>,
     private val navController: NavController,
     private val navBarViewModel: NavBarViewModel
-): ViewModel() {
+) : ViewModel() {
+
+    private val _recordPoints: MutableStateFlow<List<RecordPoint?>> = MutableStateFlow(listOf(null))
+    val recordPointsWIP = _recordPoints.asStateFlow()
 
     private lateinit var recordPointsValue: List<RecordPoint>
     private lateinit var points: List<Point>
@@ -165,7 +173,7 @@ class MapViewModel(
         }
     }
 
-    private fun changeNavBarToSpecies () {
+    private fun changeNavBarToSpecies() {
         val speciesIndex = navBarViewModel.navBarItems.indexOfFirst { it.title == "Espèces" }
         navBarViewModel.switchNavBarItem(speciesIndex)
     }
