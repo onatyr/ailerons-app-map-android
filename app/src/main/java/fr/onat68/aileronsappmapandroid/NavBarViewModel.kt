@@ -5,7 +5,7 @@ import androidx.navigation.NavController
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
-class NavBarViewModel(private val navController: NavController) : ViewModel() {
+class NavBarViewModel(val navController: NavController) : ViewModel() {
 
     val navBarItems = listOf(
         NavBarItem.Favorites,

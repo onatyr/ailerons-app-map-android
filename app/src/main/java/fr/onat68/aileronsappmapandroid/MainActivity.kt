@@ -1,5 +1,6 @@
 package fr.onat68.aileronsappmapandroid
 
+import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -9,22 +10,19 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import fr.onat68.aileronsappmapandroid.data.AppDatabase
-import fr.onat68.aileronsappmapandroid.favorites.AppDatabase
 import fr.onat68.aileronsappmapandroid.favorites.FavoriteScreen
 import fr.onat68.aileronsappmapandroid.favorites.FavoritesViewModel
 import fr.onat68.aileronsappmapandroid.data.entities.IndividualDTO
+import fr.onat68.aileronsappmapandroid.data.entities.RecordPointDTO
+import fr.onat68.aileronsappmapandroid.data.repositories.IndividualRepository
 import fr.onat68.aileronsappmapandroid.individual.IndividualScreen
 import fr.onat68.aileronsappmapandroid.map.Map
 import fr.onat68.aileronsappmapandroid.map.MapViewModel
@@ -35,25 +33,38 @@ import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.postgrest.from
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.launch
 
 
+@Suppress("DEPRECATION")
 class MainActivity : ComponentActivity() {
+
+    private val ai: ApplicationInfo = applicationContext.packageManager
+        .getApplicationInfo(applicationContext.packageName, PackageManager.GET_META_DATA)
+    private val supabaseClient = createSupabaseClient(
+        supabaseUrl = ai.metaData["supabaseUrl"].toString(),
+        supabaseKey = ai.metaData["supabaseKey"].toString(),
+    ) {
+        install(Postgrest)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        lifecycleScope.launch(Dispatchers.Main) {
+            val recordPoints = supabaseClient.from("record")
+                .select().decodeList<RecordPointDTO>().sortedBy { it.recordTimestamp }
 
-        val ai: ApplicationInfo = applicationContext.packageManager
-            .getApplicationInfo(applicationContext.packageName, PackageManager.GET_META_DATA)
-        @Suppress("DEPRECATION") val supabase = createSupabaseClient(
-            supabaseUrl = ai.metaData["supabaseUrl"].toString(),
-            supabaseKey = ai.metaData["supabaseKey"].toString(),
-        ) {
-            install(Postgrest)
+            val individualList = supabaseClient.from("individual")
+                .select().decodeList<IndividualDTO>()
         }
+
+        val database = AppDatabase.getInstance(this as Context)
+        val individualRepository = IndividualRepository(database.individualDao())
+        val favoritesViewModel = FavoritesViewModel(individualRepository)
+
+
+
         setContent {
 
 
@@ -61,28 +72,10 @@ class MainActivity : ComponentActivity() {
 
                 val navController = rememberNavController()
 
-                val _recordsPoints = MutableStateFlow<List<RecordPoint>>(listOf())
-                val recordPoints: Flow<List<RecordPoint>> = _recordsPoints
-
                 val navBarViewModel = NavBarViewModel(navController)
 
-                val mapViewModel = MapViewModel(recordPoints, navController, navBarViewModel)
-                lateinit var favoritesViewModel: FavoritesViewModel
+                val mapViewModel = MapViewModel(navBarViewModel)
 
-                var individualsList by remember { mutableStateOf<List<IndividualDTO>>(listOf()) }
-
-
-                LaunchedEffect(Unit) { // Fetch the data from Supabase
-                    withContext(Dispatchers.IO) {
-
-                        _recordsPoints.value = supabase.from("record")
-                            .select().decodeList<RecordPoint>().sortedBy { it.recordTimestamp }
-
-                        individualsList = supabase.from("individual")
-                            .select().decodeList<IndividualDTO>()
-                        favoritesViewModel = FavoritesViewModel(individualsList)
-                    }
-                }
 
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -123,8 +116,8 @@ class MainActivity : ComponentActivity() {
                                 arguments = listOf(navArgument("listId") {
                                     type = NavType.IntType
                                 })
-                            ) {
-                                val individualId = it.arguments!!.getInt("listId")
+                            ) { entry ->
+                                val individualId = entry.arguments!!.getInt("listId")
                                 val individual =
                                     individualsList.first { it.id == individualId }
                                 IndividualScreen(individual, mapViewModel, favoritesViewModel)

@@ -1,16 +1,20 @@
 package fr.onat68.aileronsappmapandroid.data.repositories
 
-import fr.onat68.aileronsappmapandroid.data.entities.FavoriteDAO
+import fr.onat68.aileronsappmapandroid.data.entities.Individual
 import fr.onat68.aileronsappmapandroid.data.entities.IndividualDAO
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class IndividualRepository @Inject constructor(private val individualDao: IndividualDAO, private val favoriteDao: FavoriteDAO) {
+class IndividualRepository @Inject constructor(private val individualDao: IndividualDAO) {
 
-    suspend fun getListIndividual() = individualDao.getAll()
+    fun getListIndividual() = individualDao.getAll()
+
+    suspend fun insertIndividual(individual: Individual) = individualDao.insert(individual)
+
+    suspend fun clearIndividual() = individualDao.deleteAll()
 
     fun getListFavorite() = individualDao.getListFavorite()
-    fun addFavorite(id: Int) = individualDao.addFavorite(id)
-    fun removeFavorite(id: Int) = individualDao.removeFavorite(id)
+    suspend fun addToFavorite(id: Int) = individualDao.addToFavorite(id)
+    suspend fun removeFromFavorite(id: Int) = individualDao.removeFromFavorite(id)
 }

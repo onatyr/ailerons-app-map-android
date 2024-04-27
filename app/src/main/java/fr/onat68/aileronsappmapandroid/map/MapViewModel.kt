@@ -1,11 +1,7 @@
 package fr.onat68.aileronsappmapandroid.map
 
 import android.graphics.Bitmap
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import androidx.navigation.NavController
 import com.google.gson.GsonBuilder
 import com.mapbox.geojson.Point
 import com.mapbox.maps.plugin.annotation.generated.CircleAnnotationManager
@@ -17,21 +13,18 @@ import com.mapbox.maps.plugin.annotation.generated.PolylineAnnotationManager
 import com.mapbox.maps.plugin.annotation.generated.PolylineAnnotationOptions
 import fr.onat68.aileronsappmapandroid.Constants
 import fr.onat68.aileronsappmapandroid.NavBarViewModel
-import fr.onat68.aileronsappmapandroid.RecordPoint
-import kotlinx.coroutines.flow.Flow
+import fr.onat68.aileronsappmapandroid.data.entities.RecordPointDTO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class MapViewModel(
-    val recordPoints: Flow<List<RecordPoint>>,
-    private val navController: NavController,
     private val navBarViewModel: NavBarViewModel
 ) : ViewModel() {
 
-    private val _recordPoints: MutableStateFlow<List<RecordPoint?>> = MutableStateFlow(listOf(null))
+    private val _recordPoints: MutableStateFlow<List<RecordPointDTO?>> = MutableStateFlow(listOf(null))
     val recordPointsWIP = _recordPoints.asStateFlow()
 
-    private lateinit var recordPointsValue: List<RecordPoint>
+    private lateinit var recordPointsValue: List<RecordPointDTO>
     private lateinit var points: List<Point>
     private lateinit var lines: List<List<Point>>
 
@@ -47,7 +40,7 @@ class MapViewModel(
     /**
      * With the data fetched, create a list of lines and a list of points with the indicated individualIdFilter
      */
-    fun setRecordsData(mapRecordPoints: List<RecordPoint>, individualIdFilter: Int) {
+    fun setRecordsData(mapRecordPoints: List<RecordPointDTO>, individualIdFilter: Int) {
         recordPointsValue = mapRecordPoints
 
         if (individualIdFilter != Constants.defaultFilter) { // first try with -1 instead of 0 but some bugs can appear
@@ -151,7 +144,7 @@ class MapViewModel(
                 OnPointAnnotationClickListener {
                     val individualId: String = it.getData().toString()
                     changeNavBarToSpecies()
-                    navController.navigate("individualSheet/${individualId}")
+                    navBarViewModel.navController.navigate("individualSheet/${individualId}")
                     false
                 }
             )

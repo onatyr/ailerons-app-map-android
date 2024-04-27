@@ -18,7 +18,7 @@ data class IndividualDTO(
     val sex: String,
 
     @SerialName("pictures")
-    val picture: List<String>,
+    val pictures: List<String>,
 
     @SerialName("common_name")
     val commonName: String,
@@ -31,4 +31,17 @@ data class IndividualDTO(
 
     @SerialName("icon")
     val icon: String
-)
+) {
+    fun toIndividualEntity(): Individual {
+        return Individual(
+            id = this.id,
+            name = this.name,
+            sex = this.sex,
+            pictures = this.pictures,
+            commonName = this.commonName,
+            binomialName = this.binomialName,
+            description = this.description,
+            icon = this.icon
+        )
+    }
+}

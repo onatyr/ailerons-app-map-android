@@ -25,7 +25,7 @@ import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
 import com.mapbox.maps.plugin.annotation.generated.createPolylineAnnotationManager
 import fr.onat68.aileronsappmapandroid.Constants
 import fr.onat68.aileronsappmapandroid.R
-import fr.onat68.aileronsappmapandroid.RecordPoint
+import fr.onat68.aileronsappmapandroid.data.entities.RecordPointDTO
 
 @Composable
 fun Map(
@@ -33,7 +33,7 @@ fun Map(
     individualIdFilter: Int
 ) {
 
-    val recordPoints: State<List<RecordPoint>> =
+    val recordPoints: State<List<RecordPointDTO>> =
         mapViewModel.recordPoints.collectAsState(initial = listOf())
 
     mapViewModel.setMarker(LocalContext.current.getDrawable(R.drawable.red_marker)!!.toBitmap())

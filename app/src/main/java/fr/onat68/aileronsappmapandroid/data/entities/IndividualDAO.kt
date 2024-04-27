@@ -3,9 +3,9 @@ package fr.onat68.aileronsappmapandroid.data.entities
 import androidx.room.ColumnInfo
 import androidx.room.Dao
 import androidx.room.Entity
+import androidx.room.Insert
 import androidx.room.PrimaryKey
 import androidx.room.Query
-import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 @Entity(
@@ -26,14 +26,20 @@ data class Individual(
 @Dao
 interface IndividualDAO {
     @Query("SELECT * FROM individual")
-    suspend fun getAll(): List<Individual>
+    fun getAll(): Flow<List<Individual>>
+
+    @Insert
+    suspend fun insert(individual: Individual)
+
+    @Query("DELETE FROM record_point")
+    suspend fun deleteAll()
 
     @Query("SELECT * FROM individual WHERE is_favorite = 1")
     fun getListFavorite(): Flow<List<Individual>>
 
     @Query("UPDATE individual SET is_favorite = 1 WHERE id = :id")
-    fun addFavorite(id: Int)
+    suspend fun addToFavorite(id: Int)
 
     @Query("UPDATE individual SET is_favorite = 0 WHERE id = :id")
-    fun removeFavorite(id: Int)
+    suspend fun removeFromFavorite(id: Int)
 }

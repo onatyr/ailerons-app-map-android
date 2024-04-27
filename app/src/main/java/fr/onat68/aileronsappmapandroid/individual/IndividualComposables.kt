@@ -14,23 +14,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.onat68.aileronsappmapandroid.R
+import fr.onat68.aileronsappmapandroid.data.entities.Individual
 import fr.onat68.aileronsappmapandroid.data.entities.IndividualDTO
 import fr.onat68.aileronsappmapandroid.ui.theme.atkinsonHyperlegible
 
 @Composable
-fun Header(individual: IndividualDTO, liked: Boolean, changeFav: (Int) -> Unit) {
+fun Header(individual: Individual, changeFav: (Individual) -> Unit) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            individual.individualName,
+            individual.name,
             fontFamily = atkinsonHyperlegible,
             fontWeight = FontWeight.Bold,
             fontSize = 40.sp,
@@ -39,42 +41,28 @@ fun Header(individual: IndividualDTO, liked: Boolean, changeFav: (Int) -> Unit) 
                 .weight(1f)
                 .padding(15.dp)
         )
-        FavToggle(liked, individual.individualRecordId, changeFav)
+        FavToggle(individual, changeFav)
         Spacer(modifier = Modifier.size(15.dp))
     }
 }
 
 @Composable
-fun FavToggle(liked: Boolean, individualId: Int, changeFav: (Int) -> Unit) {
+fun FavToggle(individual: Individual, changeFav: (Individual) -> Unit) {
 
-    OutlinedButton(onClick = { changeFav(individualId) }) {
-        val imageVector = if (liked) {
-            ImageVector.vectorResource(R.drawable.ic_star)
-        } else {
-            ImageVector.vectorResource(R.drawable.ic_unstar)
-        }
-
+    OutlinedButton(onClick = { changeFav(individual) }) {
         Icon(
-            imageVector = imageVector,
+            painter = if (individual.isFavorite) painterResource(R.drawable.ic_star) else painterResource(R.drawable.ic_unstar),
             contentDescription = "Add to favorites"
         )
     }
 }
 
 @Composable
-fun IndividualCharacteristics(individual: IndividualDTO, modifier: Modifier) {
+fun IndividualCharacteristics(individual: Individual, modifier: Modifier) {
 
     Text(
         "${individual.commonName} / ${individual.binomialName}",
         fontStyle = FontStyle.Italic,
-        modifier = modifier
-    )
-    Text(
-        "${LocalContext.current.resources.getString(R.string.age)}: ${individual.age} ${
-            LocalContext.current.resources.getString(
-                R.string.weight
-            )
-        }: ${individual.weight} ${LocalContext.current.resources.getString(R.string.sex)}: ${individual.sex}",
         modifier = modifier
     )
 }

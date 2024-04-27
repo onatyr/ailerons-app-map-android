@@ -10,6 +10,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import fr.onat68.aileronsappmapandroid.data.entities.Individual
 import fr.onat68.aileronsappmapandroid.data.entities.IndividualDTO
 import fr.onat68.aileronsappmapandroid.favorites.FavoritesViewModel
 import fr.onat68.aileronsappmapandroid.map.Map
@@ -17,15 +18,13 @@ import fr.onat68.aileronsappmapandroid.map.MapViewModel
 
 @Composable
 fun IndividualScreen(
-    individual: IndividualDTO,
+    individual: Individual,
     mapViewModel: MapViewModel,
     favoritesViewModel: FavoritesViewModel
 ) {
-    val favoritesList = favoritesViewModel.favoritesList.collectAsState(initial = listOf())
-    val liked = favoritesList.value.contains(individual)
 
     Column {
-        Header(individual, liked, favoritesViewModel::changeFav)
+        Header(individual, favoritesViewModel::changeFav)
 
         Spacer(modifier = Modifier.size(20.dp))
 
