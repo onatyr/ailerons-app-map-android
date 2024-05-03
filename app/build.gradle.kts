@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -66,16 +68,22 @@ android {
 dependencies {
     val roomVersion = "2.6.1"
 
+//    .ENV
+    implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
+
+//    ROOM DATABASE
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
     kapt("androidx.room:room-compiler:$roomVersion")
 
     implementation("androidx.navigation:navigation-compose:2.7.7")
 
+//    SUPABASE CLIENT
     implementation(platform("io.github.jan-tennert.supabase:bom:2.0.4"))
     implementation("io.github.jan-tennert.supabase:postgrest-kt")
     implementation("io.ktor:ktor-client-android:2.3.7")
 
+//    MAPBOX
     implementation("com.mapbox.maps:android:11.0.0")
     implementation("com.mapbox.extension:maps-compose:11.0.0")
 

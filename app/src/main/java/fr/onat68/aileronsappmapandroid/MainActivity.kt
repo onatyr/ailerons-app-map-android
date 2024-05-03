@@ -1,8 +1,6 @@
 package fr.onat68.aileronsappmapandroid
 
 import android.content.Context
-import android.content.pm.ApplicationInfo
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -28,34 +26,37 @@ import fr.onat68.aileronsappmapandroid.map.MapViewModel
 import fr.onat68.aileronsappmapandroid.news.NewsScreen
 import fr.onat68.aileronsappmapandroid.species.SpeciesScreen
 import fr.onat68.aileronsappmapandroid.ui.theme.AileronsAppMapAndroidTheme
+import io.github.cdimascio.dotenv.Dotenv
+import io.github.cdimascio.dotenv.dotenv
+import io.github.jan.supabase.BuildConfig
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.postgrest.Postgrest
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
-
-@Suppress("DEPRECATION")
 class MainActivity : ComponentActivity() {
 
-    private val ai: ApplicationInfo = applicationContext.packageManager
-        .getApplicationInfo(applicationContext.packageName, PackageManager.GET_META_DATA)
-    private val supabaseClient = createSupabaseClient(
-        supabaseUrl = ai.metaData["supabaseUrl"].toString(),
-        supabaseKey = ai.metaData["supabaseKey"].toString(),
-    ) {
+    private val dotenv = dotenv()
+    private val supabaseClient = createSupabaseClient(dotenv["supabase_url"], dotenv["supabase_key"]){
         install(Postgrest)
     }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val database = AppDatabase.getInstance(this as Context)
+        val database = AppDatabase.getInstance(this)
         val individualRepository = IndividualRepository(supabaseClient, database.individualDao())
         val recordPointRepository = RecordPointRepository(supabaseClient, database.recordPointDao())
 
-        individualRepository.fetchListIndividual()
-
         val individualViewModel = IndividualViewModel(individualRepository)
-        Log.d("individualsList", "${individualViewModel.individualsList}")
 
+        CoroutineScope(Dispatchers.IO).launch {
+            val individualList = individualViewModel.individualsList.first()
+            Log.d("individualsList", "$individualList")
+        }
 
 
 //        setContent {

@@ -22,7 +22,8 @@ import fr.onat68.aileronsappmapandroid.data.entities.Individual
 import fr.onat68.aileronsappmapandroid.data.entities.IndividualDTO
 
 @Composable
-fun IndividualsList(individualsList: List<Individual>, navController: NavController) {
+fun IndividualsList(individualsList: List<Individual>?, navController: NavController) {
+    individualsList ?:return
     for (i in individualsList.indices) {
         Column {
             IndividualItem(individualsList[i], navController)

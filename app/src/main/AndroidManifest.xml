@@ -23,13 +23,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <meta-data
-            android:name="supabaseKey"
-            android:value="${supabaseKey}" />
-        <meta-data
-            android:name="supabaseUrl"
-            android:value="${supabaseUrl}" />
     </application>
 
 </manifest>
