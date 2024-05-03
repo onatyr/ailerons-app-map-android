@@ -18,6 +18,7 @@ import com.mapbox.maps.MapView
 import com.mapbox.maps.plugin.animation.flyTo
 import com.mapbox.maps.plugin.annotation.annotations
 import com.mapbox.maps.plugin.annotation.generated.CircleAnnotationManager
+import com.mapbox.maps.plugin.annotation.generated.OnPointAnnotationClickListener
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationManager
 import com.mapbox.maps.plugin.annotation.generated.PolylineAnnotationManager
 import com.mapbox.maps.plugin.annotation.generated.createCircleAnnotationManager
@@ -37,7 +38,6 @@ fun Map(
     val recordPoints = mapViewModel.recordPoints.collectAsState(initial = listOf())
 
     mapViewModel.setMarker(LocalContext.current.getDrawable(R.drawable.red_marker)!!.toBitmap())
-    mapViewModel.setRecordsData(recordPoints.value, individualIdFilter)
 
     var pointAnnotationManager: PointAnnotationManager? by remember {
         mutableStateOf(null)
@@ -73,7 +73,22 @@ fun Map(
 
             pointAnnotationManager.let { pointAnnotationManager ->
                 pointAnnotationManager?.deleteAll()
-                mapViewModel.
+                mapViewModel.generateListPoint(recordPoints.value)
+                    .forEach { pointAnnotationManager?.create(it) }
+
+                pointAnnotationManager?.addClickListener(
+                    OnPointAnnotationClickListener {
+                    val individualId: String = it.getData().toString()
+                    mapViewModel.changeNavBarToSpecies()
+//                    navBarViewModel.navController.navigate("individualSheet/${individualId}")
+                    false
+                })
+            }
+
+            polylineAnnotationManager.let { polylineAnnotationManager ->
+                polylineAnnotationManager?.deleteAll()
+                mapViewModel.generateListPolyline(recordPoints.value)
+                    .forEach { polylineAnnotationManager?.create(it) }
             }
 
             val zoom =

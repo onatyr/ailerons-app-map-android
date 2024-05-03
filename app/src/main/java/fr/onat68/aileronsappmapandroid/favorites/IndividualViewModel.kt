@@ -8,9 +8,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class FavoritesViewModel @Inject constructor(private val individualRepository: IndividualRepository) :
+class IndividualViewModel @Inject constructor(private val individualRepository: IndividualRepository) :
     ViewModel() {
 
+    val individualsList: Flow<List<Individual>> = individualRepository.getListIndividual()
     val favoritesList: Flow<List<Individual>> = individualRepository.getListFavorite()
 
     private fun addFav(individualId: Int) =

@@ -6,7 +6,6 @@ import com.google.gson.GsonBuilder
 import com.mapbox.geojson.Point
 import com.mapbox.maps.plugin.annotation.generated.CircleAnnotationManager
 import com.mapbox.maps.plugin.annotation.generated.CircleAnnotationOptions
-import com.mapbox.maps.plugin.annotation.generated.OnPointAnnotationClickListener
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationManager
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions
 import com.mapbox.maps.plugin.annotation.generated.PolylineAnnotationManager
@@ -16,8 +15,6 @@ import fr.onat68.aileronsappmapandroid.NavBarViewModel
 import fr.onat68.aileronsappmapandroid.data.entities.RecordPoint
 import fr.onat68.aileronsappmapandroid.data.entities.RecordPointDTO
 import fr.onat68.aileronsappmapandroid.data.repositories.RecordPointRepository
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 
 class MapViewModel(
     private val recordPointRepository: RecordPointRepository,
@@ -67,26 +64,9 @@ class MapViewModel(
             }
     }
 
-    /**
-     * Create the annotations on the map using the annotations manager
-     */
-    fun setDataAnnotations(
-        circleAnnotationManager: CircleAnnotationManager?,
-        pointAnnotationManager: PointAnnotationManager?,
-        polylineAnnotationManager: PolylineAnnotationManager?
-    ) {
-        generateCircle(circleAnnotationManager)
-        generatePoint(pointAnnotationManager)
-        generatePolyline(polylineAnnotationManager)
-    }
-
     fun getCameraCenter(): Point {
         return if (points.isNotEmpty()) centroid() else MapValues.defaultCamera
     }
-
-    /**
-     * return a Point that is the cendroid of all the points from the data fetched
-     */
 
     private fun centroid(): Point {
         var longitude = 0.0
@@ -116,60 +96,55 @@ class MapViewModel(
         }
         return circleList
     }
-}
 
-private fun generatePoint(pointAnnotationManager: PointAnnotationManager?) {
 
-    pointAnnotationManager?.let {
-        it.deleteAll()
+    fun generateListPoint(recordPoints: List<RecordPoint>): List<PointAnnotationOptions> {
+        val pointList = emptyList<PointAnnotationOptions>()
+        val recordPointGrouped = recordPoints.groupBy { record -> record.individualId }
 
-        for (recordPoint in recordPointsValue.groupBy { record -> record.individualId }
-            .map { mapPoint -> // Take the last point in the date ordered list to pin a point
-                mapPoint.value.last()
-            }) {
+        for (recordPoint in recordPointGrouped) {
             val point = Point.fromLngLat(
-                recordPoint.longitude.toDouble(),
-                recordPoint.latitude.toDouble()
+                recordPoint.value.last().longitude.toDouble(),
+                recordPoint.value.last().latitude.toDouble()
             )
-            val pointAnnotationOptions = PointAnnotationOptions()
-                .withPoint(point)
-                .withIconImage(marker)
-                .withIconSize(MapValues.pointIconSize)
-                .withData(GsonBuilder().create().toJsonTree(recordPoint.individualId))
-
-            it.create(pointAnnotationOptions)
+            pointList.plus(
+                PointAnnotationOptions()
+                    .withPoint(point)
+                    .withIconImage(marker)
+                    .withIconSize(MapValues.pointIconSize)
+                    .withData(
+                        GsonBuilder().create().toJsonTree(recordPoint.value.last().individualId)
+                    )
+            )
         }
+        return pointList
     }
 
-    pointAnnotationManager?.apply {
-        addClickListener(
-            OnPointAnnotationClickListener {
-                val individualId: String = it.getData().toString()
-                changeNavBarToSpecies()
-                navBarViewModel.navController.navigate("individualSheet/${individualId}")
-                false
+
+    fun generateListPolyline(recordPoints: List<RecordPoint>): List<PolylineAnnotationOptions> {
+        val linesList: List<PolylineAnnotationOptions> = emptyList()
+        val lines = recordPoints.groupBy { it.individualId }.values.map { records ->
+            records.map {
+                Point.fromLngLat(
+                    it.longitude.toDouble(),
+                    it.latitude.toDouble()
+                )
             }
-        )
-    }
-}
-
-private fun generatePolyline(polylineAnnotationManager: PolylineAnnotationManager?) {
-    polylineAnnotationManager?.let {
-        it.deleteAll()
-
-        for (line in lines) {
-            val polylineAnnotationOptions = PolylineAnnotationOptions()
-                .withPoints(line)
-                .withLineColor(MapValues.polylineLineColor)
-                .withLineWidth(MapValues.polylineLineWidth)
-
-            it.create(polylineAnnotationOptions)
         }
+        for (line in lines) {
+            linesList.plus(
+                PolylineAnnotationOptions()
+                    .withPoints(line)
+                    .withLineColor(MapValues.polylineLineColor)
+                    .withLineWidth(MapValues.polylineLineWidth)
+            )
+        }
+        return linesList
     }
-}
 
-private fun changeNavBarToSpecies() {
-    val speciesIndex = navBarViewModel.navBarItems.indexOfFirst { it.title == "Espèces" }
-    navBarViewModel.switchNavBarItem(speciesIndex)
-}
+
+    fun changeNavBarToSpecies() {
+        val speciesIndex = navBarViewModel.navBarItems.indexOfFirst { it.title == "Espèces" }
+        navBarViewModel.switchNavBarItem(speciesIndex)
+    }
 }
