@@ -15,7 +15,7 @@ data class Individual(
     @PrimaryKey val id: Int,
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "sex") val sex: String,
-    @ColumnInfo(name = "pictures") val pictures: List<String>,
+    @ColumnInfo(name = "pictures") val pictures: List<String>?,
     @ColumnInfo(name = "common_name") val commonName: String,
     @ColumnInfo(name = "binomial_name") val binomialName: String,
     @ColumnInfo(name = "description") val description: String,
@@ -31,7 +31,7 @@ interface IndividualDAO {
     @Insert
     suspend fun insert(individual: Individual)
 
-    @Query("DELETE FROM record_point")
+    @Query("DELETE FROM individual")
     suspend fun deleteAll()
 
     @Query("SELECT * FROM individual WHERE is_favorite = 1")

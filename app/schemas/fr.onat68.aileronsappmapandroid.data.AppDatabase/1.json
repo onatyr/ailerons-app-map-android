@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "4cab666167a89ad0fa9dae9080fb1b83",
+    "identityHash": "8bf46d702092fdd4ebe2a78261245e90",
     "entities": [
       {
         "tableName": "individual",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT NOT NULL, `sex` TEXT NOT NULL, `pictures` TEXT NOT NULL, `common_name` TEXT NOT NULL, `binomial_name` TEXT NOT NULL, `description` TEXT NOT NULL, `icon` TEXT NOT NULL, `is_favorite` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT NOT NULL, `sex` TEXT NOT NULL, `pictures` TEXT, `common_name` TEXT NOT NULL, `binomial_name` TEXT NOT NULL, `description` TEXT NOT NULL, `icon` TEXT NOT NULL, `is_favorite` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -30,7 +30,7 @@
             "fieldPath": "pictures",
             "columnName": "pictures",
             "affinity": "TEXT",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "commonName",
@@ -126,7 +126,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4cab666167a89ad0fa9dae9080fb1b83')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8bf46d702092fdd4ebe2a78261245e90')"
     ]
   }
 }

@@ -18,7 +18,7 @@ data class IndividualDTO(
     val sex: String,
 
     @SerialName("pictures")
-    val pictures: List<String>,
+    val pictures: List<String>?,
 
     @SerialName("common_name")
     val commonName: String,

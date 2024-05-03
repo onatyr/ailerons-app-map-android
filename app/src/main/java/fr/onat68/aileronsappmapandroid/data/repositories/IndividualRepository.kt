@@ -1,5 +1,6 @@
 package fr.onat68.aileronsappmapandroid.data.repositories
 
+import android.util.Log
 import fr.onat68.aileronsappmapandroid.data.entities.Individual
 import fr.onat68.aileronsappmapandroid.data.entities.IndividualDAO
 import fr.onat68.aileronsappmapandroid.data.entities.IndividualDTO
@@ -19,13 +20,15 @@ class IndividualRepository @Inject constructor(
 
     fun fetchListIndividual() {
         CoroutineScope(Dispatchers.IO).launch {
-            val individualList = supabaseClient.from("individual")
+            val individualList = supabaseClient.from("individual_new")
                 .select().decodeList<IndividualDTO>()
 
             clearIndividual()
             individualList.forEach { insertIndividual(it.toIndividualEntity()) }
         }
     }
+
+
 
     fun getListIndividual() = individualDao.getAll()
 

@@ -1,6 +1,5 @@
 package fr.onat68.aileronsappmapandroid
 
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -9,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -26,9 +26,7 @@ import fr.onat68.aileronsappmapandroid.map.MapViewModel
 import fr.onat68.aileronsappmapandroid.news.NewsScreen
 import fr.onat68.aileronsappmapandroid.species.SpeciesScreen
 import fr.onat68.aileronsappmapandroid.ui.theme.AileronsAppMapAndroidTheme
-import io.github.cdimascio.dotenv.Dotenv
 import io.github.cdimascio.dotenv.dotenv
-import io.github.jan.supabase.BuildConfig
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.postgrest.Postgrest
 import kotlinx.coroutines.CoroutineScope
@@ -38,32 +36,32 @@ import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
 
-    private val dotenv = dotenv()
-    private val supabaseClient = createSupabaseClient(dotenv["supabase_url"], dotenv["supabase_key"]){
-        install(Postgrest)
+    private val dotenv = dotenv {
+        directory = "./assets"
+        filename = "env"
     }
-
+    private val supabaseClient =
+        createSupabaseClient(dotenv["SUPABASE_URL"], dotenv["SUPABASE_KEY"]) {
+            install(Postgrest)
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val database = AppDatabase.getInstance(this)
         val individualRepository = IndividualRepository(supabaseClient, database.individualDao())
+        individualRepository.fetchListIndividual()
         val recordPointRepository = RecordPointRepository(supabaseClient, database.recordPointDao())
 
         val individualViewModel = IndividualViewModel(individualRepository)
 
-        CoroutineScope(Dispatchers.IO).launch {
-            val individualList = individualViewModel.individualsList.first()
-            Log.d("individualsList", "$individualList")
-        }
+
+        setContent {
 
 
-//        setContent {
-//
-//
-//            AileronsAppMapAndroidTheme {
-//
+            AileronsAppMapAndroidTheme {
+                Text(text = "HEY")
+
 //                val navController = rememberNavController()
 //
 //                val navBarViewModel = NavBarViewModel(navController)
@@ -120,7 +118,7 @@ class MainActivity : ComponentActivity() {
 //                        NavBar(navBarViewModel)
 //                    }
 //                }
-//            }
-//        }
+            }
+        }
     }
 }
