@@ -14,19 +14,19 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun NavBar(navBarViewModel: NavBarViewModel) {
-    val selectedItem = navBarViewModel.selectedItem.collectAsState(initial = 1)
+    val selectedItem = navBarViewModel.selectedItem.collectAsState(NavBarItem.Map as NavBarItem)
 
-    NavigationBar( containerColor = Color(0xff173b65)) {
+    NavigationBar(containerColor = Color(0xff173b65)) {
         //Modifier.height(70.dp),
 
-        navBarViewModel.navBarItems.forEachIndexed { index, item ->
+        NavBarItem.values().forEach { item ->
             NavigationBarItem(
-                selected = selectedItem.value == index,
+                selected = selectedItem.value == item,
                 onClick = {
-                    if (index == 1 && selectedItem.value == index) { // block if trying to go to map and map is already displayed
+                    if (item == NavBarItem.Map && selectedItem.value == item) {
                         return@NavigationBarItem
                     }
-                    navBarViewModel.navigate(index)
+                    navBarViewModel.navigate(item)
                 },
                 icon = {
                     Icon(

@@ -17,8 +17,8 @@ import fr.onat68.aileronsappmapandroid.data.entities.RecordPointDTO
 import fr.onat68.aileronsappmapandroid.data.repositories.RecordPointRepository
 
 class MapViewModel(
-    private val recordPointRepository: RecordPointRepository,
-//    private val navBarViewModel: NavBarViewModel
+    recordPointRepository: RecordPointRepository,
+    private val marker: Bitmap
 ) : ViewModel() {
 
     val recordPoints = recordPointRepository.getListRecordPoint()
@@ -26,15 +26,6 @@ class MapViewModel(
     private lateinit var recordPointsValue: List<RecordPointDTO>
     private lateinit var points: List<Point>
     private lateinit var lines: List<List<Point>>
-
-    private lateinit var marker: Bitmap
-
-    /**
-     * Set a Bitmap marker that will be used to generate points with pointAnnotationManager
-     */
-    fun setMarker(mapMarker: Bitmap) {
-        marker = mapMarker
-    }
 
     /**
      * With the data fetched, create a list of lines and a list of points with the indicated individualIdFilter
@@ -142,9 +133,4 @@ class MapViewModel(
         return linesList
     }
 
-
-    fun changeNavBarToSpecies() {
-//        val speciesIndex = navBarViewModel.navBarItems.indexOfFirst { it.title == "Espèces" }
-//        navBarViewModel.switchNavBarItem(speciesIndex)
-    }
 }

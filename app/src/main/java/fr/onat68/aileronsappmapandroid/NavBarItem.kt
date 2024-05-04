@@ -1,10 +1,14 @@
 package fr.onat68.aileronsappmapandroid
 
 sealed class NavBarItem(
-    var title: String,
-    var icon: Int,
-    var route: String
+    val title: String,
+    val icon: Int,
+    val route: String
 ) {
+
+    companion object {
+        fun values() = listOf(Favorites, Map, Species, News)
+    }
     data object Favorites:
             NavBarItem(
                 "Favoris",

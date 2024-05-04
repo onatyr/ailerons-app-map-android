@@ -12,6 +12,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -42,6 +45,7 @@ import kotlinx.coroutines.launch
 class MainActivity : ComponentActivity() {
 
     private val individualViewModel: IndividualViewModel by viewModels()
+    private val mapViewModel: MapViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,7 +85,7 @@ class MainActivity : ComponentActivity() {
                             ) {
                                 val individualIdFilter =
                                     it.arguments!!.getInt("individualIdFilter")
-                                Map(mapViewModel, individualIdFilter)
+                                Map(mapViewModel, individualIdFilter, navBarViewModel::navigate)
 
                             }
                             composable("species") {
@@ -98,9 +102,7 @@ class MainActivity : ComponentActivity() {
                                 })
                             ) { entry ->
                                 val individualId = entry.arguments!!.getInt("listId")
-                                val individual =
-                                    individualsList.first { it.id == individualId }
-                                IndividualScreen(individual, mapViewModel, individualViewModel)
+                                IndividualScreen(individualId, mapViewModel, individualViewModel)
                             }
                         }
                         NavBar(navBarViewModel)

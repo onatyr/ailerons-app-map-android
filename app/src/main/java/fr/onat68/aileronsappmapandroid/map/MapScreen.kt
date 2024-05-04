@@ -25,6 +25,7 @@ import com.mapbox.maps.plugin.annotation.generated.createCircleAnnotationManager
 import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
 import com.mapbox.maps.plugin.annotation.generated.createPolylineAnnotationManager
 import fr.onat68.aileronsappmapandroid.Constants
+import fr.onat68.aileronsappmapandroid.NavBarItem
 import fr.onat68.aileronsappmapandroid.R
 import fr.onat68.aileronsappmapandroid.data.entities.RecordPoint
 import fr.onat68.aileronsappmapandroid.data.entities.RecordPointDTO
@@ -32,12 +33,11 @@ import fr.onat68.aileronsappmapandroid.data.entities.RecordPointDTO
 @Composable
 fun Map(
     mapViewModel: MapViewModel,
-    individualIdFilter: Int
+    individualIdFilter: Int,
+    openIndividualSheet: ((NavBarItem, String) -> Unit)? = null,
 ) {
 
     val recordPoints = mapViewModel.recordPoints.collectAsState(initial = listOf())
-
-    mapViewModel.setMarker(LocalContext.current.getDrawable(R.drawable.red_marker)!!.toBitmap())
 
     var pointAnnotationManager: PointAnnotationManager? by remember {
         mutableStateOf(null)
@@ -76,13 +76,18 @@ fun Map(
                 mapViewModel.generateListPoint(recordPoints.value)
                     .forEach { pointAnnotationManager?.create(it) }
 
-                pointAnnotationManager?.addClickListener(
-                    OnPointAnnotationClickListener {
-                    val individualId: String = it.getData().toString()
-                    mapViewModel.changeNavBarToSpecies()
-//                    navBarViewModel.navController.navigate("individualSheet/${individualId}")
-                    false
-                })
+                if (openIndividualSheet != null) {
+                    pointAnnotationManager?.addClickListener(
+                        OnPointAnnotationClickListener {
+                            val individualId: String = it.getData().toString()
+                            openIndividualSheet(
+                                NavBarItem.Species,
+                                "individualSheet/${individualId}"
+                            )
+
+                            false
+                        })
+                }
             }
 
             polylineAnnotationManager.let { polylineAnnotationManager ->
