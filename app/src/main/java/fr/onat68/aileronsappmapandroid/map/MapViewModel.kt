@@ -18,7 +18,7 @@ import fr.onat68.aileronsappmapandroid.data.repositories.RecordPointRepository
 
 class MapViewModel(
     private val recordPointRepository: RecordPointRepository,
-    private val navBarViewModel: NavBarViewModel
+//    private val navBarViewModel: NavBarViewModel
 ) : ViewModel() {
 
     val recordPoints = recordPointRepository.getListRecordPoint()
@@ -144,7 +144,7 @@ class MapViewModel(
 
 
     fun changeNavBarToSpecies() {
-        val speciesIndex = navBarViewModel.navBarItems.indexOfFirst { it.title == "Espèces" }
-        navBarViewModel.switchNavBarItem(speciesIndex)
+//        val speciesIndex = navBarViewModel.navBarItems.indexOfFirst { it.title == "Espèces" }
+//        navBarViewModel.switchNavBarItem(speciesIndex)
     }
 }

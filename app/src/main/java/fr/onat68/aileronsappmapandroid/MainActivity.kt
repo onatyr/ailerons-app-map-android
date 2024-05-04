@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
@@ -15,6 +17,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import dagger.hilt.android.AndroidEntryPoint
 import fr.onat68.aileronsappmapandroid.data.AppDatabase
 import fr.onat68.aileronsappmapandroid.favorites.FavoriteScreen
 import fr.onat68.aileronsappmapandroid.favorites.IndividualViewModel
@@ -34,27 +37,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
+
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val dotenv = dotenv {
-        directory = "./assets"
-        filename = "env"
-    }
-    private val supabaseClient =
-        createSupabaseClient(dotenv["SUPABASE_URL"], dotenv["SUPABASE_KEY"]) {
-            install(Postgrest)
-        }
+    private val individualViewModel: IndividualViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val database = AppDatabase.getInstance(this)
-        val individualRepository = IndividualRepository(supabaseClient, database.individualDao())
-        individualRepository.fetchListIndividual()
-        val recordPointRepository = RecordPointRepository(supabaseClient, database.recordPointDao())
-
-        val individualViewModel = IndividualViewModel(individualRepository)
-
 
         setContent {
 
@@ -62,62 +52,60 @@ class MainActivity : ComponentActivity() {
             AileronsAppMapAndroidTheme {
                 Text(text = "HEY")
 
-//                val navController = rememberNavController()
-//
-//                val navBarViewModel = NavBarViewModel(navController)
-//
-//                val mapViewModel = MapViewModel(recordPointRepository ,navBarViewModel)
-//
-//
-//                Surface(
-//                    modifier = Modifier.fillMaxSize(),
-//                    color = MaterialTheme.colorScheme.background
-//                ) {
-//                    Column {
-//                        NavHost(
-//                            navController = navController,
-//                            startDestination = "map/${Constants.defaultFilter}",
-//                            modifier = Modifier.weight(1f)
-//                        ) {
-//                            composable("favorites") {
-//                                FavoriteScreen(
-//                                    individualViewModel,
-//                                    navController
-//                                )
-//                            }
-//                            composable(
-//                                "map/{individualIdFilter}",
-//                                arguments = listOf(navArgument("individualIdFilter") {
-//                                    type = NavType.IntType
-//                                })
-//                            ) {
-//                                val individualIdFilter =
-//                                    it.arguments!!.getInt("individualIdFilter")
-//                                Map(mapViewModel, individualIdFilter)
-//
-//                            }
-//                            composable("species") {
-//                                SpeciesScreen(
-//                                    individualViewModel,
-//                                    navController
-//                                )
-//                            }
-//                            composable("news") { NewsScreen() }
-//                            composable(
-//                                "individualSheet/{listId}",
-//                                arguments = listOf(navArgument("listId") {
-//                                    type = NavType.IntType
-//                                })
-//                            ) { entry ->
-//                                val individualId = entry.arguments!!.getInt("listId")
-//                                val individual =
-//                                    individualsList.first { it.id == individualId }
-//                                IndividualScreen(individual, mapViewModel, individualViewModel)
-//                            }
-//                        }
-//                        NavBar(navBarViewModel)
-//                    }
-//                }
+                val navController = rememberNavController()
+
+                val navBarViewModel = NavBarViewModel(navController)
+
+
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    Column {
+                        NavHost(
+                            navController = navController,
+                            startDestination = "map/${Constants.defaultFilter}",
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            composable("favorites") {
+                                FavoriteScreen(
+                                    individualViewModel,
+                                    navController
+                                )
+                            }
+                            composable(
+                                "map/{individualIdFilter}",
+                                arguments = listOf(navArgument("individualIdFilter") {
+                                    type = NavType.IntType
+                                })
+                            ) {
+                                val individualIdFilter =
+                                    it.arguments!!.getInt("individualIdFilter")
+                                Map(mapViewModel, individualIdFilter)
+
+                            }
+                            composable("species") {
+                                SpeciesScreen(
+                                    individualViewModel,
+                                    navController
+                                )
+                            }
+                            composable("news") { NewsScreen() }
+                            composable(
+                                "individualSheet/{listId}",
+                                arguments = listOf(navArgument("listId") {
+                                    type = NavType.IntType
+                                })
+                            ) { entry ->
+                                val individualId = entry.arguments!!.getInt("listId")
+                                val individual =
+                                    individualsList.first { it.id == individualId }
+                                IndividualScreen(individual, mapViewModel, individualViewModel)
+                            }
+                        }
+                        NavBar(navBarViewModel)
+                    }
+                }
             }
         }
     }

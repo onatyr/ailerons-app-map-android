@@ -28,8 +28,6 @@ class IndividualRepository @Inject constructor(
         }
     }
 
-
-
     fun getListIndividual() = individualDao.getAll()
 
     private suspend fun insertIndividual(individual: Individual) = individualDao.insert(individual)
