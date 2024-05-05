@@ -85,7 +85,7 @@ class MainActivity : ComponentActivity() {
                             ) {
                                 val individualIdFilter =
                                     it.arguments!!.getInt("individualIdFilter")
-                                Map(mapViewModel, individualIdFilter, navBarViewModel::navigate)
+                                Map(mapViewModel, individualIdFilter, )//navBarViewModel::navigate)
 
                             }
                             composable("species") {

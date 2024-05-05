@@ -1,5 +1,6 @@
 package fr.onat68.aileronsappmapandroid.map
 
+import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
@@ -38,6 +39,7 @@ fun Map(
 ) {
 
     val recordPoints = mapViewModel.recordPoints.collectAsState(initial = listOf())
+    Log.d("debugpoints", "${recordPoints.value.size}")
 
     var pointAnnotationManager: PointAnnotationManager? by remember {
         mutableStateOf(null)
@@ -74,7 +76,9 @@ fun Map(
             pointAnnotationManager.let { pointAnnotationManager ->
                 pointAnnotationManager?.deleteAll()
                 mapViewModel.generateListPoint(recordPoints.value)
-                    .forEach { pointAnnotationManager?.create(it) }
+                    .forEach {
+                        pointAnnotationManager?.create(it)
+                    }
 
                 if (openIndividualSheet != null) {
                     pointAnnotationManager?.addClickListener(
@@ -101,7 +105,8 @@ fun Map(
 
             mapView.mapboxMap
                 .flyTo(
-                    CameraOptions.Builder().zoom(zoom).center(mapViewModel.getCameraCenter())
+                    CameraOptions.Builder().zoom(zoom)
+                        .center(mapViewModel.getCameraCenter(recordPoints.value))
                         .build()
                 )
 

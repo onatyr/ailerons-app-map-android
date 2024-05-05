@@ -1,10 +1,9 @@
 plugins {
+    val kotlinVersion = "1.9.23"
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    kotlin("plugin.serialization") version "1.9.0"
+    kotlin("plugin.serialization") version kotlinVersion
     id("com.google.secrets_gradle_plugin") version "0.4"
-    id("org.jetbrains.kotlin.kapt") version "1.9.0"
-    id("kotlin-kapt")
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
 
@@ -55,7 +54,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.13"
     }
     packaging {
         resources {
@@ -74,7 +73,7 @@ dependencies {
 //    ROOM DATABASE
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
-    kapt("androidx.room:room-compiler:$roomVersion")
+    ksp("androidx.room:room-compiler:$roomVersion")
 
     implementation("androidx.navigation:navigation-compose:2.7.7")
 
@@ -91,7 +90,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("androidx.activity:activity-compose:1.9.0")
     implementation(platform("androidx.compose:compose-bom:2024.05.00"))
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.21")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.23")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
 
     implementation("androidx.compose.ui:ui")
@@ -108,11 +107,15 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
-    implementation("com.google.dagger:hilt-android:2.50")
-    kapt("com.google.dagger:hilt-compiler:2.50")
+// COMPOSE
+    val lifecycleVersion = "2.7.0"
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
 
-}
 
-kapt {
-    correctErrorTypes=true
+// DAGGER-HILT
+    val daggerHiltVersion = "2.51.1"
+    //implementation("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+    implementation("com.google.dagger:hilt-android:$daggerHiltVersion")
+    ksp("com.google.dagger:hilt-compiler:$daggerHiltVersion")
 }

@@ -28,7 +28,7 @@ data class RecordPointDTO @RequiresApi(Build.VERSION_CODES.O) constructor(
     val recordTimestamp: String,
 
     @SerialName("depth")
-    val depth: Int,
+    val depth: Int?,
 
     @SerialName("csv_uuid")
     val csvUuid: String,

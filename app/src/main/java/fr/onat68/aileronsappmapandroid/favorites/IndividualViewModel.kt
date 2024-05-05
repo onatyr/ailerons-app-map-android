@@ -2,13 +2,14 @@ package fr.onat68.aileronsappmapandroid.favorites
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import fr.onat68.aileronsappmapandroid.data.entities.Individual
 import fr.onat68.aileronsappmapandroid.data.repositories.IndividualRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class IndividualViewModel @Inject constructor(private val individualRepository: IndividualRepository) :
     ViewModel() {
 

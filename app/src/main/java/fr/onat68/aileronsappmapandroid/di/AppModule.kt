@@ -56,6 +56,6 @@ object AppModule {
         supabaseClient: SupabaseClient,
         database: AppDatabase
     ): RecordPointRepository {
-        return RecordPointRepository(supabaseClient, database.recordPointDao())
+        return RecordPointRepository(supabaseClient, database.recordPointDao()).apply { fetchListRecordPoint() }
     }
 }
