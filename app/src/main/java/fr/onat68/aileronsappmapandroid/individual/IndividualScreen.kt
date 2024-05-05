@@ -20,20 +20,21 @@ fun IndividualScreen(
     mapViewModel: MapViewModel,
     individualViewModel: IndividualViewModel
 ) {
+    val individual = individualViewModel.individualsList.collectAsState(emptyList()).value.firstOrNull() { it.id == individualId }
+    if(individual != null) {
 
-    val individual = individualViewModel.individualsList.collectAsState(emptyList()).value.first { it.id == individualId }
+        Column {
+            Header(individual, individualViewModel::changeFav)
 
-    Column {
-        Header(individual, individualViewModel::changeFav)
+            Spacer(modifier = Modifier.size(20.dp))
 
-        Spacer(modifier = Modifier.size(20.dp))
+            IndividualCharacteristics(individual, Modifier.align(Alignment.CenterHorizontally))
 
-        IndividualCharacteristics(individual, Modifier.align(Alignment.CenterHorizontally))
+            Spacer(modifier = Modifier.size(20.dp))
 
-        Spacer(modifier = Modifier.size(20.dp))
-
-        Box(modifier = Modifier.height(300.dp)) {
-            Map(mapViewModel, individualId)
+            Box(modifier = Modifier.height(300.dp)) {
+                Map(mapViewModel, individualId)
+            }
         }
     }
 }
