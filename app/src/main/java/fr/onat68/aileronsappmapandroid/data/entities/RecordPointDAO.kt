@@ -28,6 +28,9 @@ interface RecordPointDAO {
     @Insert
     suspend fun insert(recordPoint: RecordPoint)
 
+    @Insert
+    suspend fun insertAll(recordPoints: List<RecordPoint>)
+
     @Query("DELETE FROM record_point")
     suspend fun deleteAll()
 }
