@@ -40,6 +40,9 @@ fun Map(
 ) {
 
     val recordPoints = mapViewModel.recordPoints.collectAsState(initial = listOf())
+    val recordPointsFiltered =
+        if (individualIdFilter != 0) recordPoints.value.filter { it.individualId == individualIdFilter }
+        else recordPoints.value
 
     var pointAnnotationManager: PointAnnotationManager? by remember {
         mutableStateOf(null)
@@ -69,13 +72,13 @@ fun Map(
 
             circleAnnotationManager.let { circleAnnotationManager ->
                 circleAnnotationManager?.deleteAll()
-                mapViewModel.generateListCircle(recordPoints.value)
+                mapViewModel.generateListCircle(recordPointsFiltered)
                     .forEach { circleAnnotationManager?.create(it) }
             }
 
             pointAnnotationManager.let { pointAnnotationManager ->
                 pointAnnotationManager?.deleteAll()
-                mapViewModel.generateListPoint(recordPoints.value)
+                mapViewModel.generateListPoint(recordPointsFiltered)
                     .forEach {
                         pointAnnotationManager?.create(it)
                     }
@@ -96,7 +99,7 @@ fun Map(
 
             polylineAnnotationManager.let { polylineAnnotationManager ->
                 polylineAnnotationManager?.deleteAll()
-                mapViewModel.generateListPolyline(recordPoints.value)
+                mapViewModel.generateListPolyline(recordPointsFiltered)
                     .forEach { polylineAnnotationManager?.create(it) }
             }
 
@@ -106,7 +109,7 @@ fun Map(
             mapView.mapboxMap
                 .flyTo(
                     CameraOptions.Builder().zoom(zoom)
-                        .center(mapViewModel.getCameraCenter(recordPoints.value))
+                        .center(mapViewModel.getCameraCenter(recordPointsFiltered))
                         .build()
                 )
 
