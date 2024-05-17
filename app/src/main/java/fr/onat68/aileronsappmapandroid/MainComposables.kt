@@ -11,13 +11,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 
 @Composable
-fun NavBar(navBarViewModel: NavBarViewModel) {
+fun NavBar(navBarViewModel: NavBarViewModel, navHostController: NavHostController) {
     val selectedItem = navBarViewModel.selectedItem.collectAsState(NavBarItem.Map as NavBarItem)
 
     NavigationBar(containerColor = Color(0xff173b65)) {
-        //Modifier.height(70.dp),
 
         NavBarItem.values().forEach { item ->
             NavigationBarItem(
@@ -26,7 +26,8 @@ fun NavBar(navBarViewModel: NavBarViewModel) {
                     if (item == NavBarItem.Map && selectedItem.value == item) {
                         return@NavigationBarItem
                     }
-                    navBarViewModel.navigate(item)
+                    navHostController.navigate(item.navRoute)
+                    navBarViewModel.updateSelectedItem(item)
                 },
                 icon = {
                     Icon(

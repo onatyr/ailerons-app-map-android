@@ -20,7 +20,7 @@ fun IndividualScreen(
     mapViewModel: MapViewModel,
     individualViewModel: IndividualViewModel
 ) {
-    val individual = individualViewModel.individualsList.collectAsState(emptyList()).value.firstOrNull() { it.id == individualId }
+    val individual = individualViewModel.individualsList.collectAsState(emptyList()).value.firstOrNull { it.id == individualId }
     if(individual != null) {
 
         Column {

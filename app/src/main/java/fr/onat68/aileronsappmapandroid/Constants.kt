@@ -1,5 +1,5 @@
 package fr.onat68.aileronsappmapandroid
 
 object Constants {
-    const val defaultFilter = 0
+    const val DEFAULT_FILTER = 0
 }

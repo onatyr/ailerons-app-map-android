@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="NONE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="837a9396-a3f3-4870-ad90-fb652cfe352f" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fr/onat68/aileronsappmapandroid/Constants.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/onat68/aileronsappmapandroid/Constants.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fr/onat68/aileronsappmapandroid/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/onat68/aileronsappmapandroid/MainActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fr/onat68/aileronsappmapandroid/MainComposables.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/onat68/aileronsappmapandroid/MainComposables.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fr/onat68/aileronsappmapandroid/NavBarItem.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/onat68/aileronsappmapandroid/NavBarItem.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fr/onat68/aileronsappmapandroid/NavBarViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/onat68/aileronsappmapandroid/NavBarViewModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fr/onat68/aileronsappmapandroid/data/repositories/IndividualRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/onat68/aileronsappmapandroid/data/repositories/IndividualRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fr/onat68/aileronsappmapandroid/individual/IndividualScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/onat68/aileronsappmapandroid/individual/IndividualScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fr/onat68/aileronsappmapandroid/map/MapScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/onat68/aileronsappmapandroid/map/MapScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/fr/onat68/aileronsappmapandroid/species/SpeciesComposables.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/fr/onat68/aileronsappmapandroid/species/SpeciesComposables.kt" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 7
+}]]></component>
+  <component name="ProjectId" id="2gWMMoQkll6SrJtNY8mNr3rfkNw" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "android.gradle.sync.needed": "true",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/home/onatyr/DevProjects/ailerons-app-map-android"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="837a9396-a3f3-4870-ad90-fb652cfe352f" name="Changes" comment="" />
+      <created>1715808835094</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1715808835094</updated>
+    </task>
+    <servers />
+  </component>
+</project>

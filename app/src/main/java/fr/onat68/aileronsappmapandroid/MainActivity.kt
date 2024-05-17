@@ -1,44 +1,28 @@
 package fr.onat68.aileronsappmapandroid
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
+import androidx.navigation.toRoute
 import dagger.hilt.android.AndroidEntryPoint
-import fr.onat68.aileronsappmapandroid.data.AppDatabase
 import fr.onat68.aileronsappmapandroid.favorites.FavoriteScreen
 import fr.onat68.aileronsappmapandroid.favorites.IndividualViewModel
-import fr.onat68.aileronsappmapandroid.data.repositories.IndividualRepository
-import fr.onat68.aileronsappmapandroid.data.repositories.RecordPointRepository
 import fr.onat68.aileronsappmapandroid.individual.IndividualScreen
 import fr.onat68.aileronsappmapandroid.map.Map
 import fr.onat68.aileronsappmapandroid.map.MapViewModel
 import fr.onat68.aileronsappmapandroid.news.NewsScreen
 import fr.onat68.aileronsappmapandroid.species.SpeciesScreen
 import fr.onat68.aileronsappmapandroid.ui.theme.AileronsAppMapAndroidTheme
-import io.github.cdimascio.dotenv.dotenv
-import io.github.jan.supabase.createSupabaseClient
-import io.github.jan.supabase.postgrest.Postgrest
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
+import kotlinx.serialization.Serializable
 
 
 @AndroidEntryPoint
@@ -46,6 +30,7 @@ class MainActivity : ComponentActivity() {
 
     private val individualViewModel: IndividualViewModel by viewModels()
     private val mapViewModel: MapViewModel by viewModels()
+    private val navBarViewModel: NavBarViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,11 +39,8 @@ class MainActivity : ComponentActivity() {
 
 
             AileronsAppMapAndroidTheme {
-                Text(text = "HEY")
 
-                val navController = rememberNavController()
-
-                val navBarViewModel = NavBarViewModel(navController)
+                val navHostController = rememberNavController()
 
 
                 Surface(
@@ -67,48 +49,60 @@ class MainActivity : ComponentActivity() {
                 ) {
                     Column {
                         NavHost(
-                            navController = navController,
-                            startDestination = "map/${Constants.defaultFilter}",
+                            navController = navHostController,
+                            startDestination = NavBarItem.Map.navRoute,
                             modifier = Modifier.weight(1f)
                         ) {
-                            composable("favorites") {
+                            composable<FavoritesScreenRoute> {
                                 FavoriteScreen(
                                     individualViewModel,
-                                    navController
+                                    navHostController
                                 )
                             }
-                            composable(
-                                "map/{individualIdFilter}",
-                                arguments = listOf(navArgument("individualIdFilter") {
-                                    type = NavType.IntType
-                                })
-                            ) {
-                                val individualIdFilter =
-                                    it.arguments!!.getInt("individualIdFilter")
-                                Map(mapViewModel, individualIdFilter, )//navBarViewModel::navigate)
-
+                            composable<MapScreenRoute> {
+                                Map(
+                                    mapViewModel,
+                                    it.toRoute<MapScreenRoute>().individualFilter
+                                )
                             }
-                            composable("species") {
+                            composable<SpeciesScreenRoute> {
                                 SpeciesScreen(
                                     individualViewModel,
-                                    navController
+                                    navHostController
                                 )
                             }
-                            composable("news") { NewsScreen() }
-                            composable(
-                                "individualSheet/{listId}",
-                                arguments = listOf(navArgument("listId") {
-                                    type = NavType.IntType
-                                })
-                            ) { entry ->
-                                val individualId = entry.arguments!!.getInt("listId")
-                                IndividualScreen(individualId, mapViewModel, individualViewModel)
+                            composable<NewsScreenRoute> { NewsScreen() }
+                            composable<IndividualScreenRoute> {
+                                IndividualScreen(
+                                    it.toRoute<IndividualScreenRoute>().individualId,
+                                    mapViewModel,
+                                    individualViewModel
+                                )
                             }
                         }
-                        NavBar(navBarViewModel)
+                        NavBar(navBarViewModel, navHostController)
                     }
                 }
             }
         }
     }
 }
+
+open class NavRoute
+
+@Serializable
+object FavoritesScreenRoute : NavRoute()
+
+@Serializable
+data class MapScreenRoute(val individualFilter: Int) : NavRoute()
+
+@Serializable
+data class IndividualScreenRoute(val individualId: Int) : NavRoute()
+
+@Serializable
+object NewsScreenRoute : NavRoute()
+
+@Serializable
+object SpeciesScreenRoute : NavRoute()
+
+

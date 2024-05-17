@@ -17,16 +17,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import fr.onat68.aileronsappmapandroid.R
 import fr.onat68.aileronsappmapandroid.data.entities.Individual
 import fr.onat68.aileronsappmapandroid.data.entities.IndividualDTO
 
 @Composable
-fun IndividualsList(individualsList: List<Individual>?, navController: NavController) {
+fun IndividualsList(individualsList: List<Individual>?, navHostController: NavHostController) {
     individualsList ?:return
     for (i in individualsList.indices) {
         Column {
-            IndividualItem(individualsList[i], navController)
+            IndividualItem(individualsList[i], navHostController)
             HorizontalDivider(Modifier.size(5.dp))
         }
     }
