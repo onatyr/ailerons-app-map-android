@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import fr.onat68.aileronsappmapandroid.IndividualScreenRoute
 import fr.onat68.aileronsappmapandroid.R
 import fr.onat68.aileronsappmapandroid.data.entities.Individual
 import fr.onat68.aileronsappmapandroid.data.entities.IndividualDTO
@@ -36,7 +37,7 @@ fun IndividualsList(individualsList: List<Individual>?, navHostController: NavHo
 @Composable
 fun IndividualItem(individual: Individual, navController: NavController) {
     ListItem(
-        headlineContent = { Text(individual.name, fontWeight = FontWeight.Bold) },
+        headlineContent = { Text(individual.individualName, fontWeight = FontWeight.Bold) },
         supportingContent = {
             Text(individual.binomialName)
         },
@@ -48,7 +49,7 @@ fun IndividualItem(individual: Individual, navController: NavController) {
             )
         },
         trailingContent = { Text("meta") },
-        modifier = Modifier.clickable { navController.navigate("individualSheet/${individual.id}") }
+        modifier = Modifier.clickable { navController.navigate(IndividualScreenRoute(individual.id)) }
     )
 }
 

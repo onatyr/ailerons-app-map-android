@@ -32,7 +32,7 @@ fun Header(individual: Individual, changeFav: (Individual) -> Unit) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            individual.name,
+            individual.individualName,
             fontFamily = atkinsonHyperlegible,
             fontWeight = FontWeight.Bold,
             fontSize = 40.sp,

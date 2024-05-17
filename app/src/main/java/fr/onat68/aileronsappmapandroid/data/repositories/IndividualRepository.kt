@@ -20,7 +20,7 @@ class IndividualRepository @Inject constructor(
 
     fun fetchListIndividual() {
         CoroutineScope(Dispatchers.IO).launch {
-            val individualList = supabaseClient.from("individual_new")
+            val individualList = supabaseClient.from("individual")
                 .select().decodeList<IndividualDTO>()
 
             clearIndividual()

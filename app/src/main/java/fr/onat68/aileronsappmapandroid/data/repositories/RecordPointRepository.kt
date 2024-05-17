@@ -29,7 +29,6 @@ class RecordPointRepository @Inject constructor(
 
             clearRecordPoint()
             recordPointDao.insertAll(recordPoints)
-//            recordPoints.forEach { insertRecordPoint(it.toRecordPointEntity()) }
         }
     }
 
