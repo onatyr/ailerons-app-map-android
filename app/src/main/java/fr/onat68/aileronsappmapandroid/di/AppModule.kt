@@ -33,14 +33,17 @@ object AppModule {
     @Provides
     @Singleton
     fun provideSupabaseClient(): SupabaseClient {
-        val dotenv = dotenv {
-            directory = "./assets"
-            filename = "env"
-        }
+//        val dotenv = dotenv {
+//            directory = "./assets"
+//            filename = "env"
+//        }
 
-        return createSupabaseClient(dotenv["SUPABASE_URL"], dotenv["SUPABASE_KEY"]) {
+        return createSupabaseClient(SUPABASE_URL, SUPABASE_KEY) {
             install(Postgrest)
         }
+//        return createSupabaseClient(dotenv["SUPABASE_URL"], dotenv["SUPABASE_KEY"]) {
+//            install(Postgrest)
+//        }
     }
 
     @Provides
@@ -48,7 +51,7 @@ object AppModule {
         supabaseClient: SupabaseClient,
         database: AppDatabase
     ): IndividualRepository {
-        return IndividualRepository(supabaseClient, database.individualDao()).apply { fetchListIndividual() }
+        return IndividualRepository(supabaseClient, database.individualDao())
     }
 
     @Provides
@@ -56,6 +59,6 @@ object AppModule {
         supabaseClient: SupabaseClient,
         database: AppDatabase
     ): RecordPointRepository {
-        return RecordPointRepository(supabaseClient, database.recordPointDao()).apply { fetchListRecordPoint() }
+        return RecordPointRepository(supabaseClient, database.recordPointDao())
     }
 }

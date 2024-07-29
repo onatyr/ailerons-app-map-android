@@ -4,6 +4,7 @@ import androidx.compose.runtime.asIntState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import fr.onat68.aileronsappmapandroid.data.entities.IndividualDAO
+import fr.onat68.aileronsappmapandroid.data.entities.IndividualDTO
 import fr.onat68.aileronsappmapandroid.data.entities.RecordPoint
 import fr.onat68.aileronsappmapandroid.data.entities.RecordPointDAO
 import fr.onat68.aileronsappmapandroid.data.entities.RecordPointDTO
@@ -13,6 +14,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -21,10 +23,20 @@ class RecordPointRepository @Inject constructor(
     private val supabaseClient: SupabaseClient,
     private val recordPointDao: RecordPointDAO
 ) {
-    fun fetchListRecordPoint() {
+
+    init {
+        fetchListRecordPoint()
+    }
+
+    private fun fetchListRecordPoint() {
         CoroutineScope(Dispatchers.IO).launch {
-            val recordPoints = supabaseClient.from("record")
-                .select().decodeList<RecordPointDTO>().sortedBy { it.recordTimestamp }
+            val response = supabaseClient.from("record")
+                .select()
+                .data
+
+            val json = Json { ignoreUnknownKeys = true }
+            val recordPoints = json.decodeFromString<List<RecordPointDTO>>(response)
+                .sortedBy { it.recordTimestamp }
                 .map { it.toRecordPointEntity() }
 
             clearRecordPoint()

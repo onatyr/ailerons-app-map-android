@@ -7,13 +7,13 @@ object MapValues {
 
     val defaultCamera: Point = Point.fromLngLat(48.0, 48.0)
 
-    const val mapStyle: String = Style.MAPBOX_STREETS
+    const val MAP_STYLE: String = Style.MAPBOX_STREETS
 
-    const val circleColor: String = "#ee4e8b"
-    const val circleRadius: Double = 5.0
+    const val CIRCLE_COLOR: String = "#ee4e8b"
+    const val CIRCLE_RADIUS: Double = 2.0
 
-    const val pointIconSize: Double = 0.3
+    const val POINT_ICON_SIZE: Double = 0.3
 
-    const val polylineLineColor: String = "#ee4e8b"
-    const val polylineLineWidth: Double = 5.00
+    const val POLYLINE_COLOR: String = "#ee4e8b"
+    const val POLYLINE_WIDTH: Double = 2.00
 }

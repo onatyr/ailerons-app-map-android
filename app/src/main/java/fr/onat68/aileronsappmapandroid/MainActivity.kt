@@ -37,7 +37,6 @@ class MainActivity : ComponentActivity() {
 
         setContent {
 
-
             AileronsAppMapAndroidTheme {
 
                 val navHostController = rememberNavController()

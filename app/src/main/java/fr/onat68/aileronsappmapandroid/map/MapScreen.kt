@@ -51,7 +51,7 @@ fun Map(
     AndroidView(
         factory = {
             MapView(it).also { mapView ->
-                mapView.mapboxMap.loadStyle(MapValues.mapStyle)
+                mapView.mapboxMap.loadStyle(MapValues.MAP_STYLE)
 
                 val annotationApi = mapView.annotations
 

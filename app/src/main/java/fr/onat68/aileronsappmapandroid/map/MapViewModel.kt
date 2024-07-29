@@ -56,8 +56,8 @@ class MapViewModel @Inject constructor(
             circleList.add(
                 CircleAnnotationOptions()
                     .withPoint(point)
-                    .withCircleRadius(MapValues.circleRadius)
-                    .withCircleColor(MapValues.circleColor)
+                    .withCircleRadius(MapValues.CIRCLE_RADIUS)
+                    .withCircleColor(MapValues.CIRCLE_COLOR)
             )
         }
         return circleList
@@ -76,7 +76,7 @@ class MapViewModel @Inject constructor(
                 PointAnnotationOptions()
                     .withPoint(point)
                     .withIconImage(marker)
-                    .withIconSize(MapValues.pointIconSize)
+                    .withIconSize(MapValues.POINT_ICON_SIZE)
                     .withData(
                         GsonBuilder().create().toJsonTree(recordPointList.value.last().individualId)
                     )
@@ -99,8 +99,8 @@ class MapViewModel @Inject constructor(
             linesList.add(
                 PolylineAnnotationOptions()
                     .withPoints(line)
-                    .withLineColor(MapValues.polylineLineColor)
-                    .withLineWidth(MapValues.polylineLineWidth)
+                    .withLineColor(MapValues.POLYLINE_COLOR)
+                    .withLineWidth(MapValues.POLYLINE_WIDTH)
             )
         }
         return linesList

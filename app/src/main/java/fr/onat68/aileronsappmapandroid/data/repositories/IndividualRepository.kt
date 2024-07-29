@@ -9,6 +9,7 @@ import io.github.jan.supabase.postgrest.from
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -18,10 +19,16 @@ class IndividualRepository @Inject constructor(
     private val individualDao: IndividualDAO
 ) {
 
-    fun fetchListIndividual() {
+    init {
+        fetchListIndividual()
+    }
+
+    private fun fetchListIndividual() {
         CoroutineScope(Dispatchers.IO).launch {
-            val individualList = supabaseClient.from("individual")
-                .select().decodeList<IndividualDTO>()
+            val response = supabaseClient.from("individual")
+                .select().data
+            val json = Json { ignoreUnknownKeys = true }
+            val individualList = json.decodeFromString<List<IndividualDTO>>(response)
 
             clearIndividual()
             individualList.forEach { insertIndividual(it.toIndividualEntity()) }
