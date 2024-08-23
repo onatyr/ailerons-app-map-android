@@ -7,29 +7,23 @@ sealed class NavBarItem(
 ) {
 
     companion object {
-        fun values() = listOf(Favorites, Map, Species, News)
+        fun values() = listOf(Individuals, Map, News)
     }
-    data object Favorites:
-            NavBarItem(
-                "Favoris",
-                R.drawable.ic_star,
-                FavoritesScreenRoute
-            )
     data object Map:
             NavBarItem(
                 "Carte",
                 R.drawable.ic_map,
                 MapScreenRoute(Constants.DEFAULT_FILTER)
             )
-    data object Species:
+    data object Individuals:
             NavBarItem(
-                "Espèces",
-                R.drawable.ic_species,
+                "Individus",
+                R.drawable.ic_individual,
                 SpeciesScreenRoute
             )
     data object News:
             NavBarItem(
-                "Actualités",
+                "Actus",
                 R.drawable.ic_news,
                 NewsScreenRoute
             )
