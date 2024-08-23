@@ -7,7 +7,7 @@ sealed class NavBarItem(
 ) {
 
     companion object {
-        fun values() = listOf(Individuals, Map, News)
+        fun values() = listOf(News, Map, Individuals)
     }
     data object Map:
             NavBarItem(

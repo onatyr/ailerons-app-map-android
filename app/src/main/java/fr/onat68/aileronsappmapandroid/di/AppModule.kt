@@ -38,7 +38,7 @@ object AppModule {
 //            filename = "env"
 //        }
 
-        return createSupabaseClient(SUPABASE_URL, SUPABASE_KEY) {
+       return createSupabaseClient(SUPABASE_URL, SUPABASE_KEY) {
             install(Postgrest)
         }
 //        return createSupabaseClient(dotenv["SUPABASE_URL"], dotenv["SUPABASE_KEY"]) {

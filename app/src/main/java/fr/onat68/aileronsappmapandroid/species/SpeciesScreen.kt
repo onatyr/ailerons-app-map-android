@@ -16,7 +16,7 @@ import fr.onat68.aileronsappmapandroid.favorites.IndividualViewModel
 fun SpeciesScreen(individualViewModel: IndividualViewModel, navHostController: NavHostController) {
     val individualsList = individualViewModel.individualsList.collectAsState(initial = null)
     Column {
-        Text(LocalContext.current.resources.getString(R.string.species))
+        Text(LocalContext.current.resources.getString(R.string.individuals))
         IndividualsList(individualsList.value, navHostController)
     }
 }

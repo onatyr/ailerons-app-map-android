@@ -5,10 +5,14 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -21,9 +25,15 @@ import fr.onat68.aileronsappmapandroid.map.Map
 import fr.onat68.aileronsappmapandroid.map.MapViewModel
 import fr.onat68.aileronsappmapandroid.news.NewsScreen
 import fr.onat68.aileronsappmapandroid.species.SpeciesScreen
-import fr.onat68.aileronsappmapandroid.ui.theme.AileronsAppMapAndroidTheme
 import kotlinx.serialization.Serializable
 
+val LocalCustomFont = staticCompositionLocalOf {
+    FontFamily(
+        Font(R.font.atkinson_hyperlegible_regular, FontWeight.Normal),
+        Font(R.font.atkinson_hyperlegible_italic, style = FontStyle.Italic),
+        Font(R.font.atkinson_hyperlegible_bold, FontWeight.Bold)
+    )
+}
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -31,56 +41,54 @@ class MainActivity : ComponentActivity() {
     private val individualViewModel: IndividualViewModel by viewModels()
     private val mapViewModel: MapViewModel by viewModels()
     private val navBarViewModel: NavBarViewModel by viewModels()
+    private val atkinsonFontFamily = FontFamily(
+        Font(R.font.atkinson_hyperlegible_regular, FontWeight.Normal),
+        Font(R.font.atkinson_hyperlegible_bold, FontWeight.Bold)
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
 
-            AileronsAppMapAndroidTheme {
+            val navHostController = rememberNavController()
 
-                val navHostController = rememberNavController()
+            CompositionLocalProvider(LocalCustomFont provides atkinsonFontFamily) {
 
-
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Column {
-                        NavHost(
-                            navController = navHostController,
-                            startDestination = NavBarItem.Map.navRoute,
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            composable<FavoritesScreenRoute> {
-                                FavoriteScreen(
-                                    individualViewModel,
-                                    navHostController
-                                )
-                            }
-                            composable<MapScreenRoute> {
-                                Map(
-                                    mapViewModel,
-                                    it.toRoute<MapScreenRoute>().individualFilter
-                                )
-                            }
-                            composable<SpeciesScreenRoute> {
-                                SpeciesScreen(
-                                    individualViewModel,
-                                    navHostController
-                                )
-                            }
-                            composable<NewsScreenRoute> { NewsScreen() }
-                            composable<IndividualScreenRoute> {
-                                IndividualScreen(
-                                    it.toRoute<IndividualScreenRoute>().individualId,
-                                    mapViewModel,
-                                    individualViewModel
-                                )
-                            }
+                Column {
+                    NavHost(
+                        navController = navHostController,
+                        startDestination = NavBarItem.Map.navRoute,
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        composable<FavoritesScreenRoute> {
+                            FavoriteScreen(
+                                individualViewModel,
+                                navHostController
+                            )
                         }
-                        NavBar(navBarViewModel, navHostController)
+                        composable<MapScreenRoute> {
+                            Map(
+                                mapViewModel,
+                                it.toRoute<MapScreenRoute>().individualFilter
+                            )
+                        }
+                        composable<SpeciesScreenRoute> {
+                            SpeciesScreen(
+                                individualViewModel,
+                                navHostController
+                            )
+                        }
+                        composable<NewsScreenRoute> { NewsScreen() }
+                        composable<IndividualScreenRoute> {
+                            IndividualScreen(
+                                it.toRoute<IndividualScreenRoute>().individualId,
+                                mapViewModel,
+                                individualViewModel
+                            )
+                        }
                     }
+                    NavBar(navBarViewModel, navHostController)
                 }
             }
         }

@@ -1,11 +1,11 @@
 <resources>
     <string name="app_name">Ailerons Maps</string>
 
-    <string name="favorites">Favoris</string>
     <string name="map">Carte</string>
-    <string name ="species">Espèces</string>
-    <string name="news">Actualités</string>
+    <string name ="individuals">Individus</string>
+    <string name="news">Actus</string>
 
+    <string name="identity_card">Fiche d\'Identité</string>
     <string name="age">Age</string>
     <string name="weight">Poids</string>
     <string name="sex">Sexe</string>

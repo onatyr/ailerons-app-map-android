@@ -7,7 +7,7 @@ object MapValues {
 
     val defaultCamera: Point = Point.fromLngLat(48.0, 48.0)
 
-    const val MAP_STYLE: String = Style.MAPBOX_STREETS
+    const val MAP_STYLE: String = "mapbox://styles/louiscoutel/clzfs0eqy00d201r35xf19d1o"
 
     const val CIRCLE_COLOR: String = "#ee4e8b"
     const val CIRCLE_RADIUS: Double = 2.0

@@ -80,7 +80,7 @@ fun Map(
                         OnPointAnnotationClickListener {
                             val individualId: String = it.getData().toString()
                             openIndividualSheet(
-                                NavBarItem.Species,
+                                NavBarItem.Individuals,
                                 "individualSheet/${individualId}"
                             )
 
@@ -96,7 +96,7 @@ fun Map(
             }
 
             val zoom =
-                if (individualIdFilter == Constants.DEFAULT_FILTER) 1.5 else 4.0 // Set the zoom closer if one individual is selected
+                if (individualIdFilter == Constants.DEFAULT_FILTER) 6.0 else 7.0 // Set the zoom closer if one individual is selected
 
             mapView.mapboxMap
                 .flyTo(

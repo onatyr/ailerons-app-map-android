@@ -24,7 +24,6 @@ fun FavoriteScreen(
         favoritesViewModel.favoritesList.collectAsState(initial = listOf())
 
     Column {
-        Text(LocalContext.current.resources.getString(R.string.favorites))
         for (favIndividual in favoritesList.value) {
 
             IndividualItem(favIndividual, navController)
