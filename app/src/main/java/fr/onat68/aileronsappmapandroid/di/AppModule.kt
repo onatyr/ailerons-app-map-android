@@ -7,10 +7,10 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import fr.onat68.aileronsappmapandroid.BuildConfig
 import fr.onat68.aileronsappmapandroid.data.AppDatabase
 import fr.onat68.aileronsappmapandroid.data.repositories.IndividualRepository
 import fr.onat68.aileronsappmapandroid.data.repositories.RecordPointRepository
-import io.github.cdimascio.dotenv.dotenv
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.postgrest.Postgrest
@@ -33,17 +33,9 @@ object AppModule {
     @Provides
     @Singleton
     fun provideSupabaseClient(): SupabaseClient {
-//        val dotenv = dotenv {
-//            directory = "./assets"
-//            filename = "env"
-//        }
-
-       return createSupabaseClient(SUPABASE_URL, SUPABASE_KEY) {
+       return createSupabaseClient(BuildConfig.supabaseUrl, BuildConfig.supabaseKey) {
             install(Postgrest)
         }
-//        return createSupabaseClient(dotenv["SUPABASE_URL"], dotenv["SUPABASE_KEY"]) {
-//            install(Postgrest)
-//        }
     }
 
     @Provides

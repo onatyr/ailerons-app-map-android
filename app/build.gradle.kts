@@ -1,9 +1,11 @@
+import java.util.Properties
+
 plugins {
     val kotlinVersion = "1.9.23"
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     kotlin("plugin.serialization") version kotlinVersion
-    id("com.google.secrets_gradle_plugin") version "0.4"
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
 
@@ -52,6 +54,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.13"
@@ -64,7 +67,7 @@ android {
 }
 
 dependencies {
-    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("androidx.appcompat:appcompat:1.7.0")
     val roomVersion = "2.6.1"
 
 //    .ENV
@@ -75,7 +78,7 @@ dependencies {
     implementation("androidx.room:room-ktx:$roomVersion")
     ksp("androidx.room:room-compiler:$roomVersion")
 
-    implementation("androidx.navigation:navigation-compose:2.8.0-beta01")
+    implementation("androidx.navigation:navigation-compose:2.8.0-rc01")
 
 //    SUPABASE CLIENT
     implementation(platform("io.github.jan-tennert.supabase:bom:2.0.4"))
@@ -87,17 +90,17 @@ dependencies {
     implementation("com.mapbox.extension:maps-compose:11.0.0")
 
     implementation("androidx.core:core-ktx:1.13.1")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.0")
-    implementation("androidx.activity:activity-compose:1.9.0")
-    implementation(platform("androidx.compose:compose-bom:2024.05.00"))
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.23")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.4")
+    implementation("androidx.activity:activity-compose:1.9.1")
+    implementation(platform("androidx.compose:compose-bom:2024.08.00"))
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:2.0.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
-    implementation("androidx.appcompat:appcompat-resources:1.6.1")
+    implementation("androidx.appcompat:appcompat-resources:1.7.0")
     implementation("com.google.android.gms:play-services-maps:18.2.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
@@ -108,7 +111,7 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
 // COMPOSE
-    val lifecycleVersion = "2.8.0"
+    val lifecycleVersion = "2.8.4"
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
 
 
