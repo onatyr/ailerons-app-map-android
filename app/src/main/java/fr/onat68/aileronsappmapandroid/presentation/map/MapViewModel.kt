@@ -1,6 +1,7 @@
 package fr.onat68.aileronsappmapandroid.presentation.map
 
 import android.graphics.Bitmap
+import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
 import com.google.gson.GsonBuilder
 import com.mapbox.geojson.Point
@@ -10,12 +11,17 @@ import com.mapbox.maps.plugin.annotation.generated.PolylineAnnotationOptions
 import dagger.hilt.android.lifecycle.HiltViewModel
 import fr.onat68.aileronsappmapandroid.Constants.CIRCLE_COLOR
 import fr.onat68.aileronsappmapandroid.Constants.CIRCLE_RADIUS
+import fr.onat68.aileronsappmapandroid.Constants.DEFAULT_FILTER
 import fr.onat68.aileronsappmapandroid.Constants.POINT_ICON_SIZE
 import fr.onat68.aileronsappmapandroid.Constants.POLYLINE_COLOR
 import fr.onat68.aileronsappmapandroid.Constants.POLYLINE_WIDTH
 import fr.onat68.aileronsappmapandroid.Constants.defaultCamera
 import fr.onat68.aileronsappmapandroid.data.entities.RecordPoint
 import fr.onat68.aileronsappmapandroid.data.repositories.RecordPointRepository
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 @HiltViewModel

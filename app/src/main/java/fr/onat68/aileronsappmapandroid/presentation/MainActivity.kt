@@ -4,11 +4,15 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
@@ -18,6 +22,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import dagger.hilt.android.AndroidEntryPoint
+import fr.onat68.aileronsappmapandroid.Constants.DEFAULT_FILTER
 import fr.onat68.aileronsappmapandroid.R
 import fr.onat68.aileronsappmapandroid.data.entities.Article
 import fr.onat68.aileronsappmapandroid.presentation.news.ArticleScreen
@@ -70,39 +75,48 @@ class MainActivity : ComponentActivity() {
             ) {
 
                 Column {
-                    NavHost(
-                        navController = navHostController,
-                        startDestination = NavBarItem.Map.navRoute,
-                        modifier = Modifier.weight(1f)
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .weight(1f)
                     ) {
-                        composable<MapScreenRoute> {
-                            Map(
-                                mapViewModel,
-                                it.toRoute<MapScreenRoute>().individualFilter
-                            )
-                        }
-                        composable<SpeciesScreenRoute> {
-                            SpeciesScreen(
-                                individualViewModel,
-                                navHostController
-                            )
-                        }
-                        composable<NewsScreenRoute> {
-                            NewsScreen(
-                                newsViewModel,
-                                navHostController::navigate
-                            )
-                        }
-                        composable<Article> {
-                            val article = it.toRoute<Article>()
-                            ArticleScreen(article)
-                        }
-                        composable<IndividualScreenRoute> {
-                            IndividualScreen(
-                                it.toRoute<IndividualScreenRoute>().individualId,
-                                mapViewModel,
-                                individualViewModel
-                            )
+                        Map(mapViewModel, DEFAULT_FILTER)
+                        NavHost(
+                            navController = navHostController,
+                            startDestination = NavBarItem.Map.navRoute,
+                        ) {
+                            composable<MapScreenRoute> {}
+                            composable<SpeciesScreenRoute> {
+                                ScreenSurface {
+                                    SpeciesScreen(
+                                        individualViewModel,
+                                        navHostController
+                                    )
+                                }
+                            }
+                            composable<NewsScreenRoute> {
+                                ScreenSurface {
+                                    NewsScreen(
+                                        newsViewModel,
+                                        navHostController::navigate
+                                    )
+                                }
+                            }
+                            composable<Article> {
+                                val article = it.toRoute<Article>()
+                                ScreenSurface {
+                                    ArticleScreen(article)
+                                }
+                            }
+                            composable<IndividualScreenRoute> {
+                                ScreenSurface {
+                                    IndividualScreen(
+                                        it.toRoute<IndividualScreenRoute>().individualId,
+                                        mapViewModel,
+                                        individualViewModel
+                                    )
+                                }
+                            }
                         }
                     }
                     NavBar(navBarViewModel, navHostController::navigate)
