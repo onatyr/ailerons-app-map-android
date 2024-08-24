@@ -6,8 +6,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
@@ -39,7 +43,11 @@ fun ArticleScreen(article: Article) {
     ScrollableColumnWithHeader(
         headerLabel = stringResource(R.string.article),
     ) {
-        GlideImage(model = article.imageUrl, contentDescription = null)
+        GlideImage(
+            model = article.imageUrl,
+            contentDescription = null,
+            contentScale = ContentScale.FillWidth
+        )
         Column(modifier = Modifier.padding(horizontal = 16.dp)) {
             Title(title = article.title, Color(0xFF173B65))
             PublicationDate(date = formatDate(article.publicationDate))
@@ -49,11 +57,13 @@ fun ArticleScreen(article: Article) {
 }
 
 @Composable
-fun Title(title: String, textColor: Color) {
+fun Title(title: String, textColor: Color, maxLines: Int = Int.MAX_VALUE, fontSize: TextUnit = 30.sp) {
     Text(
         text = title,
-        fontSize = 30.sp,
+        maxLines = maxLines,
+        fontSize = fontSize,
         color = textColor,
+        overflow = TextOverflow.Ellipsis,
         fontFamily = LocalCustomFont.current,
         modifier = Modifier.padding(top = 12.dp)
     )
@@ -61,5 +71,10 @@ fun Title(title: String, textColor: Color) {
 
 @Composable
 fun PublicationDate(date: String, textColor: Color = Color.Unspecified) {
-    Text(text = "Equipe Ailerons $date", modifier = Modifier.padding(bottom = 12.dp), color = textColor)
+    Text(
+        text = "Equipe Ailerons $date",
+        maxLines = 1,
+        modifier = Modifier.padding(bottom = 12.dp),
+        color = textColor
+    )
 }
