@@ -4,14 +4,11 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -20,7 +17,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
@@ -28,49 +24,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import fr.onat68.aileronsappmapandroid.Constants
-import fr.onat68.aileronsappmapandroid.presentation.LocalCustomFont
 import fr.onat68.aileronsappmapandroid.R
 import fr.onat68.aileronsappmapandroid.data.entities.Individual
+import fr.onat68.aileronsappmapandroid.presentation.LocalCustomFont
 
 @Composable
-fun Header() {
-    Row(
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(IntrinsicSize.Min)
-            .padding(horizontal = 10.dp, vertical = 4.dp)
-    ) {
-        Button(
-            onClick = { /*TODO*/ },
-            contentPadding = PaddingValues(0.dp),
-            colors = ButtonColors( // TODO pass them in LocalProvider
-                containerColor = Color.Transparent,
-                contentColor = Color.Transparent,
-                disabledContentColor = Color.Transparent,
-                disabledContainerColor = Color.Transparent
-            )
-        ) {
-            Icon(
-                painterResource(R.drawable.left_arrow),
-                contentDescription = "Go back button",
-                tint = Constants.ORANGE_COLOR,
-                modifier = Modifier
-            )
-        }
-        Text(
-            text = stringResource(R.string.identity_card),
-            fontSize = 30.sp,
-            fontFamily = LocalCustomFont.current,
-            modifier = Modifier
-        )
-    }
-}
-
-@Composable
-fun IndividualCharacteristics(individual: Individual, modifier: Modifier) {
+fun IndividualCharacteristics(individual: Individual) {
     Column {
         IndividualCharacteristicsHeader(
             individualName = individual.individualName,

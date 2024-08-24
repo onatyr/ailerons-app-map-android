@@ -6,6 +6,8 @@
     <string name="news">Actus</string>
 
     <string name="identity_card">Fiche d\'Identité</string>
+    <string name="article">Article</string>
+
     <string name="age">Age</string>
     <string name="weight">Poids</string>
     <string name="sex">Sexe</string>

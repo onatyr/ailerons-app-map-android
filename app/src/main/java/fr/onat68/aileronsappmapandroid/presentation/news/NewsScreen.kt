@@ -1,15 +1,24 @@
 package fr.onat68.aileronsappmapandroid.presentation.news
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.platform.LocalContext
-import fr.onat68.aileronsappmapandroid.R
+import fr.onat68.aileronsappmapandroid.presentation.NavRoute
 
 @Composable
-fun NewsScreen(newsViewModel: NewsViewModel) {
-    Text(LocalContext.current.resources.getString(R.string.news))
-    val articles = newsViewModel.articleList.collectAsState(emptyList())
-    
-    Text(text = articles.value.first().title)
+fun NewsScreen(newsViewModel: NewsViewModel, navigate: (NavRoute) -> Unit) {
+    Column {
+        val articles = newsViewModel.articleList.collectAsState(emptyList())
+
+        Column {
+            articles.value.forEach {
+                Button(onClick = { navigate(it) }) {
+                    Text(text = it.title)
+                }
+            }
+        }
+
+    }
 }

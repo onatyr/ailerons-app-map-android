@@ -6,8 +6,11 @@ import androidx.room.Entity
 import androidx.room.Insert
 import androidx.room.PrimaryKey
 import androidx.room.Query
+import fr.onat68.aileronsappmapandroid.presentation.NavRoute
 import kotlinx.coroutines.flow.Flow
+import kotlinx.serialization.Serializable
 
+@Serializable
 @Entity(
     tableName = "article"
 )
@@ -17,7 +20,7 @@ data class Article(
     @ColumnInfo(name = "content") val content: String,
     @ColumnInfo(name = "publication_date") val publicationDate: String,
     @ColumnInfo(name = "image_url") val imageUrl: String,
-)
+): NavRoute()
 
 @Dao
 interface ArticleDAO {

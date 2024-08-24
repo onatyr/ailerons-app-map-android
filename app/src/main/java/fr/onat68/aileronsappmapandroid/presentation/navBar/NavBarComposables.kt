@@ -16,10 +16,10 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
+import fr.onat68.aileronsappmapandroid.presentation.NavRoute
 
 @Composable
-fun NavBar(navBarViewModel: NavBarViewModel, navHostController: NavHostController) {
+fun NavBar(navBarViewModel: NavBarViewModel, navigate: (NavRoute) -> Unit) {
     val selectedItem = navBarViewModel.selectedItem.collectAsState(NavBarItem.Map as NavBarItem)
 
     NavigationBar(containerColor = Color.White, modifier = Modifier.height(60.dp)) {
@@ -31,7 +31,7 @@ fun NavBar(navBarViewModel: NavBarViewModel, navHostController: NavHostControlle
                     if (item == NavBarItem.Map && selectedItem.value == item) {
                         return@NavigationBarItem
                     }
-                    navHostController.navigate(item.navRoute)
+                    navigate(item.navRoute)
                     navBarViewModel.updateSelectedItem(item)
                 },
                 icon = {
