@@ -6,7 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
@@ -14,7 +13,6 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -22,7 +20,7 @@ import androidx.navigation.toRoute
 import dagger.hilt.android.AndroidEntryPoint
 import fr.onat68.aileronsappmapandroid.R
 import fr.onat68.aileronsappmapandroid.data.entities.Article
-import fr.onat68.aileronsappmapandroid.presentation.article.ArticleScreen
+import fr.onat68.aileronsappmapandroid.presentation.news.ArticleScreen
 import fr.onat68.aileronsappmapandroid.presentation.individual.IndividualViewModel
 import fr.onat68.aileronsappmapandroid.presentation.individual.IndividualScreen
 import fr.onat68.aileronsappmapandroid.presentation.map.Map

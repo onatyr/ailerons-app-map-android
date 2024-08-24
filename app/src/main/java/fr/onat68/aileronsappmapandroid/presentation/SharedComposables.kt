@@ -1,12 +1,18 @@
 package fr.onat68.aileronsappmapandroid.presentation
 
+import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Icon
@@ -20,6 +26,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.onat68.aileronsappmapandroid.Constants
 import fr.onat68.aileronsappmapandroid.R
+
+@Composable
+fun ScrollableColumnWithHeader(
+    headerLabel: String,
+    modifier: Modifier = Modifier,
+    scrollState: ScrollState = rememberScrollState(),
+    content: @Composable ColumnScope.() -> Unit
+) {
+    Column(modifier = modifier) {
+        Header(label = headerLabel)
+        Column(modifier = Modifier.verticalScroll(scrollState)) {
+            content()
+        }
+    }
+}
 
 @Composable
 fun Header(label: String) {
@@ -45,14 +66,12 @@ fun Header(label: String) {
                 painterResource(R.drawable.left_arrow),
                 contentDescription = "Go back button",
                 tint = Constants.ORANGE_COLOR,
-                modifier = Modifier
             )
         }
         Text(
             text = label,
             fontSize = 30.sp,
             fontFamily = LocalCustomFont.current,
-            modifier = Modifier
         )
     }
 }
