@@ -1,4 +1,4 @@
-package fr.onat68.aileronsappmapandroid.map
+package fr.onat68.aileronsappmapandroid.presentation.map
 
 import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
@@ -8,6 +8,12 @@ import com.mapbox.maps.plugin.annotation.generated.CircleAnnotationOptions
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions
 import com.mapbox.maps.plugin.annotation.generated.PolylineAnnotationOptions
 import dagger.hilt.android.lifecycle.HiltViewModel
+import fr.onat68.aileronsappmapandroid.Constants.CIRCLE_COLOR
+import fr.onat68.aileronsappmapandroid.Constants.CIRCLE_RADIUS
+import fr.onat68.aileronsappmapandroid.Constants.POINT_ICON_SIZE
+import fr.onat68.aileronsappmapandroid.Constants.POLYLINE_COLOR
+import fr.onat68.aileronsappmapandroid.Constants.POLYLINE_WIDTH
+import fr.onat68.aileronsappmapandroid.Constants.defaultCamera
 import fr.onat68.aileronsappmapandroid.data.entities.RecordPoint
 import fr.onat68.aileronsappmapandroid.data.repositories.RecordPointRepository
 import javax.inject.Inject
@@ -26,7 +32,7 @@ class MapViewModel @Inject constructor(
                 it.longitude.toDouble(),
                 it.latitude.toDouble()
             )
-        }) else MapValues.defaultCamera
+        }) else defaultCamera
     }
 
     private fun centroid(points: List<Point>): Point {
@@ -56,8 +62,8 @@ class MapViewModel @Inject constructor(
             circleList.add(
                 CircleAnnotationOptions()
                     .withPoint(point)
-                    .withCircleRadius(MapValues.CIRCLE_RADIUS)
-                    .withCircleColor(MapValues.CIRCLE_COLOR)
+                    .withCircleRadius(CIRCLE_RADIUS)
+                    .withCircleColor(CIRCLE_COLOR)
             )
         }
         return circleList
@@ -76,7 +82,7 @@ class MapViewModel @Inject constructor(
                 PointAnnotationOptions()
                     .withPoint(point)
                     .withIconImage(marker)
-                    .withIconSize(MapValues.POINT_ICON_SIZE)
+                    .withIconSize(POINT_ICON_SIZE)
                     .withData(
                         GsonBuilder().create().toJsonTree(recordPointList.value.last().individualId)
                     )
@@ -99,8 +105,8 @@ class MapViewModel @Inject constructor(
             linesList.add(
                 PolylineAnnotationOptions()
                     .withPoints(line)
-                    .withLineColor(MapValues.POLYLINE_COLOR)
-                    .withLineWidth(MapValues.POLYLINE_WIDTH)
+                    .withLineColor(POLYLINE_COLOR)
+                    .withLineWidth(POLYLINE_WIDTH)
             )
         }
         return linesList

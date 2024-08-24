@@ -1,4 +1,4 @@
-package fr.onat68.aileronsappmapandroid.individual
+package fr.onat68.aileronsappmapandroid.presentation.individual
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Arrangement
@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.HorizontalDivider
@@ -30,7 +29,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.onat68.aileronsappmapandroid.Constants
-import fr.onat68.aileronsappmapandroid.LocalCustomFont
+import fr.onat68.aileronsappmapandroid.presentation.LocalCustomFont
 import fr.onat68.aileronsappmapandroid.R
 import fr.onat68.aileronsappmapandroid.data.entities.Individual
 

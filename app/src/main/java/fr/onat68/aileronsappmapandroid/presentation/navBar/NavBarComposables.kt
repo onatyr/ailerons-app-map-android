@@ -1,4 +1,4 @@
-package fr.onat68.aileronsappmapandroid
+package fr.onat68.aileronsappmapandroid.presentation.navBar
 
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Icon

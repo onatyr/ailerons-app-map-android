@@ -1,4 +1,4 @@
-package fr.onat68.aileronsappmapandroid
+package fr.onat68.aileronsappmapandroid.presentation.navBar
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

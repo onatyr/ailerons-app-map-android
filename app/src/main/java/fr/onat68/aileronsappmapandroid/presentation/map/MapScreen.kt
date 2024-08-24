@@ -1,4 +1,4 @@
-package fr.onat68.aileronsappmapandroid.map
+package fr.onat68.aileronsappmapandroid.presentation.map
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -22,7 +22,8 @@ import com.mapbox.maps.plugin.annotation.generated.createCircleAnnotationManager
 import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
 import com.mapbox.maps.plugin.annotation.generated.createPolylineAnnotationManager
 import fr.onat68.aileronsappmapandroid.Constants
-import fr.onat68.aileronsappmapandroid.NavBarItem
+import fr.onat68.aileronsappmapandroid.Constants.MAP_STYLE
+import fr.onat68.aileronsappmapandroid.presentation.navBar.NavBarItem
 
 @Composable
 fun Map(
@@ -51,7 +52,7 @@ fun Map(
     AndroidView(
         factory = {
             MapView(it).also { mapView ->
-                mapView.mapboxMap.loadStyle(MapValues.MAP_STYLE)
+                mapView.mapboxMap.loadStyle(MAP_STYLE)
 
                 val annotationApi = mapView.annotations
 

@@ -1,4 +1,4 @@
-package fr.onat68.aileronsappmapandroid.individual
+package fr.onat68.aileronsappmapandroid.presentation.individual
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -20,10 +20,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import fr.onat68.aileronsappmapandroid.LocalCustomFont
+import fr.onat68.aileronsappmapandroid.presentation.LocalCustomFont
 import fr.onat68.aileronsappmapandroid.R
-import fr.onat68.aileronsappmapandroid.map.Map
-import fr.onat68.aileronsappmapandroid.map.MapViewModel
+import fr.onat68.aileronsappmapandroid.presentation.map.Map
+import fr.onat68.aileronsappmapandroid.presentation.map.MapViewModel
 
 @Composable
 fun IndividualScreen(

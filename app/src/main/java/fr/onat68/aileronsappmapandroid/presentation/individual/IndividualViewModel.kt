@@ -1,4 +1,4 @@
-package fr.onat68.aileronsappmapandroid.individual
+package fr.onat68.aileronsappmapandroid.presentation.individual
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel

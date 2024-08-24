@@ -1,4 +1,4 @@
-package fr.onat68.aileronsappmapandroid
+package fr.onat68.aileronsappmapandroid.presentation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -17,12 +17,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import dagger.hilt.android.AndroidEntryPoint
-import fr.onat68.aileronsappmapandroid.individual.IndividualViewModel
-import fr.onat68.aileronsappmapandroid.individual.IndividualScreen
-import fr.onat68.aileronsappmapandroid.map.Map
-import fr.onat68.aileronsappmapandroid.map.MapViewModel
-import fr.onat68.aileronsappmapandroid.news.NewsScreen
-import fr.onat68.aileronsappmapandroid.species.SpeciesScreen
+import fr.onat68.aileronsappmapandroid.R
+import fr.onat68.aileronsappmapandroid.presentation.individual.IndividualViewModel
+import fr.onat68.aileronsappmapandroid.presentation.individual.IndividualScreen
+import fr.onat68.aileronsappmapandroid.presentation.map.Map
+import fr.onat68.aileronsappmapandroid.presentation.map.MapViewModel
+import fr.onat68.aileronsappmapandroid.presentation.navBar.NavBarItem
+import fr.onat68.aileronsappmapandroid.presentation.navBar.NavBarViewModel
+import fr.onat68.aileronsappmapandroid.presentation.news.NewsScreen
+import fr.onat68.aileronsappmapandroid.presentation.species.SpeciesScreen
 import kotlinx.serialization.Serializable
 
 val LocalCustomFont = staticCompositionLocalOf {

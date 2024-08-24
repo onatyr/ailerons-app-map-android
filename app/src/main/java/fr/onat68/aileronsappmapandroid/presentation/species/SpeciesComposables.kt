@@ -1,4 +1,4 @@
-package fr.onat68.aileronsappmapandroid.species
+package fr.onat68.aileronsappmapandroid.presentation.species
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -14,7 +14,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import fr.onat68.aileronsappmapandroid.IndividualScreenRoute
+import fr.onat68.aileronsappmapandroid.presentation.IndividualScreenRoute
 import fr.onat68.aileronsappmapandroid.R
 import fr.onat68.aileronsappmapandroid.data.entities.Individual
 

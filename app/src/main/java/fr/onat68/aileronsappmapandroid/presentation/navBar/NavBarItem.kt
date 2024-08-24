@@ -1,4 +1,11 @@
-package fr.onat68.aileronsappmapandroid
+package fr.onat68.aileronsappmapandroid.presentation.navBar
+
+import fr.onat68.aileronsappmapandroid.Constants
+import fr.onat68.aileronsappmapandroid.presentation.MapScreenRoute
+import fr.onat68.aileronsappmapandroid.presentation.NavRoute
+import fr.onat68.aileronsappmapandroid.presentation.NewsScreenRoute
+import fr.onat68.aileronsappmapandroid.R
+import fr.onat68.aileronsappmapandroid.presentation.SpeciesScreenRoute
 
 sealed class NavBarItem(
     val title: String,

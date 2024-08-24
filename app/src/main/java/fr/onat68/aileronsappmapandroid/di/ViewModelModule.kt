@@ -11,8 +11,8 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import fr.onat68.aileronsappmapandroid.R
 import fr.onat68.aileronsappmapandroid.data.repositories.IndividualRepository
 import fr.onat68.aileronsappmapandroid.data.repositories.RecordPointRepository
-import fr.onat68.aileronsappmapandroid.individual.IndividualViewModel
-import fr.onat68.aileronsappmapandroid.map.MapViewModel
+import fr.onat68.aileronsappmapandroid.presentation.individual.IndividualViewModel
+import fr.onat68.aileronsappmapandroid.presentation.map.MapViewModel
 
 @Module
 @InstallIn(ViewModelComponent::class)
