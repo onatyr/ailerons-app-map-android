@@ -22,9 +22,11 @@ import fr.onat68.aileronsappmapandroid.presentation.individual.IndividualViewMod
 import fr.onat68.aileronsappmapandroid.presentation.individual.IndividualScreen
 import fr.onat68.aileronsappmapandroid.presentation.map.Map
 import fr.onat68.aileronsappmapandroid.presentation.map.MapViewModel
+import fr.onat68.aileronsappmapandroid.presentation.navBar.NavBar
 import fr.onat68.aileronsappmapandroid.presentation.navBar.NavBarItem
 import fr.onat68.aileronsappmapandroid.presentation.navBar.NavBarViewModel
 import fr.onat68.aileronsappmapandroid.presentation.news.NewsScreen
+import fr.onat68.aileronsappmapandroid.presentation.news.NewsViewModel
 import fr.onat68.aileronsappmapandroid.presentation.species.SpeciesScreen
 import kotlinx.serialization.Serializable
 
@@ -42,6 +44,9 @@ class MainActivity : ComponentActivity() {
     private val individualViewModel: IndividualViewModel by viewModels()
     private val mapViewModel: MapViewModel by viewModels()
     private val navBarViewModel: NavBarViewModel by viewModels()
+    private val newsViewModel: NewsViewModel by viewModels()
+
+
     private val atkinsonFontFamily = FontFamily(
         Font(R.font.atkinson_hyperlegible_regular, FontWeight.Normal),
         Font(R.font.atkinson_hyperlegible_bold, FontWeight.Bold)
@@ -74,7 +79,7 @@ class MainActivity : ComponentActivity() {
                                 navHostController
                             )
                         }
-                        composable<NewsScreenRoute> { NewsScreen() }
+                        composable<NewsScreenRoute> { NewsScreen(newsViewModel) }
                         composable<IndividualScreenRoute> {
                             IndividualScreen(
                                 it.toRoute<IndividualScreenRoute>().individualId,

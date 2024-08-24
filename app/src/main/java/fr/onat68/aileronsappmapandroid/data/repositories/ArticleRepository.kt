@@ -9,9 +9,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
+import javax.inject.Singleton
 
-class ArticleRepository
-@Inject constructor(
+@Singleton
+class ArticleRepository @Inject constructor(
     private val supabaseClient: SupabaseClient,
     private val articleDao: ArticleDAO
 ) {

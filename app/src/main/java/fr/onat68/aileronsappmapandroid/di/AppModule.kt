@@ -9,6 +9,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import fr.onat68.aileronsappmapandroid.BuildConfig
 import fr.onat68.aileronsappmapandroid.data.AppDatabase
+import fr.onat68.aileronsappmapandroid.data.repositories.ArticleRepository
 import fr.onat68.aileronsappmapandroid.data.repositories.IndividualRepository
 import fr.onat68.aileronsappmapandroid.data.repositories.RecordPointRepository
 import io.github.jan.supabase.SupabaseClient
@@ -22,35 +23,32 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideDatabase(@ApplicationContext context: Context): AppDatabase {
-        return Room.databaseBuilder(
-            context,
-            AppDatabase::class.java,
-            "AileronsDatabase"
-        ).build()
-    }
+    fun provideDatabase(@ApplicationContext context: Context) = Room.databaseBuilder(
+        context,
+        AppDatabase::class.java,
+        "AileronsDatabase"
+    ).build()
 
     @Provides
     @Singleton
-    fun provideSupabaseClient(): SupabaseClient {
-       return createSupabaseClient(BuildConfig.supabaseUrl, BuildConfig.supabaseKey) {
+    fun provideSupabaseClient() =
+        createSupabaseClient(BuildConfig.supabaseUrl, BuildConfig.supabaseKey) {
             install(Postgrest)
         }
-    }
+
+    @Provides
+    fun provideArticleRepository(supabaseClient: SupabaseClient, database: AppDatabase) =
+        ArticleRepository(supabaseClient, database.articleDao())
 
     @Provides
     fun provideIndividualRepository(
         supabaseClient: SupabaseClient,
         database: AppDatabase
-    ): IndividualRepository {
-        return IndividualRepository(supabaseClient, database.individualDao())
-    }
+    ) = IndividualRepository(supabaseClient, database.individualDao())
 
     @Provides
     fun provideRecordPointRepository(
         supabaseClient: SupabaseClient,
         database: AppDatabase
-    ): RecordPointRepository {
-        return RecordPointRepository(supabaseClient, database.recordPointDao())
-    }
+    ) = RecordPointRepository(supabaseClient, database.recordPointDao())
 }

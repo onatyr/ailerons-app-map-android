@@ -9,7 +9,7 @@ import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 
 @Entity(
-    tableName = "news"
+    tableName = "article"
 )
 data class Article(
     @PrimaryKey(autoGenerate = true) val id: Int,
@@ -21,12 +21,12 @@ data class Article(
 
 @Dao
 interface ArticleDAO {
-    @Query("SELECT * FROM news")
+    @Query("SELECT * FROM article")
     fun getAll(): Flow<List<Article>>
 
     @Insert
     suspend fun insertAll(articles: List<Article>)
 
-    @Query("DELETE FROM news")
+    @Query("DELETE FROM article")
     suspend fun deleteAll()
 }
