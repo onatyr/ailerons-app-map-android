@@ -1,5 +1,6 @@
 package fr.onat68.aileronsappmapandroid.data.dtos
 
+import fr.onat68.aileronsappmapandroid.DateUtil.formatDate
 import fr.onat68.aileronsappmapandroid.data.entities.Article
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -22,7 +23,7 @@ data class ArticleDTO(
         id = 0,
         title = title,
         content = content,
-        publicationDate = publicationDate,
+        publicationDate = formatDate(publicationDate),
         imageUrl = imageUrl
     )
 }

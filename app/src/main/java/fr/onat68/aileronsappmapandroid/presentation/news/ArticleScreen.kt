@@ -11,7 +11,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
@@ -19,23 +18,6 @@ import fr.onat68.aileronsappmapandroid.R
 import fr.onat68.aileronsappmapandroid.data.entities.Article
 import fr.onat68.aileronsappmapandroid.presentation.LocalCustomFont
 import fr.onat68.aileronsappmapandroid.presentation.ScrollableColumnWithHeader
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.util.Locale
-
-fun formatDate(input: String): String {
-    val dateTime = LocalDateTime.parse(input)
-    val formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy", Locale.FRENCH)
-    return dateTime.format(formatter)
-        .split(" ")
-        .toMutableList()
-        .let {
-            it[1] = it[1].replaceFirstChar { firstChar ->
-                firstChar.uppercaseChar()
-            }
-            return@let it
-        }.joinToString(" ")
-}
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
@@ -50,7 +32,7 @@ fun ArticleScreen(article: Article) {
         )
         Column(modifier = Modifier.padding(horizontal = 16.dp)) {
             Title(title = article.title, Color(0xFF173B65))
-            PublicationDate(date = formatDate(article.publicationDate))
+            PublicationDate(date = article.publicationDate)
             Text(text = article.content)
         }
     }

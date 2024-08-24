@@ -7,6 +7,7 @@ import io.github.jan.supabase.postgrest.from
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -28,7 +29,7 @@ class ArticleRepository @Inject constructor(
 
             val json = Json { ignoreUnknownKeys = true }
             val articles = json.decodeFromString<List<ArticleDTO>>(response)
-                .sortedBy { it.publicationDate }
+                .sortedByDescending { LocalDateTime.parse(it.publicationDate) }
                 .map { it.toArticleEntity() }
 
             clearArticles()
