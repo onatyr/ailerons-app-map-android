@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
@@ -18,8 +17,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import dagger.hilt.android.AndroidEntryPoint
-import fr.onat68.aileronsappmapandroid.favorites.FavoriteScreen
-import fr.onat68.aileronsappmapandroid.favorites.IndividualViewModel
+import fr.onat68.aileronsappmapandroid.individual.IndividualViewModel
 import fr.onat68.aileronsappmapandroid.individual.IndividualScreen
 import fr.onat68.aileronsappmapandroid.map.Map
 import fr.onat68.aileronsappmapandroid.map.MapViewModel
@@ -61,12 +59,6 @@ class MainActivity : ComponentActivity() {
                         startDestination = NavBarItem.Map.navRoute,
                         modifier = Modifier.weight(1f)
                     ) {
-                        composable<FavoritesScreenRoute> {
-                            FavoriteScreen(
-                                individualViewModel,
-                                navHostController
-                            )
-                        }
                         composable<MapScreenRoute> {
                             Map(
                                 mapViewModel,
@@ -96,9 +88,6 @@ class MainActivity : ComponentActivity() {
 }
 
 open class NavRoute
-
-@Serializable
-object FavoritesScreenRoute : NavRoute()
 
 @Serializable
 data class MapScreenRoute(val individualFilter: Int) : NavRoute()

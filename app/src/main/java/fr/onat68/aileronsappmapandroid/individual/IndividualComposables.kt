@@ -88,19 +88,19 @@ fun IndividualCharacteristics(individual: Individual, modifier: Modifier) {
             Characteristic(
                 modifier = Modifier.weight(1f),
                 label = "Sexe",
-                content = "Femelle",
+                content = individual.sex,
                 iconId = R.drawable.ic_female
             )
             Characteristic(
                 modifier = Modifier.weight(1f),
                 label = "Envergure*",
-                content = "8 mètres",
+                content = "${individual.size} mètre${if (individual.size > 1) "s" else ""}",
                 iconId = R.drawable.ic_size
             )
             Characteristic(
                 modifier = Modifier.weight(1.4f),
                 label = "Situation de groupe*",
-                content = "Seul.e",
+                content = individual.situation,
                 iconId = R.drawable.ic_group_situation
             )
         }
@@ -108,11 +108,11 @@ fun IndividualCharacteristics(individual: Individual, modifier: Modifier) {
         Column {
             Characteristic(
                 label = "Comportement*",
-                content = "Sautait hors de l'eau et jouait dans les vagues."
+                content = individual.behavior
             )
             Characteristic(
                 label = "Description",
-                content = "Repérée au large du Cap Corse, il s'agit d'une femelle adulte, en parfaite santé et qui se laisse facilement approcher"
+                content = individual.description
             )
             DateRange(startDate = "21/07/2023", endDate = "17/09/2023")
         }

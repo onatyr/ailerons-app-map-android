@@ -26,14 +26,17 @@ data class IndividualDTO(
     @SerialName("description")
     val description: String,
 ) {
-    fun toIndividualEntity(): Individual {
+    fun toIndividualEntity(individualContext: IndividualContextDTO): Individual {
         return Individual(
             id = this.id,
             individualName = this.individualName,
             sex = this.sex,
             commonName = this.commonName,
             binomialName = this.binomialName,
-            description = this.description
+            description = this.description,
+            situation = individualContext.situation,
+            size = individualContext.size,
+            behavior = individualContext.behavior
         )
     }
 }

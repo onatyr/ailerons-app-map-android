@@ -18,7 +18,9 @@ data class Individual(
     @ColumnInfo(name = "common_name") val commonName: String,
     @ColumnInfo(name = "binomial_name") val binomialName: String,
     @ColumnInfo(name = "description") val description: String,
-    @ColumnInfo(name = "is_favorite") val isFavorite: Boolean = false
+    @ColumnInfo(name = "situation") val situation: String,
+    @ColumnInfo("size") val size: Int,
+    @ColumnInfo("behavior") val behavior: String,
 )
 
 @Dao
@@ -31,13 +33,4 @@ interface IndividualDAO {
 
     @Query("DELETE FROM individual")
     suspend fun deleteAll()
-
-    @Query("SELECT * FROM individual WHERE is_favorite = 1")
-    fun getListFavorite(): Flow<List<Individual>>
-
-    @Query("UPDATE individual SET is_favorite = 1 WHERE id = :id")
-    suspend fun addToFavorite(id: Int)
-
-    @Query("UPDATE individual SET is_favorite = 0 WHERE id = :id")
-    suspend fun removeFromFavorite(id: Int)
 }

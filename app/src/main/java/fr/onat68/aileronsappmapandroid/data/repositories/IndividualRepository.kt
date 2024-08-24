@@ -1,7 +1,7 @@
 package fr.onat68.aileronsappmapandroid.data.repositories
 
-import android.util.Log
 import fr.onat68.aileronsappmapandroid.data.entities.Individual
+import fr.onat68.aileronsappmapandroid.data.entities.IndividualContextDTO
 import fr.onat68.aileronsappmapandroid.data.entities.IndividualDAO
 import fr.onat68.aileronsappmapandroid.data.entities.IndividualDTO
 import io.github.jan.supabase.SupabaseClient
@@ -25,13 +25,24 @@ class IndividualRepository @Inject constructor(
 
     private fun fetchListIndividual() {
         CoroutineScope(Dispatchers.IO).launch {
-            val response = supabaseClient.from("individual")
+            val individualResponse = supabaseClient.from("individual")
                 .select().data
+            val individualContextResponse = supabaseClient.from("context")
+                .select().data
+
             val json = Json { ignoreUnknownKeys = true }
-            val individualList = json.decodeFromString<List<IndividualDTO>>(response)
+            val individualList = json.decodeFromString<List<IndividualDTO>>(individualResponse)
+            val individualContextList =
+                json.decodeFromString<List<IndividualContextDTO>>(individualContextResponse)
 
             clearIndividual()
-            individualList.forEach { insertIndividual(it.toIndividualEntity()) }
+            individualList.forEach { individualDto ->
+                insertIndividual(individualDto.toIndividualEntity(
+                    individualContextList.single { individualContextDto ->
+                        individualContextDto.individualId == individualDto.id
+                    }
+                ))
+            }
         }
     }
 
@@ -40,8 +51,4 @@ class IndividualRepository @Inject constructor(
     private suspend fun insertIndividual(individual: Individual) = individualDao.insert(individual)
 
     private suspend fun clearIndividual() = individualDao.deleteAll()
-
-    fun getListFavorite() = individualDao.getListFavorite()
-    suspend fun addToFavorite(id: Int) = individualDao.addToFavorite(id)
-    suspend fun removeFromFavorite(id: Int) = individualDao.removeFromFavorite(id)
 }

@@ -1,7 +1,6 @@
 package fr.onat68.aileronsappmapandroid.map
 
 import com.mapbox.geojson.Point
-import com.mapbox.maps.Style
 
 object MapValues {
 
