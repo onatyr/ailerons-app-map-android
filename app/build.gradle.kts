@@ -70,9 +70,6 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.7.0")
     val roomVersion = "2.6.1"
 
-//    .ENV
-    implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
-
 //    ROOM DATABASE
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
