@@ -1,9 +1,8 @@
-package fr.onat68.aileronsappmapandroid.data.entities
+package fr.onat68.aileronsappmapandroid.data.dtos
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import kotlinx.datetime.LocalDateTime
-import kotlinx.serialization.Contextual
+import fr.onat68.aileronsappmapandroid.data.entities.RecordPoint
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -33,14 +32,12 @@ data class RecordPointDTO @RequiresApi(Build.VERSION_CODES.O) constructor(
     @SerialName("csv_uuid")
     val csvUuid: String,
 ) {
-    fun toRecordPointEntity(): RecordPoint {
-        return RecordPoint(
-            id = this.id,
-            longitude = this.longitude,
-            latitude = this.latitude,
-            individualId = this.individualId,
-            recordTimestamp = this.recordTimestamp,
-            depth = this.depth
-        )
-    }
+    fun toRecordPointEntity() = RecordPoint(
+        id = id,
+        longitude = longitude,
+        latitude = latitude,
+        individualId = individualId,
+        recordTimestamp = recordTimestamp,
+        depth = depth
+    )
 }

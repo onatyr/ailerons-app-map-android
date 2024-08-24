@@ -89,7 +89,7 @@ fun IndividualCharacteristics(individual: Individual, modifier: Modifier) {
                 modifier = Modifier.weight(1f),
                 label = "Sexe",
                 content = individual.sex,
-                iconId = R.drawable.ic_female
+                iconId = if (individual.sex == "Femelle") R.drawable.ic_female else R.drawable.ic_male
             )
             Characteristic(
                 modifier = Modifier.weight(1f),

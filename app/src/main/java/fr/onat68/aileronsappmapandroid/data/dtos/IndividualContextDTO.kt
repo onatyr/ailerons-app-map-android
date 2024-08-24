@@ -1,4 +1,4 @@
-package fr.onat68.aileronsappmapandroid.data.entities
+package fr.onat68.aileronsappmapandroid.data.dtos
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

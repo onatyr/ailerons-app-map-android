@@ -1,9 +1,9 @@
 package fr.onat68.aileronsappmapandroid.data.repositories
 
 import fr.onat68.aileronsappmapandroid.data.entities.Individual
-import fr.onat68.aileronsappmapandroid.data.entities.IndividualContextDTO
+import fr.onat68.aileronsappmapandroid.data.dtos.IndividualContextDTO
 import fr.onat68.aileronsappmapandroid.data.entities.IndividualDAO
-import fr.onat68.aileronsappmapandroid.data.entities.IndividualDTO
+import fr.onat68.aileronsappmapandroid.data.dtos.IndividualDTO
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.postgrest.from
 import kotlinx.coroutines.CoroutineScope

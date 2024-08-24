@@ -9,18 +9,14 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.core.graphics.drawable.toBitmap
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import fr.onat68.aileronsappmapandroid.IndividualScreenRoute
 import fr.onat68.aileronsappmapandroid.R
 import fr.onat68.aileronsappmapandroid.data.entities.Individual
-import fr.onat68.aileronsappmapandroid.data.entities.IndividualDTO
 
 @Composable
 fun IndividualsList(individualsList: List<Individual>?, navHostController: NavHostController) {
