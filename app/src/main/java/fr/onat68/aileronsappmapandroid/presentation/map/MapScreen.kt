@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.viewinterop.NoOpUpdate
+import com.mapbox.android.gestures.MoveGestureDetector
 import com.mapbox.geojson.Point
 import com.mapbox.maps.CameraOptions
 import com.mapbox.maps.MapInitOptions
@@ -34,6 +35,10 @@ import com.mapbox.maps.plugin.annotation.generated.PolylineAnnotationManager
 import com.mapbox.maps.plugin.annotation.generated.createCircleAnnotationManager
 import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
 import com.mapbox.maps.plugin.annotation.generated.createPolylineAnnotationManager
+import com.mapbox.maps.plugin.gestures.OnMoveListener
+import com.mapbox.maps.plugin.gestures.addOnMapClickListener
+import com.mapbox.maps.plugin.gestures.addOnMoveListener
+import com.mapbox.maps.plugin.gestures.removeOnMoveListener
 import fr.onat68.aileronsappmapandroid.Constants
 import fr.onat68.aileronsappmapandroid.Constants.MAP_STYLE
 import fr.onat68.aileronsappmapandroid.presentation.navBar.NavBarItem
@@ -161,17 +166,24 @@ fun MapScreen(
 @Stable
 @Composable
 fun MapGestureListener(mapboxMap: MapboxMap, gestureHandler: MapGestureHandler) {
+    val listener = object : OnMoveListener {
+        override fun onMove(detector: MoveGestureDetector): Boolean {
+            return false
+        }
 
-    val startListener = mapboxMap.subscribeCameraChanged {
-        if (mapboxMap.isUserAnimationInProgress())
+        override fun onMoveBegin(detector: MoveGestureDetector) {
             gestureHandler.onGestureStarted()
+        }
+
+        override fun onMoveEnd(detector: MoveGestureDetector) {
+            gestureHandler.onGestureEnded()
+        }
     }
-    val endListener = mapboxMap.subscribeMapIdle { gestureHandler.onGestureEnded() }
+    mapboxMap.addOnMoveListener(listener)
 
     DisposableEffect(Unit) {
         onDispose {
-            startListener.cancel()
-            endListener.cancel()
+            mapboxMap.removeOnMoveListener(listener)
         }
     }
 }
@@ -188,12 +200,10 @@ class MapGestureHandler {
     val gestureState: StateFlow<Boolean> = _gestureState
 
     fun onGestureStarted() {
-//        Log.e("TAG", "START")
         _gestureState.value = true
     }
 
     fun onGestureEnded() {
-//        Log.e("TAG", "END")
         _gestureState.value = false
     }
 }
