@@ -1,13 +1,21 @@
+@file:OptIn(ExperimentalComposeUiApi::class)
+
 package fr.onat68.aileronsappmapandroid.presentation.map
 
+import android.util.Log
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
@@ -16,6 +24,7 @@ import com.mapbox.geojson.Point
 import com.mapbox.maps.CameraOptions
 import com.mapbox.maps.MapInitOptions
 import com.mapbox.maps.MapView
+import com.mapbox.maps.MapboxMap
 import com.mapbox.maps.plugin.animation.flyTo
 import com.mapbox.maps.plugin.annotation.annotations
 import com.mapbox.maps.plugin.annotation.generated.CircleAnnotationManager
@@ -28,11 +37,20 @@ import com.mapbox.maps.plugin.annotation.generated.createPolylineAnnotationManag
 import fr.onat68.aileronsappmapandroid.Constants
 import fr.onat68.aileronsappmapandroid.Constants.MAP_STYLE
 import fr.onat68.aileronsappmapandroid.presentation.navBar.NavBarItem
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.launch
 
 @Composable
 fun MapScreen(
     mapViewModel: MapViewModel,
     individualIdFilter: Int,
+    gestureHandler: MapGestureHandler? = null,
     openIndividualSheet: ((NavBarItem, String) -> Unit)? = null,
 ) {
     val context = LocalContext.current
@@ -45,7 +63,7 @@ fun MapScreen(
     val mapInitOptions = MapInitOptions(
         context = context,
         cameraOptions = initialCameraOptions,
-        textureView = true
+        textureView = true // temporary work-around as described here: https://github.com/mapbox/mapbox-maps-android/issues/1570
     )
 
     val mapView = remember { MapView(context, mapInitOptions) }
@@ -65,6 +83,10 @@ fun MapScreen(
 
     var circleAnnotationManager: CircleAnnotationManager? by remember {
         mutableStateOf(null)
+    }
+
+    gestureHandler?.let {
+        MapGestureListener(mapboxMap = mapView.mapboxMap, gestureHandler = gestureHandler)
     }
 
     AndroidView(
@@ -124,7 +146,8 @@ fun MapScreen(
 
             NoOpUpdate
         },
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
     )
 
     DisposableEffect(Unit) { // lifecycle is not properly managed and cause memory leak
@@ -132,5 +155,45 @@ fun MapScreen(
             mapView.onStop()
             mapView.onDestroy()
         }
+    }
+}
+
+@Stable
+@Composable
+fun MapGestureListener(mapboxMap: MapboxMap, gestureHandler: MapGestureHandler) {
+
+    val startListener = mapboxMap.subscribeCameraChanged {
+        if (mapboxMap.isUserAnimationInProgress())
+            gestureHandler.onGestureStarted()
+    }
+    val endListener = mapboxMap.subscribeMapIdle { gestureHandler.onGestureEnded() }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            startListener.cancel()
+            endListener.cancel()
+        }
+    }
+}
+
+@Composable
+fun rememberMapGestureHandler(): MapGestureHandler {
+    return remember {
+        MapGestureHandler()
+    }
+}
+
+class MapGestureHandler {
+    private val _gestureState = MutableStateFlow(false)
+    val gestureState: StateFlow<Boolean> = _gestureState
+
+    fun onGestureStarted() {
+//        Log.e("TAG", "START")
+        _gestureState.value = true
+    }
+
+    fun onGestureEnded() {
+//        Log.e("TAG", "END")
+        _gestureState.value = false
     }
 }
