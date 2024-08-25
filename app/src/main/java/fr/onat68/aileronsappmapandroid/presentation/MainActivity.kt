@@ -67,6 +67,7 @@ class MainActivity : AppCompatActivity() {
 
             val navHostController = rememberNavController()
 
+
             CompositionLocalProvider(
                 LocalCustomFont provides atkinsonFontFamily,
                 LocalPopBackStack provides navHostController::popBackStack
@@ -137,6 +138,9 @@ object NewsScreenRoute : NavRoute()
 
 @Serializable
 object SpeciesScreenRoute : NavRoute()
+
+@Serializable
+object SplashScreenRoute : NavRoute()
 
 
 

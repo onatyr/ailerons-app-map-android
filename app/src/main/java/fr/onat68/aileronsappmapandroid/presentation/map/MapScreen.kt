@@ -1,21 +1,14 @@
-@file:OptIn(ExperimentalComposeUiApi::class)
-
 package fr.onat68.aileronsappmapandroid.presentation.map
 
-import android.util.Log
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
@@ -36,20 +29,13 @@ import com.mapbox.maps.plugin.annotation.generated.createCircleAnnotationManager
 import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
 import com.mapbox.maps.plugin.annotation.generated.createPolylineAnnotationManager
 import com.mapbox.maps.plugin.gestures.OnMoveListener
-import com.mapbox.maps.plugin.gestures.addOnMapClickListener
 import com.mapbox.maps.plugin.gestures.addOnMoveListener
 import com.mapbox.maps.plugin.gestures.removeOnMoveListener
 import fr.onat68.aileronsappmapandroid.Constants
 import fr.onat68.aileronsappmapandroid.Constants.MAP_STYLE
 import fr.onat68.aileronsappmapandroid.presentation.navBar.NavBarItem
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.launch
 
 @Composable
 fun MapScreen(
@@ -192,18 +178,5 @@ fun MapGestureListener(mapboxMap: MapboxMap, gestureHandler: MapGestureHandler) 
 fun rememberMapGestureHandler(): MapGestureHandler {
     return remember {
         MapGestureHandler()
-    }
-}
-
-class MapGestureHandler {
-    private val _gestureState = MutableStateFlow(false)
-    val gestureState: StateFlow<Boolean> = _gestureState
-
-    fun onGestureStarted() {
-        _gestureState.value = true
-    }
-
-    fun onGestureEnded() {
-        _gestureState.value = false
     }
 }
