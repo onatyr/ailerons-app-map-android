@@ -48,6 +48,8 @@ fun MapScreen(
         cameraOptions = initialCameraOptions,
     )
 
+    val mapView = remember { MapView(context, mapInitOptions) }
+
     val recordPoints = mapViewModel.recordPoints.collectAsState(initial = listOf())
     val recordPointsFiltered =
         if (individualIdFilter != 0) recordPoints.value.filter { it.individualId == individualIdFilter }
@@ -67,31 +69,30 @@ fun MapScreen(
 
     AndroidView(
         factory = {
-            MapView(it, mapInitOptions).also { mapView ->
-                mapView.mapboxMap.loadStyle(MAP_STYLE)
+            mapView.mapboxMap.loadStyle(MAP_STYLE)
 
-                val annotationApi = mapView.annotations
+            val annotationApi = mapView.annotations
 
-                circleAnnotationManager = annotationApi.createCircleAnnotationManager()
-                pointAnnotationManager = annotationApi.createPointAnnotationManager()
-                polylineAnnotationManager = annotationApi.createPolylineAnnotationManager()
-            }
+            circleAnnotationManager = annotationApi.createCircleAnnotationManager()
+            pointAnnotationManager = annotationApi.createPointAnnotationManager()
+            polylineAnnotationManager = annotationApi.createPolylineAnnotationManager()
 
+            mapView
         },
-        update = { mapView ->
+        update = {
 
-            circleAnnotationManager.let { circleAnnotationManager ->
-                circleAnnotationManager?.deleteAll()
-                circleAnnotationManager?.create(mapViewModel.generateListCircle(recordPointsFiltered))
+            circleAnnotationManager?.let { circleAnnotationManager ->
+                circleAnnotationManager.deleteAll()
+                circleAnnotationManager.create(mapViewModel.generateListCircle(recordPointsFiltered))
             }
 
-            pointAnnotationManager.let { pointAnnotationManager ->
-                pointAnnotationManager?.deleteAll()
-                pointAnnotationManager?.create(mapViewModel.generateListPoint(recordPointsFiltered))
+            pointAnnotationManager?.let { pointAnnotationManager ->
+                pointAnnotationManager.deleteAll()
+                pointAnnotationManager.create(mapViewModel.generateListPoint(recordPointsFiltered))
 
 
                 if (openIndividualSheet != null) {
-                    pointAnnotationManager?.addClickListener(
+                    pointAnnotationManager.addClickListener(
                         OnPointAnnotationClickListener {
                             val individualId: String = it.getData().toString()
                             openIndividualSheet(
@@ -104,9 +105,9 @@ fun MapScreen(
                 }
             }
 
-            polylineAnnotationManager.let { polylineAnnotationManager ->
-                polylineAnnotationManager?.deleteAll()
-                polylineAnnotationManager?.create(
+            polylineAnnotationManager?.let { polylineAnnotationManager ->
+                polylineAnnotationManager.deleteAll()
+                polylineAnnotationManager.create(
                     mapViewModel.generateListPolyline(
                         recordPointsFiltered
                     )
