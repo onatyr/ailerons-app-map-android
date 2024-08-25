@@ -57,6 +57,7 @@ class MapViewModel @Inject constructor(
     }
 
 
+
     fun generateListCircle(recordPoints: List<RecordPoint>): MutableList<CircleAnnotationOptions> {
         val circleList = mutableListOf<CircleAnnotationOptions>()
         for (recordPoint in recordPoints) {

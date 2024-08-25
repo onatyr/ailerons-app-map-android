@@ -68,9 +68,9 @@ android {
 
 dependencies {
     implementation("androidx.appcompat:appcompat:1.7.0")
-    val roomVersion = "2.6.1"
 
 //    ROOM DATABASE
+    val roomVersion = "2.6.1"
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
     ksp("androidx.room:room-compiler:$roomVersion")
@@ -83,8 +83,9 @@ dependencies {
     implementation("io.ktor:ktor-client-android:2.3.7")
 
 //    MAPBOX
-    implementation("com.mapbox.maps:android:11.0.0")
-    implementation("com.mapbox.extension:maps-compose:11.0.0")
+    val mapboxVersion = "11.6.0"
+    implementation("com.mapbox.maps:android:$mapboxVersion")
+    implementation("com.mapbox.extension:maps-compose:$mapboxVersion")
 
     // GLIDE
     implementation("com.github.bumptech.glide:compose:1.0.0-beta01")

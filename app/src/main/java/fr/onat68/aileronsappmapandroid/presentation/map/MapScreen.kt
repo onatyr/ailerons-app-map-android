@@ -1,5 +1,6 @@
 package fr.onat68.aileronsappmapandroid.presentation.map
 
+import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -8,9 +9,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.viewinterop.NoOpUpdate
+import com.mapbox.geojson.Point
 import com.mapbox.maps.CameraOptions
+import com.mapbox.maps.MapInitOptions
 import com.mapbox.maps.MapView
 import com.mapbox.maps.plugin.animation.flyTo
 import com.mapbox.maps.plugin.annotation.annotations
@@ -23,14 +27,26 @@ import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
 import com.mapbox.maps.plugin.annotation.generated.createPolylineAnnotationManager
 import fr.onat68.aileronsappmapandroid.Constants
 import fr.onat68.aileronsappmapandroid.Constants.MAP_STYLE
+import fr.onat68.aileronsappmapandroid.Constants.TRANSPARENT_COLOR
 import fr.onat68.aileronsappmapandroid.presentation.navBar.NavBarItem
 
 @Composable
-fun Map(
+fun MapScreen(
     mapViewModel: MapViewModel,
     individualIdFilter: Int,
     openIndividualSheet: ((NavBarItem, String) -> Unit)? = null,
 ) {
+    val context = LocalContext.current
+
+    val initialCameraOptions = CameraOptions.Builder()
+        .center(Point.fromLngLat(42.12, 7.72))
+        .zoom(15.5)
+        .build()
+
+    val mapInitOptions = MapInitOptions(
+        context = context,
+        cameraOptions = initialCameraOptions,
+    )
 
     val recordPoints = mapViewModel.recordPoints.collectAsState(initial = listOf())
     val recordPointsFiltered =
@@ -51,7 +67,7 @@ fun Map(
 
     AndroidView(
         factory = {
-            MapView(it).also { mapView ->
+            MapView(it, mapInitOptions).also { mapView ->
                 mapView.mapboxMap.loadStyle(MAP_STYLE)
 
                 val annotationApi = mapView.annotations
@@ -60,21 +76,19 @@ fun Map(
                 pointAnnotationManager = annotationApi.createPointAnnotationManager()
                 polylineAnnotationManager = annotationApi.createPolylineAnnotationManager()
             }
+
         },
         update = { mapView ->
 
             circleAnnotationManager.let { circleAnnotationManager ->
                 circleAnnotationManager?.deleteAll()
-                mapViewModel.generateListCircle(recordPointsFiltered)
-                    .forEach { circleAnnotationManager?.create(it) }
+                circleAnnotationManager?.create(mapViewModel.generateListCircle(recordPointsFiltered))
             }
 
             pointAnnotationManager.let { pointAnnotationManager ->
                 pointAnnotationManager?.deleteAll()
-                mapViewModel.generateListPoint(recordPointsFiltered)
-                    .forEach {
-                        pointAnnotationManager?.create(it)
-                    }
+                pointAnnotationManager?.create(mapViewModel.generateListPoint(recordPointsFiltered))
+
 
                 if (openIndividualSheet != null) {
                     pointAnnotationManager?.addClickListener(
@@ -92,16 +106,17 @@ fun Map(
 
             polylineAnnotationManager.let { polylineAnnotationManager ->
                 polylineAnnotationManager?.deleteAll()
-                mapViewModel.generateListPolyline(recordPointsFiltered)
-                    .forEach { polylineAnnotationManager?.create(it) }
+                polylineAnnotationManager?.create(
+                    mapViewModel.generateListPolyline(
+                        recordPointsFiltered
+                    )
+                )
             }
-
-            val zoom =
-                if (individualIdFilter == Constants.DEFAULT_FILTER) 6.0 else 7.0 // Set the zoom closer if one individual is selected
 
             mapView.mapboxMap
                 .flyTo(
-                    CameraOptions.Builder().zoom(zoom)
+                    CameraOptions.Builder()
+                        .zoom(if (individualIdFilter == Constants.DEFAULT_FILTER) 6.0 else 7.0)
                         .center(mapViewModel.getCameraCenter(recordPointsFiltered))
                         .build()
                 )

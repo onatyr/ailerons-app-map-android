@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import fr.onat68.aileronsappmapandroid.R
 import fr.onat68.aileronsappmapandroid.presentation.LocalCustomFont
 import fr.onat68.aileronsappmapandroid.presentation.ScrollableColumnWithHeader
-import fr.onat68.aileronsappmapandroid.presentation.map.Map
+import fr.onat68.aileronsappmapandroid.presentation.map.MapScreen
 import fr.onat68.aileronsappmapandroid.presentation.map.MapViewModel
 
 @Composable
@@ -66,7 +66,7 @@ fun IndividualScreen(
                     .clip(RoundedCornerShape(16.dp))
 
             ) {
-                Map(mapViewModel, individualId)
+                MapScreen(mapViewModel, individualId)
             }
 
             Text(
