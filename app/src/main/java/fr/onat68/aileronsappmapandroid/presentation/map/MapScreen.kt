@@ -1,8 +1,8 @@
 package fr.onat68.aileronsappmapandroid.presentation.map
 
-import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,7 +27,6 @@ import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
 import com.mapbox.maps.plugin.annotation.generated.createPolylineAnnotationManager
 import fr.onat68.aileronsappmapandroid.Constants
 import fr.onat68.aileronsappmapandroid.Constants.MAP_STYLE
-import fr.onat68.aileronsappmapandroid.Constants.TRANSPARENT_COLOR
 import fr.onat68.aileronsappmapandroid.presentation.navBar.NavBarItem
 
 @Composable
@@ -46,6 +45,7 @@ fun MapScreen(
     val mapInitOptions = MapInitOptions(
         context = context,
         cameraOptions = initialCameraOptions,
+        textureView = true
     )
 
     val mapView = remember { MapView(context, mapInitOptions) }
@@ -126,4 +126,11 @@ fun MapScreen(
         },
         modifier = Modifier.fillMaxSize()
     )
+
+    DisposableEffect(Unit) { // lifecycle is not properly managed and cause memory leak
+        onDispose {
+            mapView.onStop()
+            mapView.onDestroy()
+        }
+    }
 }
