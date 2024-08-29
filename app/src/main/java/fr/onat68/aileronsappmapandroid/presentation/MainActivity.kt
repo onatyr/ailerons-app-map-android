@@ -79,7 +79,9 @@ class MainActivity : AppCompatActivity() {
                             .fillMaxSize()
                             .weight(1f)
                     ) {
-                        MapScreen(mapViewModel, DEFAULT_FILTER)
+                        MapScreen(mapViewModel, DEFAULT_FILTER) { id ->
+                            navHostController.navigate(IndividualScreenRoute(id))
+                        }
                         NavHost(
                             navController = navHostController,
                             startDestination = NavBarItem.Map.navRoute,

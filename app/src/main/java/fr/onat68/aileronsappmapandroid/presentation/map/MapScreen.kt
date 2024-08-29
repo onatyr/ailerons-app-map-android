@@ -1,5 +1,6 @@
 package fr.onat68.aileronsappmapandroid.presentation.map
 
+import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -33,6 +34,8 @@ import com.mapbox.maps.plugin.gestures.addOnMoveListener
 import com.mapbox.maps.plugin.gestures.removeOnMoveListener
 import fr.onat68.aileronsappmapandroid.Constants
 import fr.onat68.aileronsappmapandroid.Constants.MAP_STYLE
+import fr.onat68.aileronsappmapandroid.presentation.IndividualScreenRoute
+import fr.onat68.aileronsappmapandroid.presentation.NavRoute
 import fr.onat68.aileronsappmapandroid.presentation.navBar.NavBarItem
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -42,7 +45,7 @@ fun MapScreen(
     mapViewModel: MapViewModel,
     individualIdFilter: Int,
     gestureHandler: MapGestureHandler? = null,
-    openIndividualSheet: ((NavBarItem, String) -> Unit)? = null,
+    openIndividualSheet: ((Int) -> Unit)? = null,
 ) {
     val context = LocalContext.current
 
@@ -62,6 +65,7 @@ fun MapScreen(
     val recordPoints = mapViewModel.recordPoints.collectAsState(initial = listOf())
     val recordPointsFiltered =
         if (individualIdFilter != 0) recordPoints.value.filter { it.individualId == individualIdFilter }
+            .filter { it.individualId != 327 }
         else recordPoints.value
 
     var pointAnnotationManager: PointAnnotationManager? by remember {
@@ -107,12 +111,9 @@ fun MapScreen(
                 if (openIndividualSheet != null) {
                     pointAnnotationManager.addClickListener(
                         OnPointAnnotationClickListener {
-                            val individualId: String = it.getData().toString()
-                            openIndividualSheet(
-                                NavBarItem.Individuals,
-                                "individualSheet/${individualId}"
-                            )
-
+                            Log.e("TAG", "MapScreen: hey")
+                            val individualId = it.getData().toString().toInt()
+                            openIndividualSheet(individualId)
                             false
                         })
                 }
