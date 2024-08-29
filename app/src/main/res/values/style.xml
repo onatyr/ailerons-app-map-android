@@ -2,6 +2,6 @@
 <resources>
     <style name="Theme.SplashScreen" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowBackground">@color/splash_background</item>
-        <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_shark</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/empty_drawable</item>
     </style>
 </resources>
