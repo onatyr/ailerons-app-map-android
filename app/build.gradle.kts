@@ -8,12 +8,18 @@ plugins {
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
-
 }
 
 android {
     namespace = "fr.onat68.aileronsappmapandroid"
     compileSdk = 34
+
+    val properties = Properties()
+    if (rootProject.file("local.properties").exists()) {
+        properties.load(rootProject.file("local.properties").inputStream())
+    } else {
+        throw Exception("File local.properties is missing.")
+    }
 
     defaultConfig {
         applicationId = "fr.onat68.aileronsappmapandroid"
@@ -34,6 +40,17 @@ android {
                 )
             }
         }
+
+        buildConfigField(
+            "String",
+            "SUPABASE_URL",
+            "\"${properties.getProperty("supabaseUrl", "")}\""
+        )
+        buildConfigField(
+            "String",
+            "SUPABASE_KEY",
+            "\"${properties.getProperty("supabaseKey", "")}\""
+        )
     }
 
     buildTypes {

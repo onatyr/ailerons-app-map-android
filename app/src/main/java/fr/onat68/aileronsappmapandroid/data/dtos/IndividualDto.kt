@@ -5,7 +5,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class IndividualDTO(
+data class IndividualDto(
     @SerialName("id")
     val id: Int,
 
@@ -27,14 +27,14 @@ data class IndividualDTO(
     @SerialName("description")
     val description: String,
 ) {
-    fun toIndividualEntity(individualContext: IndividualContextDTO): Individual {
+    fun toIndividual(individualContext: IndividualContextDto): Individual {
         return Individual(
-            id = this.id,
-            individualName = this.individualName,
-            sex = this.sex,
-            commonName = this.commonName,
-            binomialName = this.binomialName,
-            description = this.description,
+            id = id,
+            individualName = individualName,
+            sex = sex,
+            commonName = commonName,
+            binomialName = binomialName,
+            description = description,
             situation = individualContext.situation,
             size = individualContext.size,
             behavior = individualContext.behavior

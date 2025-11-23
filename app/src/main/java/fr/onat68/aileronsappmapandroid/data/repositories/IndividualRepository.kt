@@ -1,9 +1,9 @@
 package fr.onat68.aileronsappmapandroid.data.repositories
 
 import fr.onat68.aileronsappmapandroid.data.entities.Individual
-import fr.onat68.aileronsappmapandroid.data.dtos.IndividualContextDTO
+import fr.onat68.aileronsappmapandroid.data.dtos.IndividualContextDto
 import fr.onat68.aileronsappmapandroid.data.entities.IndividualDAO
-import fr.onat68.aileronsappmapandroid.data.dtos.IndividualDTO
+import fr.onat68.aileronsappmapandroid.data.dtos.IndividualDto
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.postgrest.from
 import kotlinx.coroutines.CoroutineScope
@@ -31,13 +31,13 @@ class IndividualRepository @Inject constructor(
                 .select().data
 
             val json = Json { ignoreUnknownKeys = true }
-            val individualList = json.decodeFromString<List<IndividualDTO>>(individualResponse)
+            val individualList = json.decodeFromString<List<IndividualDto>>(individualResponse)
             val individualContextList =
-                json.decodeFromString<List<IndividualContextDTO>>(individualContextResponse)
+                json.decodeFromString<List<IndividualContextDto>>(individualContextResponse)
 
             clearIndividual()
             individualList.forEach { individualDto ->
-                insertIndividual(individualDto.toIndividualEntity(
+                insertIndividual(individualDto.toIndividual(
                     individualContextList.single { individualContextDto ->
                         individualContextDto.individualId == individualDto.id
                     }

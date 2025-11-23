@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class IndividualContextDTO(
+data class IndividualContextDto(
     @SerialName("individual_id")
     val individualId: Int,
 

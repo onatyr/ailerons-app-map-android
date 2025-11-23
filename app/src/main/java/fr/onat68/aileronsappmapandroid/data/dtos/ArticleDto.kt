@@ -6,7 +6,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ArticleDTO(
+data class ArticleDto(
     @SerialName("title")
     val title: String,
 
@@ -19,7 +19,7 @@ data class ArticleDTO(
     @SerialName("image_url")
     val imageUrl: String,
 ) {
-    fun toArticleEntity() = Article(
+    fun toArticle() = Article(
         id = 0,
         title = title,
         content = content,

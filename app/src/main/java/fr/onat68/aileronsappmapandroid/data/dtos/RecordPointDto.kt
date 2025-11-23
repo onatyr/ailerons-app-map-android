@@ -1,13 +1,11 @@
 package fr.onat68.aileronsappmapandroid.data.dtos
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import fr.onat68.aileronsappmapandroid.data.entities.RecordPoint
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class RecordPointDTO @RequiresApi(Build.VERSION_CODES.O) constructor(
+data class RecordPointDto(
     @SerialName("id")
     val id: Int,
 
@@ -28,11 +26,8 @@ data class RecordPointDTO @RequiresApi(Build.VERSION_CODES.O) constructor(
 
     @SerialName("depth")
     val depth: Int?,
-
-    @SerialName("csv_uuid")
-    val csvUuid: String,
 ) {
-    fun toRecordPointEntity() = RecordPoint(
+    fun toRecordPoint() = RecordPoint(
         id = id,
         longitude = longitude,
         latitude = latitude,

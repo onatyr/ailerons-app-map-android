@@ -1,6 +1,6 @@
 package fr.onat68.aileronsappmapandroid.data.repositories
 
-import fr.onat68.aileronsappmapandroid.data.dtos.ArticleDTO
+import fr.onat68.aileronsappmapandroid.data.dtos.ArticleDto
 import fr.onat68.aileronsappmapandroid.data.entities.ArticleDAO
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.postgrest.from
@@ -28,9 +28,9 @@ class ArticleRepository @Inject constructor(
                 .data
 
             val json = Json { ignoreUnknownKeys = true }
-            val articles = json.decodeFromString<List<ArticleDTO>>(response)
+            val articles = json.decodeFromString<List<ArticleDto>>(response)
                 .sortedByDescending { LocalDateTime.parse(it.publicationDate) }
-                .map { it.toArticleEntity() }
+                .map { it.toArticle() }
 
             clearArticles()
             articleDao.insertAll(articles)

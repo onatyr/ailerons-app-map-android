@@ -11,7 +11,11 @@ import fr.onat68.aileronsappmapandroid.data.entities.RecordPoint
 import fr.onat68.aileronsappmapandroid.data.entities.RecordPointDAO
 
 @Database(
-    entities = [Individual::class, RecordPoint::class, Article::class],
+    entities = [
+        Individual::class,
+        RecordPoint::class,
+        Article::class
+    ],
     version = 1,
     exportSchema = false
 )

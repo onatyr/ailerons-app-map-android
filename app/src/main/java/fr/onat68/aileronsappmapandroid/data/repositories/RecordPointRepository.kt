@@ -1,7 +1,6 @@
 package fr.onat68.aileronsappmapandroid.data.repositories
 
-import android.util.Log
-import fr.onat68.aileronsappmapandroid.data.dtos.RecordPointDTO
+import fr.onat68.aileronsappmapandroid.data.dtos.RecordPointDto
 import fr.onat68.aileronsappmapandroid.data.entities.RecordPointDAO
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.postgrest.from
@@ -23,16 +22,15 @@ class RecordPointRepository @Inject constructor(
     }
 
     private fun fetchListRecordPoint() {
-        Log.e("TAG", "fetchListRecordPoint", )
         CoroutineScope(Dispatchers.IO).launch {
             val response = supabaseClient.from("record")
                 .select()
                 .data
 
             val json = Json { ignoreUnknownKeys = true }
-            val recordPoints = json.decodeFromString<List<RecordPointDTO>>(response)
+            val recordPoints = json.decodeFromString<List<RecordPointDto>>(response)
                 .sortedBy { it.recordTimestamp }
-                .map { it.toRecordPointEntity() }
+                .map { it.toRecordPoint() }
 
             clearRecordPoint()
             recordPointDao.insertAll(recordPoints)
