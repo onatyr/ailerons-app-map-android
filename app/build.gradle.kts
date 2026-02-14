@@ -12,7 +12,7 @@ plugins {
 }
 
 android {
-    namespace = "fr.onat68.aileronsappmapandroid"
+    namespace = "fr.ailerons.map"
     compileSdk = 36
 
     val properties = Properties()
@@ -23,7 +23,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "fr.onat68.aileronsappmapandroid"
+        applicationId = "fr.ailerons.map"
         minSdk = 31
         targetSdk = 36
         versionCode = 1
