@@ -37,7 +37,9 @@ class RecordPointRepository @Inject constructor(
         }
     }
 
-    fun getListRecordPoint() = recordPointDao.getAll()
+    fun getByIdIndividual(id: Int) = recordPointDao.getByIdIndividual(id)
+
+    fun getAll() = recordPointDao.getAll()
 
     private suspend fun clearRecordPoint() = recordPointDao.deleteAll()
 }

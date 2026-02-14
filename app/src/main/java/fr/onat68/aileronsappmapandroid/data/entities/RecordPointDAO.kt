@@ -22,6 +22,13 @@ data class RecordPoint(
 
 @Dao
 interface RecordPointDAO {
+
+    @Query("""
+        SELECT * FROM record_point
+            WHERE individual_id = :id
+        """)
+    fun getByIdIndividual(id: Int): Flow<List<RecordPoint>>
+
     @Query("SELECT * FROM record_point")
     fun getAll(): Flow<List<RecordPoint>>
 

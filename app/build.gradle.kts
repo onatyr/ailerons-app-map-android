@@ -64,11 +64,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
 
 
@@ -99,21 +99,21 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.9.6")
 
 //    SUPABASE CLIENT
-    implementation(platform("io.github.jan-tennert.supabase:bom:3.2.6"))
+    implementation(platform("io.github.jan-tennert.supabase:bom:3.3.0"))
     implementation("io.github.jan-tennert.supabase:postgrest-kt")
-    implementation("io.ktor:ktor-client-android:3.3.2")
+    implementation("io.ktor:ktor-client-android:3.4.0")
 
 //    MAPBOX
-    val mapboxVersion = "11.6.0"
-    implementation("com.mapbox.maps:android:$mapboxVersion")
-    implementation("com.mapbox.extension:maps-compose:$mapboxVersion")
+    val mapboxVersion = "11.18.1"
+    implementation("com.mapbox.maps:android-ndk27:$mapboxVersion")
+    implementation("com.mapbox.extension:maps-compose-ndk27:$mapboxVersion")
 
     // GLIDE
     implementation("com.github.bumptech.glide:compose:1.0.0-beta08")
 
     implementation("androidx.core:core-ktx:1.17.0")
-    implementation("androidx.activity:activity-compose:1.12.0")
-    implementation(platform("androidx.compose:compose-bom:2025.11.01"))
+    implementation("androidx.activity:activity-compose:1.12.3")
+    implementation(platform("androidx.compose:compose-bom:2026.01.01"))
     implementation("org.jetbrains.kotlin:kotlin-stdlib:2.2.21")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
 
@@ -126,7 +126,7 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.3.0")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.7.0")
-    androidTestImplementation(platform("androidx.compose:compose-bom:2025.11.01"))
+    androidTestImplementation(platform("androidx.compose:compose-bom:2026.01.01"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
@@ -138,7 +138,7 @@ dependencies {
 
 
 // DAGGER-HILT
-    val daggerHiltVersion = "2.57.2"
+    val daggerHiltVersion = "2.58"
     //implementation("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03")
     implementation("androidx.hilt:hilt-navigation-compose:1.3.0")
     implementation("com.google.dagger:hilt-android:$daggerHiltVersion")

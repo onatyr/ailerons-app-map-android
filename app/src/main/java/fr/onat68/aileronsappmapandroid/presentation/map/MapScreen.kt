@@ -1,11 +1,12 @@
 package fr.onat68.aileronsappmapandroid.presentation.map
 
-import android.util.Log
+import android.graphics.Bitmap
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -14,6 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.viewinterop.NoOpUpdate
+import androidx.core.graphics.drawable.toBitmap
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mapbox.android.gestures.MoveGestureDetector
 import com.mapbox.geojson.Point
 import com.mapbox.maps.CameraOptions
@@ -23,7 +26,7 @@ import com.mapbox.maps.MapboxMap
 import com.mapbox.maps.plugin.animation.flyTo
 import com.mapbox.maps.plugin.annotation.annotations
 import com.mapbox.maps.plugin.annotation.generated.CircleAnnotationManager
-import com.mapbox.maps.plugin.annotation.generated.OnPointAnnotationClickListener
+import com.mapbox.maps.plugin.annotation.generated.PointAnnotation
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationManager
 import com.mapbox.maps.plugin.annotation.generated.PolylineAnnotationManager
 import com.mapbox.maps.plugin.annotation.generated.createCircleAnnotationManager
@@ -32,22 +35,40 @@ import com.mapbox.maps.plugin.annotation.generated.createPolylineAnnotationManag
 import com.mapbox.maps.plugin.gestures.OnMoveListener
 import com.mapbox.maps.plugin.gestures.addOnMoveListener
 import com.mapbox.maps.plugin.gestures.removeOnMoveListener
-import fr.onat68.aileronsappmapandroid.Constants
 import fr.onat68.aileronsappmapandroid.Constants.MAP_STYLE
-import fr.onat68.aileronsappmapandroid.presentation.IndividualScreenRoute
-import fr.onat68.aileronsappmapandroid.presentation.NavRoute
-import fr.onat68.aileronsappmapandroid.presentation.navBar.NavBarItem
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import fr.onat68.aileronsappmapandroid.R
+import fr.onat68.aileronsappmapandroid.data.entities.RecordPoint
 
 @Composable
 fun MapScreen(
-    mapViewModel: MapViewModel,
-    individualIdFilter: Int,
+    viewModel: MapViewModel,
+    individualIdFilter: Int? = null,
     gestureHandler: MapGestureHandler? = null,
     openIndividualSheet: ((Int) -> Unit)? = null,
 ) {
+    LaunchedEffect(individualIdFilter) { viewModel.setIndividualIdFilter(individualIdFilter) }
+    val recordPoints by viewModel.recordPoints.collectAsStateWithLifecycle(emptyList())
+
+    AileronMap(
+        recordPoints = recordPoints,
+        gestureHandler = gestureHandler,
+        onPointAnnotationClick = { annotation ->
+            openIndividualSheet
+                ?.let { openIndividualSheet(annotation.getData().toString().toInt()) }
+            false
+        }
+    )
+}
+
+@Composable
+fun AileronMap(
+    recordPoints: List<RecordPoint>,
+    gestureHandler: MapGestureHandler?,
+    onPointAnnotationClick: (PointAnnotation) -> Boolean,
+) {
     val context = LocalContext.current
+    val marker = getMarker()
+
 
     val initialCameraOptions = CameraOptions.Builder()
         .center(Point.fromLngLat(42.12, 7.72))
@@ -60,25 +81,13 @@ fun MapScreen(
         textureView = true // temporary work-around as described here: https://github.com/mapbox/mapbox-maps-android/issues/1570
     )
 
+    var pointAnnotationManager by remember { mutableStateOf<PointAnnotationManager?>(null) }
+
+    var polylineAnnotationManager by remember { mutableStateOf<PolylineAnnotationManager?>(null) }
+
+    var circleAnnotationManager by remember { mutableStateOf<CircleAnnotationManager?>(null) }
+
     val mapView = remember { MapView(context, mapInitOptions) }
-
-    val recordPoints = mapViewModel.recordPoints.collectAsState(initial = listOf())
-    val recordPointsFiltered =
-        if (individualIdFilter != 0) recordPoints.value.filter { it.individualId == individualIdFilter }
-            .filter { it.individualId != 327 }
-        else recordPoints.value
-
-    var pointAnnotationManager: PointAnnotationManager? by remember {
-        mutableStateOf(null)
-    }
-
-    var polylineAnnotationManager: PolylineAnnotationManager? by remember {
-        mutableStateOf(null)
-    }
-
-    var circleAnnotationManager: CircleAnnotationManager? by remember {
-        mutableStateOf(null)
-    }
 
     gestureHandler?.let {
         MapGestureListener(mapboxMap = mapView.mapboxMap, gestureHandler = gestureHandler)
@@ -97,42 +106,28 @@ fun MapScreen(
             mapView
         },
         update = {
-
             circleAnnotationManager?.let { circleAnnotationManager ->
                 circleAnnotationManager.deleteAll()
-                circleAnnotationManager.create(mapViewModel.generateListCircle(recordPointsFiltered))
+                circleAnnotationManager.create(recordPoints.toCircleAnnotationOptions())
             }
 
             pointAnnotationManager?.let { pointAnnotationManager ->
                 pointAnnotationManager.deleteAll()
-                pointAnnotationManager.create(mapViewModel.generateListPoint(recordPointsFiltered))
+                pointAnnotationManager.create(recordPoints.toPointAnnotationOptions(marker))
 
-
-                if (openIndividualSheet != null) {
-                    pointAnnotationManager.addClickListener(
-                        OnPointAnnotationClickListener {
-                            Log.e("TAG", "MapScreen: hey")
-                            val individualId = it.getData().toString().toInt()
-                            openIndividualSheet(individualId)
-                            false
-                        })
-                }
+                pointAnnotationManager.addClickListener { onPointAnnotationClick(it); false }
             }
 
             polylineAnnotationManager?.let { polylineAnnotationManager ->
                 polylineAnnotationManager.deleteAll()
-                polylineAnnotationManager.create(
-                    mapViewModel.generateListPolyline(
-                        recordPointsFiltered
-                    )
-                )
+                polylineAnnotationManager.create(recordPoints.toPolylineAnnotationOptions())
             }
 
             mapView.mapboxMap
                 .flyTo(
                     CameraOptions.Builder()
-                        .zoom(if (individualIdFilter == Constants.DEFAULT_FILTER) 6.0 else 7.0)
-                        .center(mapViewModel.getCameraCenter(recordPointsFiltered))
+                        .zoom(7.0)
+                        .center(getCameraCenter(recordPoints))
                         .build()
                 )
 
@@ -141,13 +136,6 @@ fun MapScreen(
         modifier = Modifier
             .fillMaxSize()
     )
-
-    DisposableEffect(Unit) { // lifecycle is not properly managed and cause memory leak
-        onDispose {
-            mapView.onStop()
-            mapView.onDestroy()
-        }
-    }
 }
 
 @Stable
@@ -180,4 +168,10 @@ fun rememberMapGestureHandler(): MapGestureHandler {
     return remember {
         MapGestureHandler()
     }
+}
+
+@Composable
+fun getMarker(): Bitmap {
+    val context = LocalContext.current
+    return AppCompatResources.getDrawable(context, R.drawable.red_marker)!!.toBitmap()
 }

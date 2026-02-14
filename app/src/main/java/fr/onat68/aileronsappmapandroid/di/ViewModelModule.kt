@@ -31,10 +31,7 @@ object ViewModelModule {
     @Provides
     fun provideMapViewModel(
         recordPointRepository: RecordPointRepository,
-        @ApplicationContext context: Context
     ): MapViewModel {
-        val bitmapMarker =
-            AppCompatResources.getDrawable(context, R.drawable.red_marker)!!.toBitmap()
-        return MapViewModel(recordPointRepository, bitmapMarker)
+        return MapViewModel(recordPointRepository)
     }
 }
