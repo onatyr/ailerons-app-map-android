@@ -45,6 +45,4 @@ class MapboxUtils {
             return Point.fromLngLat(longitude, latitude)
         }
     }
-
-
 }

@@ -1,4 +1,4 @@
-package fr.ailerons.map.presentation.map
+package fr.ailerons.map.presentation.screens.map
 
 import android.graphics.Bitmap
 import com.google.gson.GsonBuilder

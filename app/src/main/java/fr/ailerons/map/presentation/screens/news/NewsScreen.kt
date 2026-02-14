@@ -1,4 +1,4 @@
-package fr.ailerons.map.presentation.news
+package fr.ailerons.map.presentation.screens.news
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -21,13 +21,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import fr.ailerons.map.data.entities.Article
 import fr.ailerons.map.presentation.NavRoute
 
 @Composable
-fun NewsScreen(newsViewModel: NewsViewModel, navigate: (NavRoute) -> Unit) {
+fun NewsScreen(viewModel: NewsViewModel = hiltViewModel(), navigate: (NavRoute) -> Unit) {
     val scrollState = rememberScrollState()
 
     Column(
@@ -35,7 +36,7 @@ fun NewsScreen(newsViewModel: NewsViewModel, navigate: (NavRoute) -> Unit) {
             .background(Color.White)
             .verticalScroll(scrollState)
     ) {
-        val articles = newsViewModel.articleList.collectAsState(emptyList())
+        val articles = viewModel.articleList.collectAsState(emptyList())
 
         Column {
             articles.value.forEachIndexed { index, article ->

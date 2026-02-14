@@ -1,4 +1,4 @@
-package fr.ailerons.map.presentation.individual
+package fr.ailerons.map.presentation.screens.individual
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -18,18 +18,19 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import fr.ailerons.map.presentation.LocalCustomFont
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import fr.ailerons.map.presentation.lib.LocalCustomFont
 import fr.ailerons.map.presentation.ScrollableColumnWithHeader
-import fr.ailerons.map.presentation.map.MapScreen
-import fr.ailerons.map.presentation.map.MapViewModel
-import fr.ailerons.map.presentation.map.rememberMapGestureHandler
+import fr.ailerons.map.presentation.screens.map.MapScreen
+import fr.ailerons.map.presentation.screens.map.MapViewModel
+import fr.ailerons.map.presentation.screens.map.rememberMapGestureHandler
 import fr.ailerons.map.R
 
 @Composable
 fun IndividualScreen(
     individualId: Int,
-    mapViewModel: MapViewModel,
-    individualViewModel: IndividualViewModel
+    mapViewModel: MapViewModel = hiltViewModel(),
+    individualViewModel: IndividualViewModel = hiltViewModel()
 ) {
     val mapGestureHandler = rememberMapGestureHandler()
     val individual =
@@ -56,7 +57,7 @@ fun IndividualScreen(
                     .clip(RoundedCornerShape(16.dp))
 
             ) {
-                MapScreen(mapViewModel, individualId, mapGestureHandler)
+                MapScreen(individualIdFilter = individualId, gestureHandler = mapGestureHandler)
             }
 
             Text(

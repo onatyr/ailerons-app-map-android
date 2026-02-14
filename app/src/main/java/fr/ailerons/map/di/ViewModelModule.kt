@@ -7,9 +7,9 @@ import dagger.hilt.android.components.ViewModelComponent
 import fr.ailerons.map.data.repositories.ArticleRepository
 import fr.ailerons.map.data.repositories.IndividualRepository
 import fr.ailerons.map.data.repositories.RecordPointRepository
-import fr.ailerons.map.presentation.individual.IndividualViewModel
-import fr.ailerons.map.presentation.map.MapViewModel
-import fr.ailerons.map.presentation.news.NewsViewModel
+import fr.ailerons.map.presentation.screens.individual.IndividualViewModel
+import fr.ailerons.map.presentation.screens.map.MapViewModel
+import fr.ailerons.map.presentation.screens.news.NewsViewModel
 
 @Module
 @InstallIn(ViewModelComponent::class)

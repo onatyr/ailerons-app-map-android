@@ -1,4 +1,4 @@
-package fr.ailerons.map.presentation.map
+package fr.ailerons.map.presentation.screens.map
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

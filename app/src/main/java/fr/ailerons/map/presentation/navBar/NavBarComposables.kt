@@ -16,10 +16,11 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import fr.ailerons.map.presentation.NavRoute
 
 @Composable
-fun NavBar(navBarViewModel: NavBarViewModel, navigate: (NavRoute) -> Unit) {
+fun NavBar(navBarViewModel: NavBarViewModel = hiltViewModel(), navigate: (NavRoute) -> Unit) {
     val selectedItem = navBarViewModel.selectedItem.collectAsState(NavBarItem.Map as NavBarItem)
 
     NavigationBar(containerColor = Color.White, modifier = Modifier.height(60.dp)) {

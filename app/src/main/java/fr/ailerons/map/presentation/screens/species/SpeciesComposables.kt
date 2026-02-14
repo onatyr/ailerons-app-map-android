@@ -1,4 +1,4 @@
-package fr.ailerons.map.presentation.species
+package fr.ailerons.map.presentation.screens.species
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -12,25 +12,29 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import fr.ailerons.map.data.entities.Individual
 import fr.ailerons.map.presentation.IndividualScreenRoute
 import fr.ailerons.map.R
 
 @Composable
-fun IndividualsList(individualsList: List<Individual>?, navHostController: NavHostController) {
-    individualsList ?:return
-    for (i in individualsList.indices) {
+fun IndividualsList(
+    individualsList: List<Individual>?,
+    navigateToIndividualScreen: (IndividualScreenRoute) -> Unit
+) {
+    individualsList ?: return
+    for (individual in individualsList) {
         Column {
-            IndividualItem(individualsList[i], navHostController)
+            IndividualItem(individual, navigateToIndividualScreen)
             HorizontalDivider(Modifier.size(5.dp))
         }
     }
 }
 
 @Composable
-fun IndividualItem(individual: Individual, navController: NavController) {
+fun IndividualItem(
+    individual: Individual,
+    navigateToIndividualScreen: (IndividualScreenRoute) -> Unit
+) {
     ListItem(
         headlineContent = { Text(individual.individualName, fontWeight = FontWeight.Bold) },
         supportingContent = {
@@ -44,7 +48,7 @@ fun IndividualItem(individual: Individual, navController: NavController) {
             )
         },
         trailingContent = { Text("meta") },
-        modifier = Modifier.clickable { navController.navigate(IndividualScreenRoute(individual.id)) }
+        modifier = Modifier.clickable { navigateToIndividualScreen(IndividualScreenRoute(individual.id)) }
     )
 }
 

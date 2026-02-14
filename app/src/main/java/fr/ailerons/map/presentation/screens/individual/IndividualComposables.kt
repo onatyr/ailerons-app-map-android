@@ -1,4 +1,4 @@
-package fr.ailerons.map.presentation.individual
+package fr.ailerons.map.presentation.screens.individual
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Arrangement
@@ -25,7 +25,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.ailerons.map.data.entities.Individual
-import fr.ailerons.map.presentation.LocalCustomFont
+import fr.ailerons.map.presentation.lib.LocalCustomFont
 import fr.ailerons.map.R
 
 @Composable

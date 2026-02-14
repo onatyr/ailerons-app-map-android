@@ -1,4 +1,4 @@
-package fr.ailerons.map.presentation.news
+package fr.ailerons.map.presentation.screens.news
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.sp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import fr.ailerons.map.data.entities.Article
-import fr.ailerons.map.presentation.LocalCustomFont
+import fr.ailerons.map.presentation.lib.LocalCustomFont
 import fr.ailerons.map.presentation.ScrollableColumnWithHeader
 import fr.ailerons.map.R
 

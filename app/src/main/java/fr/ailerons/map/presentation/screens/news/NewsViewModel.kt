@@ -1,4 +1,4 @@
-package fr.ailerons.map.presentation.news
+package fr.ailerons.map.presentation.screens.news
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel

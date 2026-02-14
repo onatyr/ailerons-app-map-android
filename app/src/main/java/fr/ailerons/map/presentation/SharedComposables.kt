@@ -27,9 +27,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.ailerons.map.Constants
-import fr.ailerons.map.presentation.map.MapGestureHandler
-import fr.ailerons.map.presentation.map.rememberMapGestureHandler
+import fr.ailerons.map.presentation.screens.map.MapGestureHandler
+import fr.ailerons.map.presentation.screens.map.rememberMapGestureHandler
 import fr.ailerons.map.R
+import fr.ailerons.map.presentation.lib.LocalCustomFont
+import fr.ailerons.map.presentation.lib.LocalPopBackStack
 
 @Composable
 fun ScreenSurface(content: @Composable () -> Unit) {
