@@ -26,8 +26,9 @@ fun List<RecordPoint>.toPointAnnotationOptions(marker: Bitmap) =
             .withIconSize(Constants.POINT_ICON_SIZE)
             .withData(
                 GsonBuilder().create()
-                    .toJsonTree(records.last().individualId)
+                    .toJsonTree(records.last().individualId to records.last().recordTimestamp)
             )
+
     }
 
 fun List<RecordPoint>.toPolylineAnnotationOptions() =

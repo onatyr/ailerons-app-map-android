@@ -29,7 +29,7 @@ interface RecordPointDAO {
         """)
     fun getByIdIndividual(id: Int): Flow<List<RecordPoint>>
 
-    @Query("SELECT * FROM record_point")
+    @Query("SELECT * FROM record_point WHERE individual_id != 334") // todo remove filter
     fun getAll(): Flow<List<RecordPoint>>
 
     @Insert

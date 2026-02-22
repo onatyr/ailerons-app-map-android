@@ -2,12 +2,14 @@ package fr.ailerons.map.presentation
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -15,19 +17,16 @@ import androidx.navigation.toRoute
 import dagger.hilt.android.AndroidEntryPoint
 import fr.ailerons.map.data.entities.Article
 import fr.ailerons.map.presentation.screens.individual.IndividualScreen
-import fr.ailerons.map.presentation.screens.individual.IndividualViewModel
 import fr.ailerons.map.presentation.lib.LocalCustomFont
 import fr.ailerons.map.presentation.lib.LocalPopBackStack
+import fr.ailerons.map.presentation.lib.LocalTouchEventBus
 import fr.ailerons.map.presentation.lib.atkinsonFontFamily
 import fr.ailerons.map.presentation.screens.map.MapScreen
-import fr.ailerons.map.presentation.screens.map.MapViewModel
 import fr.ailerons.map.presentation.navBar.NavBar
 import fr.ailerons.map.presentation.navBar.NavBarItem
-import fr.ailerons.map.presentation.navBar.NavBarViewModel
 import fr.ailerons.map.presentation.screens.map.rememberMapState
 import fr.ailerons.map.presentation.screens.news.ArticleScreen
 import fr.ailerons.map.presentation.screens.news.NewsScreen
-import fr.ailerons.map.presentation.screens.news.NewsViewModel
 import fr.ailerons.map.presentation.screens.species.SpeciesScreen
 import kotlinx.serialization.Serializable
 
@@ -49,38 +48,45 @@ class MainActivity : AppCompatActivity() {
                 ) { innerPadding ->
                     val mapState = rememberMapState()
 
-                    NavHost(
-                        navController = navHostController,
-                        startDestination = NavBarItem.Map.navRoute,
-                        modifier = Modifier.padding(innerPadding)
-                    ) {
-                        composable<MapScreenRoute> {
-                            MapScreen(
-                                openIndividualSheet = { id ->
-                                    navHostController.navigate(IndividualScreenRoute(id))
-                                },
-                                mapState = mapState
-                            )
-                        }
-                        composable<SpeciesScreenRoute> {
-                            ScreenSurface {
-                                SpeciesScreen(navigateToIndividualScreen = navHostController::navigate)
+                    val touchEventBus = LocalTouchEventBus.current
+                    Box(modifier = Modifier.pointerInput(Unit) {
+                        awaitPointerEventScope {
+                            while (true) {
+                                val event = awaitPointerEvent(pass = PointerEventPass.Initial)
+
+                                touchEventBus.tryEmit(event.changes.first().position)
+
                             }
                         }
-                        composable<NewsScreenRoute> {
-                            ScreenSurface {
-                                NewsScreen(navigate = navHostController::navigate)
+                    }) {
+                        NavHost(
+                            navController = navHostController,
+                            startDestination = NavBarItem.Map.navRoute,
+                            modifier = Modifier.padding(innerPadding)
+                        ) {
+                            composable<MapScreenRoute> {
+                                MapScreen(mapState = mapState)
                             }
-                        }
-                        composable<Article> {
-                            val article = it.toRoute<Article>()
-                            ScreenSurface {
-                                ArticleScreen(article = article)
+                            composable<SpeciesScreenRoute> {
+                                ScreenSurface {
+                                    SpeciesScreen(navigateToIndividualScreen = navHostController::navigate)
+                                }
                             }
-                        }
-                        composable<IndividualScreenRoute> {
-                            ScreenSurface {
-                                IndividualScreen(individualId = it.toRoute<IndividualScreenRoute>().individualId)
+                            composable<NewsScreenRoute> {
+                                ScreenSurface {
+                                    NewsScreen(navigate = navHostController::navigate)
+                                }
+                            }
+                            composable<Article> {
+                                val article = it.toRoute<Article>()
+                                ScreenSurface {
+                                    ArticleScreen(article = article)
+                                }
+                            }
+                            composable<IndividualScreenRoute> {
+                                ScreenSurface {
+                                    IndividualScreen(individualId = it.toRoute<IndividualScreenRoute>().individualId)
+                                }
                             }
                         }
                     }

@@ -24,18 +24,34 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import fr.ailerons.map.R
 import fr.ailerons.map.data.entities.Individual
 import fr.ailerons.map.presentation.lib.LocalCustomFont
-import fr.ailerons.map.R
+import fr.ailerons.map.presentation.screens.map.IndividualBottomSheetRecordPointContent
+import fr.ailerons.map.presentation.screens.map.MapConst
+import fr.ailerons.map.presentation.screens.map.MapConst.INDIVIDUAL_HEADER_HORIZONTAL_PADDING
 
 @Composable
-fun IndividualCharacteristics(individual: Individual) {
+fun IndividualCharacteristics(individual: Individual, recordTimestamp: String?) {
     Column {
         IndividualCharacteristicsHeader(
             individualName = individual.individualName,
-            commonName = individual.commonName,
-            binomialName = individual.binomialName
+            trailingContent = {
+                if (recordTimestamp == null)
+                    IndividualScientificNames(
+                        commonName = individual.commonName,
+                        binomialName = individual.binomialName
+                    )
+                else IndividualBottomSheetRecordPointContent(timestamp = recordTimestamp)
+            }
+
         )
+        HorizontalDivider(
+            thickness = 1.dp,
+            color = Color.Black,
+            modifier = Modifier.padding(bottom = 5.dp, start = 8.dp, end = 8.dp)
+        )
+
         Row(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
@@ -72,7 +88,7 @@ fun IndividualCharacteristics(individual: Individual) {
                 label = "Description",
                 content = individual.description
             )
-            DateRange(startDate = "21/07/2023", endDate = "17/09/2023")
+            DateRange(startDate = "21/07/2023", endDate = "17/09/2023") // todo get real dates
         }
     }
 }
@@ -80,10 +96,15 @@ fun IndividualCharacteristics(individual: Individual) {
 @Composable
 fun IndividualCharacteristicsHeader(
     individualName: String,
-    commonName: String,
-    binomialName: String
-) {
-    Column(modifier = Modifier.padding(horizontal = 8.dp)) {
+    trailingContent: @Composable () -> Unit,
+
+    ) {
+    Column(
+        modifier = Modifier
+            .padding(horizontal = INDIVIDUAL_HEADER_HORIZONTAL_PADDING, vertical = 5.dp)
+            .height(MapConst.INDIVIDUAL_HEADER_HEIGHT),
+        verticalArrangement = Arrangement.Center
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth(),
@@ -97,21 +118,21 @@ fun IndividualCharacteristicsHeader(
                 fontWeight = FontWeight.Bold
             )
             Column(horizontalAlignment = Alignment.End) {
-                Text(text = commonName, fontFamily = LocalCustomFont.current, fontSize = 13.sp)
-                Text(
-                    text = binomialName,
-                    fontStyle = FontStyle.Italic,
-                    fontFamily = LocalCustomFont.current,
-                    fontSize = 13.sp
-                )
+                trailingContent()
             }
         }
-        HorizontalDivider(
-            thickness = 1.dp,
-            color = Color.Black,
-            modifier = Modifier.padding(vertical = 5.dp)
-        )
     }
+}
+
+@Composable
+fun IndividualScientificNames(commonName: String, binomialName: String) {
+    Text(text = commonName, fontFamily = LocalCustomFont.current, fontSize = 13.sp)
+    Text(
+        text = binomialName,
+        fontStyle = FontStyle.Italic,
+        fontFamily = LocalCustomFont.current,
+        fontSize = 13.sp
+    )
 }
 
 @Composable

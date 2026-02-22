@@ -28,6 +28,12 @@ interface IndividualDAO {
     @Query("SELECT * FROM individual")
     fun getAll(): Flow<List<Individual>>
 
+    @Query("""
+        SELECT * FROM individual
+            WHERE id = :id
+    """)
+    fun getById(id: Int): Flow<Individual?>
+
     @Insert
     suspend fun insert(individual: Individual)
 

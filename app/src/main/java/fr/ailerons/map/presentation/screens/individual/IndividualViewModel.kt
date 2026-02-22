@@ -11,5 +11,5 @@ import javax.inject.Inject
 class IndividualViewModel @Inject constructor(private val individualRepository: IndividualRepository) :
     ViewModel() {
 
-    val individualsList: Flow<List<Individual>> = individualRepository.getListIndividual()
+    val individualsList: Flow<List<Individual>> = individualRepository.getAll()
 }

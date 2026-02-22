@@ -10,10 +10,12 @@ import fr.ailerons.map.R
 
 val LocalCustomFont = staticCompositionLocalOf {
     FontFamily(
-        Font(R.font.atkinson_hyperlegible_regular, FontWeight.Companion.Normal),
-        Font(R.font.atkinson_hyperlegible_italic, style = FontStyle.Companion.Italic),
-        Font(R.font.atkinson_hyperlegible_bold, FontWeight.Companion.Bold)
+        Font(R.font.atkinson_hyperlegible_regular, FontWeight.Normal),
+        Font(R.font.atkinson_hyperlegible_italic, style = FontStyle.Italic),
+        Font(R.font.atkinson_hyperlegible_bold, FontWeight.Bold)
     )
 }
 
 val LocalPopBackStack = compositionLocalOf { {} }
+
+val LocalTouchEventBus = compositionLocalOf { TouchEventBus() }
