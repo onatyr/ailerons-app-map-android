@@ -4,10 +4,9 @@ import fr.ailerons.map.data.dtos.RecordPointDto
 import fr.ailerons.map.data.entities.RecordPointDAO
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.postgrest.from
-import kotlinx.coroutines.CoroutineScope
+import io.github.jan.supabase.postgrest.query.filter.FilterOperator
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.serialization.json.Json
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -17,29 +16,24 @@ class RecordPointRepository @Inject constructor(
     private val recordPointDao: RecordPointDAO
 ) {
 
-    init {
-        fetchListRecordPoint()
+    suspend fun fetchFromRemote() = withContext(Dispatchers.IO) {
+        val recordPoints = supabaseClient.from("record")
+            .select {
+                filter {
+                    filterNot("individual_id", FilterOperator.IS, null)
+                }
+            }
+            .decodeList<RecordPointDto>()
+            .sortedBy { it.recordTimestamp }
+            .map { it.toRecordPoint() }
+
+        clearRecordPoint()
+        recordPointDao.insertAll(recordPoints)
     }
 
-    private fun fetchListRecordPoint() {
-        CoroutineScope(Dispatchers.IO).launch {
-            val response = supabaseClient.from("record")
-                .select()
-                .data
+    fun getWithColorByIndividualId(id: Int) = recordPointDao.getWithColorByIndividualId(id)
 
-            val json = Json { ignoreUnknownKeys = true }
-            val recordPoints = json.decodeFromString<List<RecordPointDto>>(response)
-                .sortedBy { it.recordTimestamp }
-                .map { it.toRecordPoint() }
-
-            clearRecordPoint()
-            recordPointDao.insertAll(recordPoints)
-        }
-    }
-
-    fun getByIdIndividual(id: Int) = recordPointDao.getByIdIndividual(id)
-
-    fun getAll() = recordPointDao.getAll()
+    fun getAllWithColor() = recordPointDao.getAllWithColor()
 
     private suspend fun clearRecordPoint() = recordPointDao.deleteAll()
 }

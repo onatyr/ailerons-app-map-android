@@ -89,6 +89,7 @@ android {
 
 dependencies {
     implementation("androidx.appcompat:appcompat:1.7.1")
+    implementation("androidx.compose.ui:ui:1.10.5")
 
 //    ROOM DATABASE
     val roomVersion = "2.8.4"
@@ -135,7 +136,6 @@ dependencies {
     val lifecycleVersion = "2.10.0"
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
-
 
 // DAGGER-HILT
     val daggerHiltVersion = "2.58"

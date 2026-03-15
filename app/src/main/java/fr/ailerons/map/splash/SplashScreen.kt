@@ -29,8 +29,8 @@ fun SplashScreen(onTimeout: () -> Unit) {
         contentAlignment = Alignment.Center
     ) {
         Image(
-            painter = painterResource(id = R.drawable.ic_shark), // Replace with your logo
-            contentDescription = "Logo",
+            painter = painterResource(id = R.drawable.ic_shark),
+            contentDescription = null,
             modifier = Modifier.size(100.dp)
         )
     }

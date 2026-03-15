@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
@@ -12,6 +13,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.BottomSheetScaffoldState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.SheetValue
@@ -28,8 +30,11 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
+import fr.ailerons.map.R
+import fr.ailerons.map.data.entities.Individual
 import fr.ailerons.map.lib.extensions.onClickOutside
 import fr.ailerons.map.presentation.lib.LocalCustomFont
+import fr.ailerons.map.presentation.lib.dynamicPainter
 import fr.ailerons.map.presentation.screens.individual.IndividualSheet
 import fr.ailerons.map.presentation.screens.map.MapConst.BOTTOM_SHEET_DRAG_HANDLER_HEIGHT
 import fr.ailerons.map.presentation.screens.map.MapConst.INDIVIDUAL_HEADER_HEIGHT
@@ -74,7 +79,7 @@ fun MapBottomSheetScaffold(
                         indication = null,
                         onClick = {}
                     )
-                    .height(MapConst.BOTTOM_SHEET_DRAG_HANDLER_HEIGHT),
+                    .height(BOTTOM_SHEET_DRAG_HANDLER_HEIGHT),
                 contentAlignment = Alignment.Center
             ) {
                 Box(
@@ -115,13 +120,7 @@ fun BottomSheetContent(uiState: BottomSheetUiState, sheetState: SheetState) {
             }
     ) {
         when (uiState) {
-            is BottomSheetUiState.IndividualFilters -> {
-                Column {
-                    uiState.individuals.forEach {
-                        Text(text = it.individualName)
-                    }
-                }
-            }
+            is BottomSheetUiState.IndividualFilters -> FiltersList(uiState.individuals)
 
             is BottomSheetUiState.IndividualPointAnnotation ->
                 IndividualSheet(
@@ -150,4 +149,24 @@ fun IndividualBottomSheetRecordPointContent(timestamp: String) {
         fontFamily = LocalCustomFont.current,
         fontSize = 13.sp
     )
+}
+
+@Composable
+fun FiltersList(individuals: List<Individual>) {
+    Column {
+        individuals.forEach { individual ->
+            Row(modifier = Modifier.fillMaxWidth()) {
+                Icon(
+                    painter = dynamicPainter(
+                        drawableRes = R.drawable.ic_ray_icon,
+                        dynamicPathMap = mapOf("dynamic_path" to individual.color),
+                    ),
+                    contentDescription = null,
+                    tint = Color.Unspecified
+                )
+
+                Text(text = individual.individualName)
+            }
+        }
+    }
 }

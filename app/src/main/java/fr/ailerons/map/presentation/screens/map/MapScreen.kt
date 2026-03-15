@@ -1,16 +1,10 @@
 package fr.ailerons.map.presentation.screens.map
 
-import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.PorterDuff
 import android.view.Gravity
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -32,14 +26,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.viewinterop.NoOpUpdate
-import androidx.core.graphics.createBitmap
-import androidx.core.graphics.drawable.DrawableCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mapbox.maps.CameraOptions
@@ -57,7 +49,9 @@ import com.mapbox.maps.plugin.annotation.generated.createPolylineAnnotationManag
 import com.mapbox.maps.plugin.compass.compass
 import fr.ailerons.map.Constants
 import fr.ailerons.map.R
-import fr.ailerons.map.data.entities.RecordPoint
+import fr.ailerons.map.data.entities.RecordPointWithColor
+import fr.ailerons.map.presentation.lib.dynamicPainter
+import fr.ailerons.map.presentation.lib.painterToBitmap
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -79,7 +73,9 @@ fun MapScreen(
         )
     )
 
-    LaunchedEffect(individualIdFilter) { viewModel.setIndividualIdFilter(individualIdFilter) }
+    LaunchedEffect(individualIdFilter) { viewModel.setIdIndividualFilter(individualIdFilter) }
+
+    val colors by viewModel.colors.collectAsStateWithLifecycle(emptyList())
 
     val recordPoints by viewModel.recordPoints.collectAsStateWithLifecycle(emptyList())
 
@@ -91,6 +87,7 @@ fun MapScreen(
         Box {
             AileronMap(
                 recordPoints = recordPoints,
+                colors = colors,
                 gestureHandler = gestureHandler,
                 onPointAnnotationClick = { annotation ->
                     val jsonObject = annotation.getData()?.asJsonObject
@@ -109,21 +106,24 @@ fun MapScreen(
                 mapState = mapState
             )
 
-            FilterIcon(onClick = {
-                viewModel.updateBottomSheetUiState(
-                    params =
-                        if (bottomSheetUiState is BottomSheetUiState.IndividualFilters)
-                            null.also { scope.launch { scaffoldState.bottomSheetState.hide() } }
-                        else BottomSheetParams.IndividualFilters
-                )
-            })
+            FilterIcon(
+                modifier = Modifier.align(Alignment.TopEnd),
+                onClick = {
+                    viewModel.updateBottomSheetUiState(
+                        params =
+                            if (bottomSheetUiState is BottomSheetUiState.IndividualFilters)
+                                null.also { scope.launch { scaffoldState.bottomSheetState.hide() } }
+                            else BottomSheetParams.IndividualFilters
+                    )
+                })
         }
     }
 }
 
 @Composable
 fun AileronMap(
-    recordPoints: List<RecordPoint>,
+    recordPoints: List<RecordPointWithColor>,
+    colors: List<String>,
     gestureHandler: MapGestureHandler?,
     onPointAnnotationClick: (PointAnnotation) -> Boolean,
     mapState: MapState,
@@ -135,6 +135,21 @@ fun AileronMap(
         cameraOptions = mapState.cameraOptions,
         textureView = true // temporary work-around as described here: https://github.com/mapbox/mapbox-maps-android/issues/1570
     )
+
+    val density = LocalDensity.current
+    val markers =
+        colors.associateWith { stringColor ->
+            painterToBitmap(
+                dynamicPainter(
+                    drawableRes = R.drawable.ic_ray_marker,
+                    dynamicPathMap = mapOf("dynamic_path" to stringColor)
+                ),
+                width = 250,
+                height = 320,
+                density
+            )
+        }
+
 
     var pointAnnotationManager by remember { mutableStateOf<PointAnnotationManager?>(null) }
 
@@ -159,7 +174,10 @@ fun AileronMap(
             mapView.mapboxMap.flyTo(
                 cameraOptions = CameraOptions.Builder()
                     .zoom(7.0)
-                    .center(getCameraCenter(recordPoints))
+                    .center(
+                        if (recordPoints.isNotEmpty()) centroid(recordPoints.map { it.recordPoint.toPoint() })
+                        else Constants.defaultCamera
+                    )
                     .build(),
                 animatorListener = getMapInitListener(mapState)
             )
@@ -195,10 +213,7 @@ fun AileronMap(
                 pointAnnotationManager.deleteAll()
                 pointAnnotationManager.create(
                     recordPoints.toPointAnnotationOptions(
-                        marker = getMarker(
-                            context,
-                            Color.Yellow
-                        )
+                        getMarker = { markers[it] }
                     )
                 )
 
@@ -219,11 +234,10 @@ fun AileronMap(
 
 
 @Composable
-fun BoxScope.FilterIcon(onClick: () -> Unit) {
+fun FilterIcon(onClick: () -> Unit, modifier: Modifier = Modifier) {
     val cornerSize = 10.dp
     Box(
-        modifier = Modifier
-            .align(Alignment.TopEnd)
+        modifier = modifier
             .padding(top = 12.dp, bottom = 10.dp, start = 10.dp, end = 10.dp)
             .size(40.dp)
             .background(color = Color.White, shape = RoundedCornerShape(cornerSize))
@@ -242,21 +256,4 @@ fun BoxScope.FilterIcon(onClick: () -> Unit) {
             modifier = Modifier.size(19.dp)
         )
     }
-}
-
-fun getMarker(context: Context, color: Color): Bitmap {
-    val drawable = AppCompatResources
-        .getDrawable(context, R.drawable.ic_ray_marker)!!
-        .mutate()
-
-    DrawableCompat.setTintMode(drawable, PorterDuff.Mode.SRC_IN)
-    DrawableCompat.setTint(drawable, color.toArgb())
-
-    val bitmap = createBitmap(200, 255)
-    val canvas = Canvas(bitmap)
-
-    drawable.setBounds(0, 0, canvas.width, canvas.height)
-    drawable.draw(canvas)
-
-    return bitmap
 }

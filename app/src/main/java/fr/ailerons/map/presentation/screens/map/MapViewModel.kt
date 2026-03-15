@@ -44,41 +44,45 @@ class MapViewModel @Inject constructor(
     private val individualRepository: IndividualRepository,
 ) : ViewModel() {
 
-    private val _individualIdFilter = MutableStateFlow<Int?>(null)
-    private val individualIdFilter = _individualIdFilter.asStateFlow()
+    private val _idIndividualFilter = MutableStateFlow<Int?>(null)
+    private val individualIdFilter = _idIndividualFilter.asStateFlow()
 
     private val _bottomSheetUiState = MutableStateFlow<BottomSheetUiState?>(null)
     val bottomSheetUiState = _bottomSheetUiState.asStateFlow()
 
     val recordPoints = individualIdFilter.flatMapLatest {
-        if (it == null) recordPointRepository.getAll()
-        else recordPointRepository.getByIdIndividual(it)
+        if (it == null) recordPointRepository.getAllWithColor()
+        else recordPointRepository.getWithColorByIndividualId(it)
     }
 
-    fun setIndividualIdFilter(id: Int?) = _individualIdFilter.update { id }
+    val colors = individualRepository.getColors()
 
-    fun updateBottomSheetUiState(params: BottomSheetParams?) = viewModelScope.launch(Dispatchers.IO) {
-        when (params) {
-            is BottomSheetParams.IndividualFilters -> {
-                _bottomSheetUiState.update {
-                    BottomSheetUiState.IndividualFilters(
-                        individualRepository.getAll().first()
-                    )
-                }
-            }
+    fun setIdIndividualFilter(id: Int?) = _idIndividualFilter.update { id }
 
-            is BottomSheetParams.IndividualPointAnnotation -> {
-                _bottomSheetUiState.update {
-                    individualRepository.getById(params.idIndividual).first()?.let { individual ->
-                        BottomSheetUiState.IndividualPointAnnotation(
-                            individual = individual,
-                            timestamp = params.timestamp
+    fun updateBottomSheetUiState(params: BottomSheetParams?) =
+        viewModelScope.launch(Dispatchers.IO) {
+            when (params) {
+                is BottomSheetParams.IndividualFilters -> {
+                    _bottomSheetUiState.update {
+                        BottomSheetUiState.IndividualFilters(
+                            individualRepository.getAll().first()
                         )
                     }
                 }
-            }
 
-            null -> _bottomSheetUiState.update { null }
+                is BottomSheetParams.IndividualPointAnnotation -> {
+                    _bottomSheetUiState.update {
+                        individualRepository.getById(params.idIndividual).first()
+                            ?.let { individual ->
+                                BottomSheetUiState.IndividualPointAnnotation(
+                                    individual = individual,
+                                    timestamp = params.timestamp
+                                )
+                            }
+                    }
+                }
+
+                null -> _bottomSheetUiState.update { null }
+            }
         }
-    }
 }

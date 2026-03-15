@@ -4,6 +4,7 @@
     android:viewportWidth="40"
     android:viewportHeight="51">
   <path
+      android:name="dynamic_path"
       android:pathData="M20,0C11.167,0 4,7.047 4,15.747C4,25.708 14.017,37.648 18.2,42.198C19.183,43.267 20.817,43.267 21.8,42.198C25.983,37.648 36,25.708 36,15.747C36,7.047 28.833,0 20,0Z"
       android:fillColor="#000000"/>
   <path

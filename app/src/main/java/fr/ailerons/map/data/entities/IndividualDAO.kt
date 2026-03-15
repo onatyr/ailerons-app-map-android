@@ -13,14 +13,18 @@ import kotlinx.coroutines.flow.Flow
 )
 data class Individual(
     @PrimaryKey val id: Int,
-    @ColumnInfo(name = "individual_name") val individualName: String,
-    @ColumnInfo(name = "sex") val sex: String,
-    @ColumnInfo(name = "common_name") val commonName: String,
-    @ColumnInfo(name = "binomial_name") val binomialName: String,
-    @ColumnInfo(name = "description") val description: String,
-    @ColumnInfo(name = "situation") val situation: String,
-    @ColumnInfo("size") val size: Int,
-    @ColumnInfo("behavior") val behavior: String,
+    @ColumnInfo(name = "individual_name") val
+    individualName: String,
+    val sex: String,
+    @ColumnInfo(name = "common_name") val
+    commonName: String,
+    @ColumnInfo(name = "binomial_name") val
+    binomialName: String,
+    val description: String,
+    val situation: String,
+    val size: Int,
+    val behavior: String,
+    val color: String
 )
 
 @Dao
@@ -28,11 +32,20 @@ interface IndividualDAO {
     @Query("SELECT * FROM individual")
     fun getAll(): Flow<List<Individual>>
 
-    @Query("""
+    @Query(
+        """
         SELECT * FROM individual
             WHERE id = :id
-    """)
+    """
+    )
     fun getById(id: Int): Flow<Individual?>
+
+    @Query(
+        """
+            SELECT color from individual
+        """
+    )
+    fun getColors(): Flow<List<String>>
 
     @Insert
     suspend fun insert(individual: Individual)

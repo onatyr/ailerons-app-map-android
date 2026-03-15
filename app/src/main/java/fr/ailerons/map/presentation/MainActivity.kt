@@ -7,23 +7,25 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import dagger.hilt.android.AndroidEntryPoint
 import fr.ailerons.map.data.entities.Article
-import fr.ailerons.map.presentation.screens.individual.IndividualScreen
 import fr.ailerons.map.presentation.lib.LocalCustomFont
 import fr.ailerons.map.presentation.lib.LocalPopBackStack
 import fr.ailerons.map.presentation.lib.LocalTouchEventBus
 import fr.ailerons.map.presentation.lib.atkinsonFontFamily
-import fr.ailerons.map.presentation.screens.map.MapScreen
 import fr.ailerons.map.presentation.navBar.NavBar
 import fr.ailerons.map.presentation.navBar.NavBarItem
+import fr.ailerons.map.presentation.screens.individual.IndividualScreen
+import fr.ailerons.map.presentation.screens.map.MapScreen
 import fr.ailerons.map.presentation.screens.map.rememberMapState
 import fr.ailerons.map.presentation.screens.news.ArticleScreen
 import fr.ailerons.map.presentation.screens.news.NewsScreen
@@ -37,6 +39,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
+            val viewModel = hiltViewModel<MainActivityViewModel>()
+            LaunchedEffect(Unit) { viewModel.fetchData() }
+
             val navHostController = rememberNavController()
             CompositionLocalProvider(
                 LocalCustomFont provides atkinsonFontFamily,

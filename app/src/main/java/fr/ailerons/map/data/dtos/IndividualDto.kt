@@ -3,6 +3,7 @@ package fr.ailerons.map.data.dtos
 import fr.ailerons.map.data.entities.Individual
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlin.random.Random
 
 @Serializable
 data class IndividualDto(
@@ -37,7 +38,8 @@ data class IndividualDto(
             description = description,
             situation = individualContext.situation,
             size = individualContext.size,
-            behavior = individualContext.behavior
+            behavior = individualContext.behavior,
+            color = String.format("#%02x%02x%02x", Random.nextInt(256), Random.nextInt(256), Random.nextInt(256)) // todo remove
         )
     }
 }

@@ -19,7 +19,7 @@ data class RecordPointDto(
     val latitude: Float,
 
     @SerialName("individual_id")
-    val individualId: Int?,
+    val individualId: Int,
 
     @SerialName("record_timestamp")
     val recordTimestamp: String,
@@ -33,6 +33,6 @@ data class RecordPointDto(
         latitude = latitude,
         individualId = individualId,
         recordTimestamp = recordTimestamp,
-        depth = depth
+        depth = depth,
     )
 }

@@ -3,46 +3,52 @@ package fr.ailerons.map.presentation.screens.map
 import android.graphics.Bitmap
 import com.google.gson.GsonBuilder
 import com.mapbox.geojson.Point
+import com.mapbox.maps.extension.style.layers.properties.generated.IconAnchor
 import com.mapbox.maps.plugin.annotation.generated.CircleAnnotationOptions
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions
 import com.mapbox.maps.plugin.annotation.generated.PolylineAnnotationOptions
 import fr.ailerons.map.Constants
 import fr.ailerons.map.data.entities.RecordPoint
+import fr.ailerons.map.data.entities.RecordPointWithColor
 
 fun RecordPoint.toPoint() = Point.fromLngLat(longitude.toDouble(), latitude.toDouble())!!
 
-fun List<RecordPoint>.toCircleAnnotationOptions() = map { recordPoint ->
+fun List<RecordPointWithColor>.toCircleAnnotationOptions() = map { recordPoint ->
     CircleAnnotationOptions()
-        .withPoint(recordPoint.toPoint())
+        .withPoint(recordPoint.recordPoint.toPoint())
         .withCircleRadius(Constants.CIRCLE_RADIUS)
-        .withCircleColor(Constants.CIRCLE_COLOR)
+        .withCircleColor(recordPoint.color)
 }
 
-fun List<RecordPoint>.toPointAnnotationOptions(marker: Bitmap) =
-    groupBy { it.individualId }.values.map { records ->
+fun List<RecordPointWithColor>.toPointAnnotationOptions(getMarker: (colorString: String) -> Bitmap?) =
+    groupBy { it.recordPoint.individualId }.values.map { records ->
+        val record = records.last()
         PointAnnotationOptions()
-            .withPoint(records.last().toPoint())
-            .withIconImage(marker)
+            .withPoint(record.recordPoint.toPoint())
+            .apply {
+                getMarker(record.color)?.let {
+                    withIconImage(it)
+                        .withIconAnchor(IconAnchor.BOTTOM)
+                        .withIconOffset(listOf(0.0, 10.0))
+                }
+            }
             .withIconSize(Constants.POINT_ICON_SIZE)
             .withData(
                 GsonBuilder().create()
-                    .toJsonTree(records.last().individualId to records.last().recordTimestamp)
+                    .toJsonTree(record.recordPoint.individualId to records.last().recordPoint.recordTimestamp)
             )
 
     }
 
-fun List<RecordPoint>.toPolylineAnnotationOptions() =
-    groupBy { it.individualId }.values.map { records ->
+fun List<RecordPointWithColor>.toPolylineAnnotationOptions() =
+    groupBy { it.recordPoint.individualId }.values.map { records ->
         PolylineAnnotationOptions()
-            .withPoints(records.map { it.toPoint() })
-            .withLineColor(Constants.POLYLINE_COLOR)
+            .withPoints(records.map { it.recordPoint.toPoint() })
+            .withLineColor(records.first().color)
             .withLineWidth(Constants.POLYLINE_WIDTH)
     }
 
-fun getCameraCenter(recordPoints: List<RecordPoint>) =
-    if (recordPoints.isNotEmpty()) centroid(recordPoints.map { it.toPoint() }) else Constants.defaultCamera
-
-private fun centroid(points: List<Point>): Point {
+fun centroid(points: List<Point>): Point {
     var longitude = 0.0
     var latitude = 0.0
 

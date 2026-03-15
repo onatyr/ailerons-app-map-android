@@ -2,35 +2,60 @@ package fr.ailerons.map.data.entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Dao
+import androidx.room.Embedded
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.Insert
 import androidx.room.PrimaryKey
 import androidx.room.Query
+import androidx.room.Relation
 import kotlinx.coroutines.flow.Flow
 
+data class RecordPointWithColor(
+    @Embedded val recordPoint: RecordPoint,
+    @Relation(
+        parentColumn = "id_individual",
+        entityColumn = "id",
+        entity = Individual::class,
+        projection = ["color"]
+    )
+    val color: String
+)
+
 @Entity(
-    tableName = "record_point"
+    tableName = "record_point",
+    foreignKeys = [
+        ForeignKey(
+            entity = Individual::class,
+            parentColumns = ["id"],
+            childColumns = ["id_individual"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
 )
 data class RecordPoint(
     @PrimaryKey val id: Int,
-    @ColumnInfo(name = "longitude") val longitude: Float,
-    @ColumnInfo(name = "latitude") val latitude: Float,
-    @ColumnInfo(name = "individual_id") val individualId: Int?,
-    @ColumnInfo(name = "record_timestamp") val recordTimestamp: String,
-    @ColumnInfo(name = "depth") val depth: Int?
+    val longitude: Float,
+    val latitude: Float,
+    @ColumnInfo(name = "id_individual")
+    val individualId: Int,
+    @ColumnInfo(name = "record_timestamp")
+    val recordTimestamp: String,
+    val depth: Int?
 )
 
 @Dao
 interface RecordPointDAO {
-
-    @Query("""
+    @Query(
+        """
         SELECT * FROM record_point
-            WHERE individual_id = :id
-        """)
-    fun getByIdIndividual(id: Int): Flow<List<RecordPoint>>
+            WHERE id_individual = :id
+        """
+    )
+    fun getWithColorByIndividualId(id: Int): Flow<List<RecordPointWithColor>>
 
-    @Query("SELECT * FROM record_point WHERE individual_id != 334") // todo remove filter
-    fun getAll(): Flow<List<RecordPoint>>
+    @Query("SELECT * FROM record_point WHERE id_individual != 334") // todo remove filter
+    fun getAllWithColor(): Flow<List<RecordPointWithColor>>
 
     @Insert
     suspend fun insert(recordPoint: RecordPoint)
