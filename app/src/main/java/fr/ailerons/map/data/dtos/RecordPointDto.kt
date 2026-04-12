@@ -1,37 +1,20 @@
 package fr.ailerons.map.data.dtos
 
 import fr.ailerons.map.data.entities.RecordPoint
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class RecordPointDto(
-    @SerialName("id")
-    val id: Int,
-
-    @SerialName("created_at")
-    val createdAt: String,
-
-    @SerialName("longitude")
     val longitude: Float,
-
-    @SerialName("latitude")
     val latitude: Float,
-
-    @SerialName("individual_id")
-    val individualId: Int,
-
-    @SerialName("record_timestamp")
+    val idIndividual: Int,
     val recordTimestamp: String,
-
-    @SerialName("depth")
     val depth: Int?,
 ) {
     fun toRecordPoint() = RecordPoint(
-        id = id,
-        longitude = longitude,
-        latitude = latitude,
-        individualId = individualId,
+        longitude = if (idIndividual == 18) longitude + 0.3f else longitude, // todo remove
+        latitude = if (idIndividual == 18) latitude + 0.3f else latitude, // todo remove
+        idIndividual = idIndividual,
         recordTimestamp = recordTimestamp,
         depth = depth,
     )

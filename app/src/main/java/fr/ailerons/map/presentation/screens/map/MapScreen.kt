@@ -73,7 +73,11 @@ fun MapScreen(
         )
     )
 
-    LaunchedEffect(individualIdFilter) { viewModel.setIdIndividualFilter(individualIdFilter) }
+    LaunchedEffect(individualIdFilter) {
+        individualIdFilter?.let {
+            viewModel.setIdIndividualFilter(individualIdFilter)
+        }
+    }
 
     val colors by viewModel.colors.collectAsStateWithLifecycle(emptyList())
 
@@ -136,7 +140,6 @@ fun AileronMap(
         textureView = true // temporary work-around as described here: https://github.com/mapbox/mapbox-maps-android/issues/1570
     )
 
-    val density = LocalDensity.current
     val markers =
         colors.associateWith { stringColor ->
             painterToBitmap(
@@ -146,7 +149,7 @@ fun AileronMap(
                 ),
                 width = 250,
                 height = 320,
-                density
+                density = LocalDensity.current
             )
         }
 
@@ -197,18 +200,16 @@ fun AileronMap(
 
             val annotationApi = mapView.annotations
 
-            circleAnnotationManager = annotationApi.createCircleAnnotationManager()
             pointAnnotationManager = annotationApi.createPointAnnotationManager()
+            circleAnnotationManager = annotationApi.createCircleAnnotationManager()
+                .apply { minZoom = 7.5 }
             polylineAnnotationManager = annotationApi.createPolylineAnnotationManager()
+                .apply { minZoom = 7.5 }
+
 
             mapView
         },
         update = {
-            circleAnnotationManager?.let { circleAnnotationManager ->
-                circleAnnotationManager.deleteAll()
-                circleAnnotationManager.create(recordPoints.toCircleAnnotationOptions())
-            }
-
             pointAnnotationManager?.let { pointAnnotationManager ->
                 pointAnnotationManager.deleteAll()
                 pointAnnotationManager.create(
@@ -218,6 +219,11 @@ fun AileronMap(
                 )
 
                 pointAnnotationManager.addClickListener { onPointAnnotationClick(it); false }
+            }
+
+            circleAnnotationManager?.let { circleAnnotationManager ->
+                circleAnnotationManager.deleteAll()
+                circleAnnotationManager.create(recordPoints.toCircleAnnotationOptions())
             }
 
             polylineAnnotationManager?.let { polylineAnnotationManager ->

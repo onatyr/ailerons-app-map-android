@@ -41,17 +41,6 @@ android {
                 )
             }
         }
-
-        buildConfigField(
-            "String",
-            "SUPABASE_URL",
-            "\"${properties.getProperty("supabaseUrl", "")}\""
-        )
-        buildConfigField(
-            "String",
-            "SUPABASE_KEY",
-            "\"${properties.getProperty("supabaseKey", "")}\""
-        )
     }
 
     buildTypes {
@@ -89,7 +78,7 @@ android {
 
 dependencies {
     implementation("androidx.appcompat:appcompat:1.7.1")
-    implementation("androidx.compose.ui:ui:1.10.5")
+    implementation("androidx.compose.ui:ui:1.10.6")
 
 //    ROOM DATABASE
     val roomVersion = "2.8.4"
@@ -99,11 +88,6 @@ dependencies {
 
     implementation("androidx.navigation:navigation-compose:2.9.6")
 
-//    SUPABASE CLIENT
-    implementation(platform("io.github.jan-tennert.supabase:bom:3.3.0"))
-    implementation("io.github.jan-tennert.supabase:postgrest-kt")
-    implementation("io.ktor:ktor-client-android:3.4.0")
-
 //    MAPBOX
     val mapboxVersion = "11.18.1"
     implementation("com.mapbox.maps:android-ndk27:$mapboxVersion")
@@ -112,7 +96,7 @@ dependencies {
     // GLIDE
     implementation("com.github.bumptech.glide:compose:1.0.0-beta08")
 
-    implementation("androidx.core:core-ktx:1.17.0")
+    implementation("androidx.core:core-ktx:1.18.0")
     implementation("androidx.activity:activity-compose:1.12.3")
     implementation(platform("androidx.compose:compose-bom:2026.01.01"))
     implementation("org.jetbrains.kotlin:kotlin-stdlib:2.2.21")
@@ -143,4 +127,11 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-compose:1.3.0")
     implementation("com.google.dagger:hilt-android:$daggerHiltVersion")
     ksp("com.google.dagger:hilt-compiler:$daggerHiltVersion")
+
+// KTOR
+    val ktorVersion = "3.4.2"
+    implementation("io.ktor:ktor-client-core:$ktorVersion")
+    implementation("io.ktor:ktor-client-cio:$ktorVersion")
+    implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
 }

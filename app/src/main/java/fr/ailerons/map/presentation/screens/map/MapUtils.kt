@@ -21,7 +21,7 @@ fun List<RecordPointWithColor>.toCircleAnnotationOptions() = map { recordPoint -
 }
 
 fun List<RecordPointWithColor>.toPointAnnotationOptions(getMarker: (colorString: String) -> Bitmap?) =
-    groupBy { it.recordPoint.individualId }.values.map { records ->
+    groupBy { it.recordPoint.idIndividual }.values.map { records ->
         val record = records.last()
         PointAnnotationOptions()
             .withPoint(record.recordPoint.toPoint())
@@ -35,13 +35,13 @@ fun List<RecordPointWithColor>.toPointAnnotationOptions(getMarker: (colorString:
             .withIconSize(Constants.POINT_ICON_SIZE)
             .withData(
                 GsonBuilder().create()
-                    .toJsonTree(record.recordPoint.individualId to records.last().recordPoint.recordTimestamp)
+                    .toJsonTree(record.recordPoint.idIndividual to records.last().recordPoint.recordTimestamp)
             )
 
     }
 
 fun List<RecordPointWithColor>.toPolylineAnnotationOptions() =
-    groupBy { it.recordPoint.individualId }.values.map { records ->
+    groupBy { it.recordPoint.idIndividual }.values.map { records ->
         PolylineAnnotationOptions()
             .withPoints(records.map { it.recordPoint.toPoint() })
             .withLineColor(records.first().color)

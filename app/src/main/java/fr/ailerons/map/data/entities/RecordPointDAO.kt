@@ -34,11 +34,11 @@ data class RecordPointWithColor(
     ]
 )
 data class RecordPoint(
-    @PrimaryKey val id: Int,
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val longitude: Float,
     val latitude: Float,
-    @ColumnInfo(name = "id_individual")
-    val individualId: Int,
+    @ColumnInfo(name = "id_individual", index = true)
+    val idIndividual: Int,
     @ColumnInfo(name = "record_timestamp")
     val recordTimestamp: String,
     val depth: Int?
@@ -49,13 +49,10 @@ interface RecordPointDAO {
     @Query(
         """
         SELECT * FROM record_point
-            WHERE id_individual = :id
+            WHERE id_individual IN (:ids)
         """
     )
-    fun getWithColorByIndividualId(id: Int): Flow<List<RecordPointWithColor>>
-
-    @Query("SELECT * FROM record_point WHERE id_individual != 334") // todo remove filter
-    fun getAllWithColor(): Flow<List<RecordPointWithColor>>
+    fun getWithColorByIds(ids: List<Int>): Flow<List<RecordPointWithColor>>
 
     @Insert
     suspend fun insert(recordPoint: RecordPoint)

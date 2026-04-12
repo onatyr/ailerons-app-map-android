@@ -1,11 +1,8 @@
 package fr.ailerons.map.data.repositories
 
-import fr.ailerons.map.data.dtos.IndividualContextDto
-import fr.ailerons.map.data.dtos.IndividualDto
+import fr.ailerons.map.data.api.CoreApi
 import fr.ailerons.map.data.entities.Individual
 import fr.ailerons.map.data.entities.IndividualDAO
-import io.github.jan.supabase.SupabaseClient
-import io.github.jan.supabase.postgrest.from
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -13,27 +10,23 @@ import javax.inject.Singleton
 
 @Singleton
 class IndividualRepository @Inject constructor(
-    private val supabaseClient: SupabaseClient,
+    private val coreApi: CoreApi,
     private val individualDao: IndividualDAO
 ) {
     suspend fun fetchFromRemote() = withContext(Dispatchers.IO) {
-        val individuals = supabaseClient.from("individual")
-            .select().decodeList<IndividualDto>()
-        val contexts = supabaseClient.from("context")
-            .select().decodeList<IndividualContextDto>()
+        val individuals = coreApi.getIndividuals().getOrElse { emptyList() }
 
         clearIndividual()
         individuals.forEach { individualDto ->
-            insertIndividual(
-                individualDto.toIndividual(
-                    contexts.single { contextDto ->
-                        contextDto.individualId == individualDto.id
-                    }
-                ))
+            insertIndividual(individualDto.toIndividual())
         }
     }
 
     fun getAll() = individualDao.getAll()
+
+    fun getAllIds() = individualDao.getAllIds()
+
+    fun getAllWithNonEmptyRecordPoints() = individualDao.getAllWithNonEmptyRecordPoints()
 
     fun getById(id: Int) = individualDao.getById(id)
 

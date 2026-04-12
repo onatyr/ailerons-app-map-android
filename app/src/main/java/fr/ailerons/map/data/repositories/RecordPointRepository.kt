@@ -1,10 +1,7 @@
 package fr.ailerons.map.data.repositories
 
-import fr.ailerons.map.data.dtos.RecordPointDto
+import fr.ailerons.map.data.api.CoreApi
 import fr.ailerons.map.data.entities.RecordPointDAO
-import io.github.jan.supabase.SupabaseClient
-import io.github.jan.supabase.postgrest.from
-import io.github.jan.supabase.postgrest.query.filter.FilterOperator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -12,18 +9,12 @@ import javax.inject.Singleton
 
 @Singleton
 class RecordPointRepository @Inject constructor(
-    private val supabaseClient: SupabaseClient,
+    private val coreApi: CoreApi,
     private val recordPointDao: RecordPointDAO
 ) {
 
     suspend fun fetchFromRemote() = withContext(Dispatchers.IO) {
-        val recordPoints = supabaseClient.from("record")
-            .select {
-                filter {
-                    filterNot("individual_id", FilterOperator.IS, null)
-                }
-            }
-            .decodeList<RecordPointDto>()
+        val recordPoints = coreApi.getRecordPoints().getOrElse { emptyList() } // todo check if the idIndividual is in the db
             .sortedBy { it.recordTimestamp }
             .map { it.toRecordPoint() }
 
@@ -31,9 +22,7 @@ class RecordPointRepository @Inject constructor(
         recordPointDao.insertAll(recordPoints)
     }
 
-    fun getWithColorByIndividualId(id: Int) = recordPointDao.getWithColorByIndividualId(id)
-
-    fun getAllWithColor() = recordPointDao.getAllWithColor()
+    fun getWithColorByIds(ids: List<Int>) = recordPointDao.getWithColorByIds(ids)
 
     private suspend fun clearRecordPoint() = recordPointDao.deleteAll()
 }

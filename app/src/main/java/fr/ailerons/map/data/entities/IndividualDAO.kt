@@ -22,7 +22,7 @@ data class Individual(
     binomialName: String,
     val description: String,
     val situation: String,
-    val size: Int,
+    val size: Double,
     val behavior: String,
     val color: String
 )
@@ -31,6 +31,20 @@ data class Individual(
 interface IndividualDAO {
     @Query("SELECT * FROM individual")
     fun getAll(): Flow<List<Individual>>
+
+    @Query("SELECT id FROM individual")
+    fun getAllIds(): Flow<List<Int>>
+
+    @Query(
+        """
+        SELECT * FROM individual 
+        WHERE EXISTS (
+            SELECT 1 FROM record_point 
+            WHERE record_point.id_individual = individual.id
+        )
+        """
+    )
+    fun getAllWithNonEmptyRecordPoints(): Flow<List<Individual>>
 
     @Query(
         """

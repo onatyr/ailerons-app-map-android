@@ -1,34 +1,21 @@
 package fr.ailerons.map.data.dtos
 
 import fr.ailerons.map.data.entities.Individual
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlin.random.Random
 
 @Serializable
 data class IndividualDto(
-    @SerialName("id")
     val id: Int,
-
-    @SerialName("created_at")
     val createdAt: String,
-
-    @SerialName("individual_name")
     val individualName: String,
-
-    @SerialName("sex")
     val sex: String,
-
-    @SerialName("common_name")
     val commonName: String,
-
-    @SerialName("binomial_name")
     val binomialName: String,
-
-    @SerialName("description")
+    val observationContext: ObservationContextDto,
     val description: String,
 ) {
-    fun toIndividual(individualContext: IndividualContextDto): Individual {
+    fun toIndividual(): Individual {
         return Individual(
             id = id,
             individualName = individualName,
@@ -36,10 +23,15 @@ data class IndividualDto(
             commonName = commonName,
             binomialName = binomialName,
             description = description,
-            situation = individualContext.situation,
-            size = individualContext.size,
-            behavior = individualContext.behavior,
-            color = String.format("#%02x%02x%02x", Random.nextInt(256), Random.nextInt(256), Random.nextInt(256)) // todo remove
+            situation = observationContext.situation,
+            size = observationContext.size,
+            behavior = observationContext.behavior,
+            color = String.format(
+                "#%02x%02x%02x",
+                Random.nextInt(256),
+                Random.nextInt(256),
+                Random.nextInt(256)
+            ) // todo remove
         )
     }
 }
